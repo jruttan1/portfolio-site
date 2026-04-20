@@ -1,0 +1,48 @@
+@import "tailwindcss";
+@import "@fontsource/geist-sans/400.css";
+@import "@fontsource/geist-sans/500.css";
+@import "@fontsource/geist-sans/600.css";
+@import "@fontsource/geist-sans/700.css";
+
+@theme {
+  --font-sans: "Geist Sans", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono", monospace;
+  --color-ink: #111111;
+  --color-paper: #f7f5f0;
+  --color-line: #d9d4c8;
+  --color-accent: #e04f2f;
+  --color-accent-2: #27776f;
+}
+
+html {
+  background: #f7f5f0;
+  color: #111111;
+}
+
+body {
+  min-width: 320px;
+  margin: 0;
+  font-family: var(--font-sans);
+  text-rendering: geometricPrecision;
+}
+
+button,
+canvas {
+  touch-action: manipulation;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid #e04f2f;
+  outline-offset: 3px;
+}
+
+.disc-spin {
+  animation: spin 5.5s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

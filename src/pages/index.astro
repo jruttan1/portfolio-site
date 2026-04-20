@@ -1,0 +1,28 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ChessWidget from "../components/ChessWidget.astro";
+import LetterboxdWidget from "../components/LetterboxdWidget.astro";
+import MnistWidget from "../components/MnistWidget.astro";
+import ProfilePanel from "../components/ProfilePanel.astro";
+import StatusCard from "../components/StatusCard.astro";
+---
+
+<BaseLayout title="Jack | Developer Portfolio">
+  <main class="portfolio-shell min-h-[100svh] bg-paper text-ink md:flex lg:h-[100vh] lg:overflow-hidden">
+    <ProfilePanel />
+
+    <section class="portfolio-main flex-1 px-5 py-8 lg:h-[100vh] lg:overflow-hidden lg:px-7">
+      <div class="portfolio-stage mx-auto flex min-h-[calc(100svh-4rem)] max-w-6xl flex-col gap-5 lg:gap-10 lg:grid lg:h-[calc(100vh-4rem)] lg:min-h-0 lg:place-content-center lg:grid-rows-[auto_auto]">
+        <div class="portfolio-top grid gap-4 lg:grid-cols-[1.4fr_0.6fr]">
+          <ChessWidget />
+          <StatusCard />
+        </div>
+
+        <div class="portfolio-bottom grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
+          <LetterboxdWidget />
+          <MnistWidget />
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

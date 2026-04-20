@@ -1,0 +1,64 @@
+---
+import { tracks } from "../data/music";
+const tracksJson = JSON.stringify(tracks);
+---
+
+<section class="widget-music text-ink">
+  <div class="grid max-w-40 justify-items-center gap-2 py-1">
+    <div class="grid w-full grid-cols-[1fr_auto_1fr] items-center gap-2">
+      <button class="justify-self-end px-1 py-2 text-lg leading-none text-ink transition hover:text-accent" type="button" data-prev aria-label="Previous disc">
+        <span aria-hidden="true">‹</span>
+      </button>
+
+      <button class="group relative grid aspect-square w-16 place-items-center rounded-full shadow-[0_8px_18px_rgba(17,17,17,0.18)] transition hover:scale-[1.02]" type="button" data-play aria-label="Play">
+        <div class="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_50%_50%,#fbfaf7_0_12%,transparent_13%),radial-gradient(circle_at_50%_50%,rgba(17,17,17,0.18)_0_18%,transparent_19%),linear-gradient(135deg,#141414,#e8edf2_34%,#283543_52%,#f7f5f0_70%,#111111)]" data-disc></div>
+        <div class="relative h-4 w-4 rounded-full bg-[#fbfaf7] shadow-[inset_0_0_0_1px_rgba(17,17,17,0.2)]"></div>
+      </button>
+
+      <button class="justify-self-start px-1 py-2 text-lg leading-none text-ink transition hover:text-accent" type="button" data-next aria-label="Next disc">
+        <span aria-hidden="true">›</span>
+      </button>
+    </div>
+
+    <div class="flex h-4 w-40 justify-center overflow-hidden text-[10px] font-medium tracking-[0.14em]">
+      <div class="flex min-w-0 items-center gap-1.5">
+        <span class="shrink-0 text-xs leading-none" aria-hidden="true">♪</span>
+        <p class="truncate font-[Georgia,serif] italic uppercase leading-none" data-title>{tracks[0].title}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script is:inline define:vars={{ tracksJson }}>
+  const tracks = JSON.parse(tracksJson);
+  const root = document.querySelector(".widget-music");
+  const play = root?.querySelector("[data-play]");
+  const prev = root?.querySelector("[data-prev]");
+  const next = root?.querySelector("[data-next]");
+  const disc = root?.querySelector("[data-disc]");
+  const title = root?.querySelector("[data-title]");
+  let index = 0;
+  let playing = false;
+
+  const render = () => {
+    const track = tracks[index];
+    if (title) title.textContent = track.title;
+    disc?.classList.toggle("disc-spin", playing);
+    play?.setAttribute("aria-label", playing ? "Pause" : "Play");
+  };
+
+  play?.addEventListener("click", () => {
+    playing = !playing;
+    render();
+  });
+
+  prev?.addEventListener("click", () => {
+    index = (index - 1 + tracks.length) % tracks.length;
+    render();
+  });
+
+  next?.addEventListener("click", () => {
+    index = (index + 1) % tracks.length;
+    render();
+  });
+</script>

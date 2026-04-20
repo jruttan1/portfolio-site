@@ -1,0 +1,134 @@
+<section class="widget-mnist border border-line bg-white/70 p-4 lg:h-full lg:overflow-hidden lg:p-3">
+  <div class="flex items-center justify-between gap-4">
+    <h2 class="font-mono text-[11px] uppercase tracking-[0.18em] text-ink/70">Draw a digit</h2>
+    <button class="border border-ink px-3 py-1 text-xs font-medium transition hover:bg-ink hover:text-paper" type="button" data-clear>Clear</button>
+  </div>
+
+  <div class="mt-3 grid gap-4 sm:grid-cols-[minmax(160px,0.68fr)_1fr] lg:gap-3">
+    <canvas class="digit-canvas aspect-square w-full max-w-42 border border-ink" width="280" height="280" aria-label="Digit drawing canvas" data-canvas></canvas>
+    <div class="flex flex-col justify-center gap-4">
+      <div>
+        <p class="font-mono text-[11px] uppercase tracking-[0.18em] text-ink/45">drawing pad</p>
+        <div class="mt-2 flex items-end gap-3">
+          <span class="text-5xl font-semibold leading-none text-accent" data-digit>✎</span>
+          <span class="pb-2 font-mono text-xs text-ink/55" data-status>draw on the grid</span>
+        </div>
+        <dl class="mt-4 grid grid-cols-3 gap-2 border border-line bg-[#fbfaf7] p-2">
+          <div>
+            <dt class="font-mono text-[10px] uppercase tracking-[0.14em] text-ink/40">canvas</dt>
+            <dd class="mt-1 text-xs font-medium text-ink">280 px</dd>
+          </div>
+          <div>
+            <dt class="font-mono text-[10px] uppercase tracking-[0.14em] text-ink/40">input</dt>
+            <dd class="mt-1 text-xs font-medium text-ink">28 x 28</dd>
+          </div>
+          <div>
+            <dt class="font-mono text-[10px] uppercase tracking-[0.14em] text-ink/40">strokes</dt>
+            <dd class="mt-1 text-xs font-medium text-ink" data-strokes>0</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-4 border-t border-line pt-3">
+    <div class="flex min-h-14 items-center justify-between gap-3" aria-label="Neural network architecture preview">
+      <div class="grid gap-2" aria-hidden="true">
+        <span class="h-2.5 w-2.5 rounded-full bg-ink/25"></span>
+        <span class="h-2.5 w-2.5 rounded-full bg-ink/45"></span>
+        <span class="h-2.5 w-2.5 rounded-full bg-ink/25"></span>
+        <span class="h-2.5 w-2.5 rounded-full bg-ink/45"></span>
+      </div>
+      <div class="h-px flex-1 bg-line"></div>
+      <div class="grid grid-cols-2 gap-2" aria-hidden="true">
+        <span class="h-3 w-3 rounded-full bg-accent/75"></span>
+        <span class="h-3 w-3 rounded-full bg-ink/35"></span>
+        <span class="h-3 w-3 rounded-full bg-ink/35"></span>
+        <span class="h-3 w-3 rounded-full bg-accent/75"></span>
+      </div>
+      <div class="h-px flex-1 bg-line"></div>
+      <div class="grid gap-2" aria-hidden="true">
+        <span class="h-2.5 w-2.5 rounded-full bg-accent-2/80"></span>
+        <span class="h-2.5 w-2.5 rounded-full bg-ink/30"></span>
+        <span class="h-2.5 w-2.5 rounded-full bg-accent-2/80"></span>
+      </div>
+      <div class="h-px flex-1 bg-line"></div>
+      <div class="grid gap-1.5" aria-hidden="true">
+        {Array.from({ length: 10 }).map((_, index) => (
+          <span class:list={["h-1.5 w-6", index === 7 ? "bg-accent" : "bg-ink/20"]}></span>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const root = document.querySelector(".widget-mnist");
+  const canvas = root?.querySelector("[data-canvas]");
+  const clear = root?.querySelector("[data-clear]");
+  const status = root?.querySelector("[data-status]");
+  const strokeCount = root?.querySelector("[data-strokes]");
+  const ctx = canvas instanceof HTMLCanvasElement ? canvas.getContext("2d") : null;
+  let drawing = false;
+  let strokes = 0;
+
+  if (ctx && canvas instanceof HTMLCanvasElement) {
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.lineWidth = 18;
+    ctx.strokeStyle = "#111111";
+  }
+
+  const point = (event: Event) => {
+    if (!(canvas instanceof HTMLCanvasElement)) return { x: 0, y: 0 };
+    const pointer = event as PointerEvent;
+    const rect = canvas.getBoundingClientRect();
+    return {
+      x: ((pointer.clientX - rect.left) / rect.width) * canvas.width,
+      y: ((pointer.clientY - rect.top) / rect.height) * canvas.height
+    };
+  };
+
+  canvas?.addEventListener("pointerdown", (event) => {
+    if (!ctx) return;
+    const pointer = event as PointerEvent;
+    drawing = true;
+    canvas.setPointerCapture(pointer.pointerId);
+    const p = point(event);
+    ctx.beginPath();
+    ctx.moveTo(p.x, p.y);
+  });
+
+  canvas?.addEventListener("pointermove", (event) => {
+    if (!drawing || !ctx) return;
+    const p = point(event);
+    ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+    strokes += 1;
+    if (status) status.textContent = "drawing";
+    if (strokeCount) strokeCount.textContent = String(strokes);
+  });
+
+  canvas?.addEventListener("pointerup", () => {
+    drawing = false;
+    if (status && strokes > 0) status.textContent = "ink captured";
+  });
+
+  clear?.addEventListener("click", () => {
+    if (!ctx || !(canvas instanceof HTMLCanvasElement)) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    strokes = 0;
+    if (status) status.textContent = "draw on the grid";
+    if (strokeCount) strokeCount.textContent = "0";
+  });
+</script>
+
+<style>
+  .digit-canvas {
+    background-color: #fbfaf7;
+    background-image:
+      linear-gradient(rgba(17, 17, 17, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(17, 17, 17, 0.1) 1px, transparent 1px);
+    background-size: 10px 10px;
+  }
+</style>

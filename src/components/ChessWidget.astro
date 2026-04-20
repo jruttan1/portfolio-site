@@ -1,0 +1,90 @@
+---
+import "@lichess-org/chessground/assets/chessground.base.css";
+import "@lichess-org/chessground/assets/chessground.brown.css";
+import "@lichess-org/chessground/assets/chessground.cburnett.css";
+
+const initialFen = "r1bqkb1r/pp2pppp/2np1n2/8/3P4/2N2N2/PPP1PPPP/R1BQKB1R";
+---
+
+<section class="widget-chess border border-line bg-white/70 p-4 lg:flex lg:flex-col">
+  <div class="flex items-center justify-between gap-4">
+    <h2 class="font-mono text-[11px] uppercase tracking-[0.18em] text-ink/70">Play a sketchy line</h2>
+  </div>
+
+  <div class="mt-3 grid items-start gap-4 lg:flex lg:min-h-0 lg:flex-1 lg:items-start">
+    <div class="chessground-board cg-wrap shrink-0 border border-ink bg-ink/10" data-board data-fen={initialFen} aria-label="Chess board"></div>
+    <div class="flex flex-col gap-4 lg:flex-1 lg:min-w-0 lg:overflow-hidden">
+      <p class="text-sm leading-6 text-ink/70">Move pieces around the board and use the position as a small opening sketchpad.</p>
+      <div class="border-l-2 border-accent pl-3">
+        <p class="font-mono text-[11px] uppercase tracking-[0.18em] text-ink/45">board state</p>
+        <p class="mt-2 text-sm font-medium text-ink" data-chess-status>Chessground ready.</p>
+      </div>
+      <div class="border border-line bg-[#fbfaf7] p-3">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <p class="font-mono text-[11px] uppercase tracking-[0.18em] text-ink/45">white opening</p>
+            <p class="mt-2 text-sm font-semibold text-ink" data-opening-name>Book pending</p>
+          </div>
+          <span class="border border-line px-2 py-1 font-mono text-[11px] text-ink/50" data-opening-code>--</span>
+        </div>
+        <p class="mt-2 text-xs leading-5 text-ink/60" data-opening-note>Make a white move to classify the first idea.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { Chessground } from "@lichess-org/chessground";
+
+  const root = document.querySelector(".widget-chess");
+  const boardEl = root?.querySelector<HTMLElement>("[data-board]");
+  const statusEl = root?.querySelector("[data-chess-status]");
+  const openingNameEl = root?.querySelector("[data-opening-name]");
+  const openingCodeEl = root?.querySelector("[data-opening-code]");
+  const openingNoteEl = root?.querySelector("[data-opening-note]");
+  let whiteMoveCount = 0;
+
+  const updateOpening = (from: string, to: string, role: string) => {
+    whiteMoveCount += 1;
+    if (whiteMoveCount > 1 || !openingNameEl || !openingCodeEl || !openingNoteEl) return;
+    const [name, code, note] = classifyOpening(from, to, role);
+    openingNameEl.textContent = name;
+    openingCodeEl.textContent = code;
+    openingNoteEl.textContent = note;
+  };
+
+  if (boardEl) {
+    const ground = Chessground(boardEl, {
+      fen: boardEl.dataset.fen,
+      coordinates: false,
+      animation: { enabled: true, duration: 180 },
+      movable: {
+        color: "white",
+        free: true,
+        showDests: false,
+        events: {
+          after: (from, to) => {
+            const moved = ground.state.pieces.get(to);
+            if (moved?.color === "white") updateOpening(from, to, moved.role);
+            if (statusEl) statusEl.textContent = `${from} → ${to}`;
+          }
+        }
+      }
+    });
+  }
+</script>
+
+<style>
+  .chessground-board.cg-wrap {
+    width: 16rem;
+    height: 16rem;
+    max-width: 100%;
+  }
+
+  @media (min-width: 1024px) {
+    .chessground-board.cg-wrap {
+      width: 18.5rem;
+      height: 18.5rem;
+    }
+  }
+</style>
