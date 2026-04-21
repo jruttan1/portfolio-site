@@ -1,23 +1,23 @@
 export const tracks = [
   {
-    title: "Late Night Compile",
-    artist: "Local Drafts",
-    length: "2:48",
-    accent: "#e04f2f",
-    mood: "Warm static"
+    title: "Fellows",
+    artist: "Nujabes",
+    length: "3:07",
+    audio: "/music/Fellows-Nujabes.m4a",
+    cover: "/spiritual-state.png"
   },
   {
-    title: "Green Thread",
-    artist: "Stack Trace",
-    length: "3:16",
-    accent: "#27776f",
-    mood: "Soft focus"
+    title: "idkidk",
+    artist: "Jim Legxacy",
+    length: "2:27",
+    audio: "/music/idkidk-JimLegxacy.mp3",
+    cover: "/idkidk.png"
   },
   {
-    title: "Static Bloom",
-    artist: "Wireframe Radio",
-    length: "2:31",
-    accent: "#111111",
-    mood: "Night mode"
+    title: "A.D.H.D",
+    artist: "Kendrick Lamar",
+    length: "3:36",
+    audio: "/music/adhd.mp3",
+    cover: "/Section.80-Cover.jpg"
   }
 ];

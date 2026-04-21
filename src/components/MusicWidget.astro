@@ -4,14 +4,17 @@ const tracksJson = JSON.stringify(tracks);
 ---
 
 <section class="widget-music text-ink">
-  <div class="grid max-w-40 justify-items-center gap-2 py-1">
+  <div class="grid max-w-44 justify-items-center gap-2 py-1">
     <div class="grid w-full grid-cols-[1fr_auto_1fr] items-center gap-2">
       <button class="justify-self-end px-1 py-2 text-lg leading-none text-ink transition hover:text-accent" type="button" data-prev aria-label="Previous disc">
         <span aria-hidden="true">‹</span>
       </button>
 
-      <button class="group relative grid aspect-square w-16 place-items-center rounded-full shadow-[0_8px_18px_rgba(17,17,17,0.18)] transition hover:scale-[1.02]" type="button" data-play aria-label="Play">
-        <div class="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_50%_50%,#fbfaf7_0_12%,transparent_13%),radial-gradient(circle_at_50%_50%,rgba(17,17,17,0.18)_0_18%,transparent_19%),linear-gradient(135deg,#141414,#e8edf2_34%,#283543_52%,#f7f5f0_70%,#111111)]" data-disc></div>
+      <button class="group relative grid aspect-square w-20 place-items-center rounded-full shadow-[0_8px_18px_rgba(17,17,17,0.18)] transition hover:scale-[1.02]" type="button" data-play aria-label="Play">
+        <div class="absolute inset-0 overflow-hidden rounded-full bg-ink" data-disc>
+          <img class="h-full w-full object-cover" src={tracks[0].cover} alt="" data-cover />
+          <div class="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_50%_50%,#fbfaf7_0_10%,transparent_11%),radial-gradient(circle_at_50%_50%,rgba(17,17,17,0.24)_0_17%,transparent_18%),linear-gradient(135deg,rgba(255,255,255,0.18),transparent_34%,rgba(0,0,0,0.2)_62%,rgba(255,255,255,0.12))]"></div>
+        </div>
         <div class="relative h-4 w-4 rounded-full bg-[#fbfaf7] shadow-[inset_0_0_0_1px_rgba(17,17,17,0.2)]"></div>
       </button>
 
@@ -20,10 +23,10 @@ const tracksJson = JSON.stringify(tracks);
       </button>
     </div>
 
-    <div class="flex h-4 w-40 justify-center overflow-hidden text-[10px] font-medium tracking-[0.14em]">
+    <div class="flex h-4 w-44 justify-center overflow-hidden text-[10px] font-medium tracking-[0.14em]">
       <div class="flex min-w-0 items-center gap-1.5">
         <span class="shrink-0 text-xs leading-none" aria-hidden="true">♪</span>
-        <p class="truncate font-[Georgia,serif] italic uppercase leading-none" data-title>{tracks[0].title}</p>
+        <p class="truncate font-['Optima','Candara','Noto_Sans',sans-serif] italic leading-none" data-title>{tracks[0].title}</p>
       </div>
     </div>
   </div>
@@ -36,29 +39,79 @@ const tracksJson = JSON.stringify(tracks);
   const prev = root?.querySelector("[data-prev]");
   const next = root?.querySelector("[data-next]");
   const disc = root?.querySelector("[data-disc]");
+  const cover = root?.querySelector("[data-cover]");
   const title = root?.querySelector("[data-title]");
+  const defaultVolume = 0.18;
   let index = 0;
   let playing = false;
+  let audio = new Audio(tracks[index].audio);
+  audio.volume = defaultVolume;
 
   const render = () => {
     const track = tracks[index];
     if (title) title.textContent = track.title;
-    disc?.classList.toggle("disc-spin", playing);
+    if (cover) cover.setAttribute("src", track.cover);
+    if (disc instanceof HTMLElement) {
+      if (playing) disc.classList.add("disc-spin");
+      disc.style.animationPlayState = playing ? "running" : "paused";
+    }
     play?.setAttribute("aria-label", playing ? "Pause" : "Play");
   };
 
-  play?.addEventListener("click", () => {
+  const loadTrack = () => {
+    audio.pause();
+    audio = new Audio(tracks[index].audio);
+    audio.volume = defaultVolume;
+    audio.addEventListener("ended", () => {
+      playing = false;
+      render();
+    });
+  };
+
+  loadTrack();
+
+  play?.addEventListener("click", async () => {
     playing = !playing;
+    if (playing) {
+      try {
+        audio.volume = defaultVolume;
+        await audio.play();
+      } catch {
+        playing = false;
+      }
+    } else {
+      audio.pause();
+    }
     render();
   });
 
-  prev?.addEventListener("click", () => {
+  prev?.addEventListener("click", async () => {
+    const wasPlaying = playing;
     index = (index - 1 + tracks.length) % tracks.length;
+    loadTrack();
+    if (wasPlaying) {
+      try {
+        audio.volume = defaultVolume;
+        await audio.play();
+      } catch {
+        playing = false;
+      }
+    }
     render();
   });
 
-  next?.addEventListener("click", () => {
+  next?.addEventListener("click", async () => {
+    const wasPlaying = playing;
     index = (index + 1) % tracks.length;
+    loadTrack();
+    if (wasPlaying) {
+      try {
+        audio.volume = defaultVolume;
+        await audio.play();
+      } catch {
+        playing = false;
+      }
+    }
     render();
   });
 </script>
