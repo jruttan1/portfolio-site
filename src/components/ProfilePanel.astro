@@ -3,45 +3,70 @@ import { profile } from "../data/profile";
 import MusicWidget from "./MusicWidget.astro";
 ---
 
-<aside class="profile-panel relative flex min-h-[100svh] flex-col border-b border-line bg-paper px-7 py-5 md:sticky md:top-0 md:w-[34%] md:border-b-0 md:border-r lg:h-[100vh] lg:min-h-0 lg:overflow-hidden lg:px-9">
-  <div class="flex items-start justify-between gap-4">
-    <div>
-      <h1 class="mt-4 text-5xl font-semibold leading-none text-ink sm:text-6xl md:text-5xl lg:text-7xl">{profile.name}</h1>
+<aside class="profile-panel relative flex min-h-[100svh] flex-col border-b border-line bg-paper px-5 py-5 pb-10 sm:px-7 md:sticky md:top-0 md:h-[100svh] md:min-h-0 md:w-[min(34rem,52vw)] md:overflow-hidden md:border-b-0 md:border-r md:pb-10 lg:w-[clamp(30rem,46vw,42rem)] lg:px-7 lg:py-4 lg:pb-9 xl:px-9">
+  <div class="shrink-0 flex items-start justify-between gap-4">
+    <div class="min-w-0">
+      <h1 class="mt-2 text-4xl font-semibold leading-none text-ink sm:text-5xl md:text-[2.4rem] lg:text-[clamp(2.25rem,3.3vw,3.5rem)]">{profile.name}</h1>
     </div>
-    <div class="flex flex-col items-end gap-2">
-      <span class="font-mono text-[9px] uppercase tracking-[0.22em] text-ink/25 select-none">Portfolio / V0</span>
-      <div class="h-3 w-3 rounded-full bg-accent" aria-hidden="true"></div>
+    <div class="shrink-0 flex flex-col items-end gap-3">
+      <div class="flex flex-col items-end gap-2">
+        <span class="font-mono text-[9px] uppercase tracking-[0.22em] text-ink/25 select-none">Portfolio / V0</span>
+        <div class="h-3 w-3 rounded-full bg-accent" aria-hidden="true"></div>
+      </div>
     </div>
   </div>
 
-  <div class="mt-6 max-w-sm pl-4">
-    <p class="text-sm leading-6 text-ink/60">{profile.title}</p>
-    <div class="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1">
-      <p class="text-sm text-ink/45">{profile.location}</p>
-      <span class="text-ink/20" aria-hidden="true">·</span>
-      <p class="text-sm text-ink/45">{profile.education}</p>
-    </div>
-    <p class="mt-1 text-sm text-accent">{profile.availability}</p>
+  <div class="profile-music profile-music-header pointer-events-auto absolute right-5 top-24 z-10 hidden sm:block md:right-6 lg:right-7">
+    <MusicWidget />
   </div>
 
-  <div class="mt-9 space-y-6 pl-4 lg:overflow-y-auto lg:flex-1">
+  <div class="profile-intro mt-3 max-w-md shrink-0 pl-2 sm:pl-4">
+    <p class="max-w-[34ch] text-sm leading-5 text-ink/60">{profile.title}</p>
+    <div class="mt-2.5 border-l border-line pl-3">
+      <p class="font-mono text-[10px] uppercase leading-4 tracking-[0.16em] text-ink/45">
+        {profile.location} / {profile.education.replace(" — graduating May 2028", "")}
+      </p>
+      <p class="font-mono text-[10px] uppercase leading-4 tracking-[0.16em] text-accent">
+        {profile.availability}
+      </p>
+    </div>
+  </div>
+
+  <div class="profile-scroll mt-8 min-h-0 space-y-6 pl-2 pr-0 sm:pl-4 md:flex-1 md:w-[calc(100%+1rem)] md:overflow-y-auto lg:mt-8 xl:w-[calc(100%+1.25rem)]">
     <section>
       <h2 class="font-mono text-[11px] uppercase tracking-[0.18em] text-ink/70">experience</h2>
       <ul class="mt-3 space-y-2.5">
         {profile.experience.map((role) => (
           <li>
-            <div class="flex items-center gap-1.5">
-              <span class="shrink-0 text-ink/30" aria-hidden="true">›</span>
-              <a
-                class="preview-trigger inline-block rounded px-1.5 py-0.5 text-base font-semibold leading-snug"
-                style={`background:${role.chip.bg}; color:${role.chip.text};`}
-                href={role.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                data-url={role.url}
-                data-name={role.name}
-              >{role.name}</a>
-              <span class="text-base text-ink/75">{role.role}</span>
+            <div class="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-8 gap-y-1">
+              <div class="flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-1">
+                <span class="shrink-0 text-ink/30" aria-hidden="true">›</span>
+                {role.logo === "red-cross" ? (
+                  <span class="profile-logo profile-logo-cross" aria-hidden="true">
+                    <svg viewBox="0 0 16 16">
+                      <path d="M6.2 1.8h3.6v4.4h4.4v3.6H9.8v4.4H6.2V9.8H1.8V6.2h4.4z" fill="currentColor" />
+                    </svg>
+                  </span>
+                ) : (
+                  <img class="profile-logo" src={role.logo} alt="" loading="lazy" decoding="async" aria-hidden="true" />
+                )}
+                {role.name === "Primate.sh" ? (
+                  <a
+                    class="preview-trigger inline-block max-w-full text-base font-semibold leading-snug text-ink/80 underline decoration-ink/25 underline-offset-3"
+                    href={role.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-url={role.url}
+                    data-name={role.name}
+                  >{role.name}</a>
+                ) : (
+                  <span class="inline-block max-w-full text-base font-semibold leading-snug text-ink/80">{role.name}</span>
+                )}
+                <span class="min-w-0 text-base text-ink/75">{role.role}</span>
+              </div>
+              <span class="shrink-0 whitespace-nowrap text-right font-mono text-[10px] uppercase tracking-[0.16em] text-ink/35">
+                {role.name === "Primate.sh" ? "Current" : role.name === "Canadian Red Cross" ? "Fall-Winter 25/26" : role.period.replace(" — ", " - ")}
+              </span>
             </div>
             <p class="mt-0.5 pl-4 text-base leading-6 text-ink/75">{role.description}</p>
           </li>
@@ -51,27 +76,35 @@ import MusicWidget from "./MusicWidget.astro";
 
     <section>
       <h2 class="font-mono text-[11px] uppercase tracking-[0.18em] text-ink/70">projects</h2>
-      <ul class="mt-3 space-y-2.5">
+      <ul class="mt-3 space-y-3.5">
         {profile.projects.map((project) => (
           <li>
-            <div class="flex items-center gap-1.5">
-              <span class="shrink-0 text-ink/30" aria-hidden="true">›</span>
+            <div class="flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-1">
               <a
-                class="preview-trigger text-base font-semibold text-ink/75 hover:text-ink transition"
+                class="preview-trigger group/project inline-flex min-w-0 items-baseline gap-1 text-[1.0625rem] font-semibold text-ink transition-colors hover:text-accent"
                 href={project.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 data-url={project.url}
                 data-name={project.name}
-              >{project.name}</a>
+              >
+                <span>{project.name}</span>
+                <svg class="h-3.5 w-3.5 translate-y-[0.08em] text-ink/35 transition-colors group-hover/project:text-accent/80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M7 17 17 7" />
+                  <path d="M9 7h8v8" />
+                </svg>
+              </a>
             </div>
             <p class="mt-0.5 pl-4 text-base leading-6 text-ink/75">{project.description}</p>
             {project.prizes && (
               <ul class="mt-1.5 pl-4 space-y-1">
                 {project.prizes.map((prize) => (
-                  <li class="flex items-start gap-2">
-                    <span class="shrink-0 border border-line px-1.5 py-0.5 font-mono text-[12px] uppercase tracking-widest text-ink/50">{prize.name}</span>
-                    <span class="text-sm leading-5 text-ink/75">{prize.note}</span>
+                  <li class="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+                    <span class="inline-flex shrink-0 items-center gap-1.5 font-mono text-[12px] uppercase tracking-widest text-ink/50">
+                      <img class="prize-logo" src={prize.logo} alt="" loading="lazy" decoding="async" aria-hidden="true" />
+                      <span>{prize.name}</span>
+                    </span>
+                    <span class="min-w-0 flex-1 text-sm leading-5 text-ink/75">{prize.note}</span>
                   </li>
                 ))}
               </ul>
@@ -86,20 +119,28 @@ import MusicWidget from "./MusicWidget.astro";
       <ul class="mt-3 space-y-2.5">
         {profile.research.map((paper) => (
           <li>
-            <div class="flex items-center gap-1.5">
-              <span class="shrink-0 text-ink/30" aria-hidden="true">›</span>
+            <div class="flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-1">
               {paper.url ? (
-                <a href={paper.url} target="_blank" rel="noopener noreferrer" class="text-base font-semibold text-ink/75 underline underline-offset-2 hover:text-ink transition">{paper.title}</a>
+                <a href={paper.url} target="_blank" rel="noopener noreferrer" class="group/project inline-flex min-w-0 items-baseline gap-1 text-[1.0625rem] font-semibold text-ink transition-colors hover:text-accent">
+                  <span>{paper.title}</span>
+                  <svg class="h-3.5 w-3.5 translate-y-[0.08em] text-ink/35 transition-colors group-hover/project:text-accent/80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M7 17 17 7" />
+                    <path d="M9 7h8v8" />
+                  </svg>
+                </a>
               ) : (
-                <span class="text-base font-semibold text-ink/75">{paper.title}</span>
+                <span class="min-w-0 text-base font-semibold text-ink/75">{paper.title}</span>
               )}
             </div>
             <p class="mt-0.5 pl-4 text-base leading-6 text-ink/75">{paper.description}</p>
             <ul class="mt-1.5 pl-4 space-y-1">
               {paper.venues.map((venue) => (
-                <li class="flex items-start gap-2">
-                  <span class="shrink-0 border border-line px-1.5 py-0.5 font-mono text-[12px] uppercase tracking-widest text-ink/50">{venue.name}</span>
-                  <span class="text-sm leading-5 text-ink/75">{venue.note}</span>
+                <li class="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+                  <span class="inline-flex shrink-0 items-center gap-1.5 font-mono text-[12px] uppercase tracking-widest text-ink/50">
+                    <img class="venue-logo" src={venue.logo} alt="" loading="lazy" decoding="async" aria-hidden="true" />
+                    <span>{venue.name}</span>
+                  </span>
+                  <span class="min-w-0 flex-1 text-sm leading-5 text-ink/75">{venue.note}</span>
                 </li>
               ))}
             </ul>
@@ -107,10 +148,6 @@ import MusicWidget from "./MusicWidget.astro";
         ))}
       </ul>
     </section>
-  </div>
-
-  <div class="absolute bottom-36 right-5 z-10 lg:right-7">
-    <MusicWidget />
   </div>
 
   <div
@@ -136,10 +173,19 @@ import MusicWidget from "./MusicWidget.astro";
       tooltipImg.alt = name;
 
       const rect = el.getBoundingClientRect();
-      tooltip.style.left = `${rect.left + rect.width / 2}px`;
-      tooltip.style.top = `${rect.top - 12}px`;
+      const tooltipWidth = tooltip.offsetWidth || 200;
+      const gutter = 12;
+      const centeredLeft = rect.left + rect.width / 2;
+      const clampedLeft = Math.min(
+        window.innerWidth - tooltipWidth / 2 - gutter,
+        Math.max(tooltipWidth / 2 + gutter, centeredLeft)
+      );
+      const placeBelow = rect.top < 160;
+
+      tooltip.style.left = `${clampedLeft}px`;
+      tooltip.style.top = `${placeBelow ? rect.bottom + 12 : rect.top - 12}px`;
       tooltip.style.opacity = "1";
-      tooltip.style.transform = "scale(1) translateX(-50%) translateY(-100%)";
+      tooltip.style.transform = `scale(1) translateX(-50%) translateY(${placeBelow ? "0" : "-100%"})`;
     };
 
     const hide = () => {
@@ -161,21 +207,28 @@ import MusicWidget from "./MusicWidget.astro";
     });
   </script>
 
-  <footer class="mt-auto flex items-center gap-5 border-t border-line pt-5 pl-4 pr-32">
-    <a href="mailto:jruttan3@uwo.ca" aria-label="Email" class="text-ink/50 transition hover:text-ink">
-      <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-        <rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
-      </svg>
+  <footer class="profile-footer mt-2 mb-3 flex shrink-0 items-center justify-between gap-5 border-t border-line pt-5 pl-2 pr-0 sm:pl-4 lg:mb-4">
+    <a href="mailto:jruttan3@uwo.ca" class="group/contact min-w-0 text-ink/70 transition hover:text-ink">
+      <span class="block font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-ink/45">contact</span>
+      <span class="mt-1 flex min-w-0 items-center gap-2">
+        <svg class="h-6 w-6 shrink-0 text-ink/60 transition group-hover/contact:text-accent" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+        </svg>
+        <span class="truncate text-sm font-semibold leading-none">jruttan3@uwo.ca</span>
+      </span>
     </a>
-    <a href="https://github.com/jruttan1" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="text-ink/50 transition hover:text-ink">
-      <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/>
-      </svg>
-    </a>
-    <a href="https://linkedin.com/in/jack-ruttan" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="text-ink/50 transition hover:text-ink">
-      <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-      </svg>
-    </a>
+
+    <div class="flex shrink-0 items-center gap-3.5">
+      <a href="https://github.com/jruttan1" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="grid h-11 w-11 place-items-center text-ink/60 transition hover:text-accent">
+        <svg class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/>
+        </svg>
+      </a>
+      <a href="https://linkedin.com/in/jack-ruttan" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="grid h-11 w-11 place-items-center text-ink/60 transition hover:text-accent">
+        <svg class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+        </svg>
+      </a>
+    </div>
   </footer>
 </aside>

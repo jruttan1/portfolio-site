@@ -7,27 +7,30 @@ export const profile = {
   experience: [
     {
       name: "Primate.sh",
-      role: "Co-founder",
+      role: "- Co-founder · Engineering",
       period: "2025 — present",
       description: "Agentic visual QA that catches UI bugs before they ship",
       url: "https://primate.sh",
+      logo: "/favicon.svg",
       chip: { bg: "#fde8d8", text: "#c2410c" }
     },
     {
-      name: "Unity Health Toronto",
-      role: "Applied AI Intern",
-      period: "Summer 2025",
-      description: "Clinical triage agents and evaluation pipelines",
-      url: "https://unityhealth.to",
-      chip: { bg: "#d1fae5", text: "#065f46" }
-    },
-    {
       name: "Canadian Red Cross",
-      role: "Technical Project Lead",
+      role: "- Technical Project Lead",
       period: "Fall 2025 — Winter 2026",
       description: "Internal knowledge retrieval systems for a national nonprofit",
       url: "https://redcross.ca",
+      logo: "red-cross",
       chip: { bg: "#fee2e2", text: "#991b1b" }
+    },
+    {
+      name: "Unity Health Toronto",
+      role: "- Applied AI Intern",
+      period: "Summer 2025",
+      description: "Clinical triage agents and evaluation pipelines",
+      url: "https://unityhealth.to",
+      logo: "https://www.google.com/s2/favicons?sz=64&domain=unityhealth.to",
+      chip: { bg: "#d1fae5", text: "#065f46" }
     }
   ],
   research: [
@@ -36,29 +39,28 @@ export const profile = {
       title: "ComancheNLP",
       description: "First computational modeling for the critically endangered language Comanche",
       venues: [
-        { name: "NAACL 2025", note: "Presented @ AmericasNLP, archived in ACL Anthology" },
-        { name: "NeurIPS 2025", note: "Accepted to CLRLC-LLMs Workshop" }
+        { name: "NAACL 2025", note: "Presented @ AmericasNLP, archived in ACL Anthology", logo: "/Association_for_Computational_Linguistics_logo.svg" }
       ]
     }
   ],
   projects: [
     {
       name: "Optimate",
-      description: "AI underwriting automation",
+      description: "AI copilot for insurance underwriting",
       url: "https://devpost.com/software/optimate",
-      prizes: [{ name: "Hack the North", note: "YC Unicorn · Federato RiskOps Gold Sponsor" }],
+      prizes: [{ name: "Hack the North", note: "YC Unicorn · Federato RiskOps Gold Sponsor", logo: "/HTNLogo.148bc3f0.webp" }],
       chip: { bg: "#ede9fe", text: "#5b21b6" }
     },
     {
       name: "Doppels",
-      description: "Agents surface connections before people reach out",
+      description: "Agents converse before humans connect",
       url: "https://doppels.vercel.app",
-      prizes: [{ name: "McHacks", note: "Best Product Design · Finalist" }],
+      prizes: [{ name: "McHacks", note: "Best Product Design · Top 5 Finalist", logo: "/mchacks-martlet-tight.c15b06650e3e5cda2d82cb370481b855.svg" }],
       chip: { bg: "#e0e7ff", text: "#3730a3" }
     },
     {
-      name: "omcp",
-      description: "CLI that gives any server an MCP, written in Go",
+      name: "Omcp",
+      description: "CLI that gives any server an MCP",
       url: "https://github.com/jruttan1/omcp",
       chip: { bg: "#f1f5f9", text: "#334155" }
     }
