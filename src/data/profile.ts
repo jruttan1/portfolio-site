@@ -2,8 +2,8 @@ export const profile = {
   name: "Jack Ruttan",
   title: "Building AI systems and products. I like research too",
   location: "London, Ontario",
-  education: "CS + Math @ Western University — graduating May 2028",
-  availability: "Open to internship opportunities",
+  education: "CS + Math @ Western University",
+  availability: "Open to internship opportunities · grad 2028",
   experience: [
     {
       name: "Primate.sh",
@@ -11,7 +11,7 @@ export const profile = {
       period: "2025 — present",
       description: "Agentic visual QA that catches UI bugs before they ship",
       url: "https://primate.sh",
-      logo: "/favicon.svg",
+      logo: "/primate.svg",
       chip: { bg: "#fde8d8", text: "#c2410c" }
     },
     {
@@ -26,7 +26,7 @@ export const profile = {
     {
       name: "Unity Health Toronto",
       role: "- Applied AI Intern",
-      period: "Summer 2025",
+      period: "Summer 25",
       description: "Clinical triage agents and evaluation pipelines",
       url: "https://unityhealth.to",
       logo: "https://www.google.com/s2/favicons?sz=64&domain=unityhealth.to",
@@ -37,7 +37,7 @@ export const profile = {
     {
       url: "https://aclanthology.org/2025.americasnlp-1.4/",
       title: "ComancheNLP",
-      description: "First computational modeling for the critically endangered language Comanche",
+      description: "First computational modeling for the endangered language Comanche",
       venues: [
         { name: "NAACL 2025", note: "Presented @ AmericasNLP, archived in ACL Anthology", logo: "/Association_for_Computational_Linguistics_logo.svg" }
       ]

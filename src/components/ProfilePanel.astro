@@ -3,7 +3,7 @@ import { profile } from "../data/profile";
 import MusicWidget from "./MusicWidget.astro";
 ---
 
-<aside class="profile-panel relative flex min-h-[100svh] flex-col border-b border-line bg-paper px-5 py-5 pb-10 sm:px-7 md:sticky md:top-0 md:h-[100svh] md:min-h-0 md:w-[min(34rem,52vw)] md:overflow-hidden md:border-b-0 md:border-r md:pb-10 lg:w-[clamp(30rem,46vw,42rem)] lg:px-7 lg:py-4 lg:pb-9 xl:px-9">
+<aside class="profile-panel relative flex min-h-[100svh] flex-col border-b border-line bg-paper px-5 py-5 pb-5 sm:px-7 md:sticky md:top-0 md:h-svh md:min-h-0 md:w-[min(34rem,52vw)] md:overflow-hidden md:border-b-0 md:border-r md:pb-5 lg:w-[clamp(30rem,46vw,42rem)] lg:px-7 lg:py-4 lg:pb-4 xl:px-9">
   <div class="shrink-0 flex items-start justify-between gap-4">
     <div>
       <h1 class="mt-2 whitespace-nowrap text-5xl font-semibold leading-none text-ink sm:text-6xl md:text-5xl lg:text-7xl">{profile.name}</h1>
@@ -23,16 +23,16 @@ import MusicWidget from "./MusicWidget.astro";
   <div class="profile-intro mt-3 shrink-0 pl-1 sm:pl-3">
     <p class="text-base leading-6 text-ink/60">{profile.title}</p>
     <div class="mt-2.5 border-l border-line pl-3">
-      <p class="font-mono text-[10px] uppercase leading-4 tracking-[0.16em] text-ink/45">
-        {profile.location} / {profile.education.replace(" — graduating May 2028", "")}
+      <p class="font-mono text-[12px] uppercase leading-4 tracking-[0.16em] text-ink/45">
+        {profile.location} · {profile.education}
       </p>
-      <p class="font-mono text-[10px] uppercase leading-4 tracking-[0.16em] text-accent">
+      <p class="mt-1.5 font-mono text-[10px] uppercase leading-4 tracking-[0.16em] text-accent">
         {profile.availability}
       </p>
     </div>
   </div>
 
-  <div class="profile-scroll mt-8 min-h-0 space-y-6 pl-1 pr-0 sm:pl-3 md:flex-1 md:w-[calc(100%+1rem)] md:overflow-y-auto lg:mt-8 xl:w-[calc(100%+1.25rem)]">
+  <div class="profile-scroll mt-8 space-y-6 pl-1 pr-0 sm:pl-3 md:w-[calc(100%+1rem)] lg:mt-8 xl:w-[calc(100%+1.25rem)]">
     <section>
       <h2 class="font-mono text-[11px] uppercase tracking-[0.18em] text-ink/70">experience</h2>
       <ul class="mt-3 space-y-2.5">
@@ -65,7 +65,7 @@ import MusicWidget from "./MusicWidget.astro";
                 <span class="min-w-0 text-base text-ink/75">{role.role}</span>
               </div>
               <span class="shrink-0 whitespace-nowrap text-right font-mono text-[10px] uppercase tracking-[0.16em] text-ink/35">
-                {role.name === "Primate.sh" ? "Current" : role.name === "Canadian Red Cross" ? "Fall-Winter 25/26" : role.period.replace(" — ", " - ")}
+                {role.name === "Primate.sh" ? "Current" : role.name === "Canadian Red Cross" ? "FW 25/26" : role.period.replace(" — ", " - ")}
               </span>
             </div>
             <p class="mt-0.5 pl-4 text-base leading-6 text-ink/75">{role.description}</p>
@@ -207,7 +207,7 @@ import MusicWidget from "./MusicWidget.astro";
     });
   </script>
 
-  <footer class="profile-footer mt-2 mb-3 flex shrink-0 items-center justify-between gap-5 border-t border-line pt-5 pl-2 pr-0 sm:pl-4 lg:mb-4">
+  <footer class="profile-footer mt-auto mb-3 flex shrink-0 items-center justify-between gap-5 border-t border-line pt-5 pl-2 pr-0 sm:pl-4">
     <a href="mailto:jruttan3@uwo.ca" class="group/contact min-w-0 text-ink/70 transition hover:text-ink">
       <span class="block font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-ink/45">contact</span>
       <span class="mt-1 flex min-w-0 items-center gap-2">
