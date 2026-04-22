@@ -44,6 +44,22 @@ const initialFen = "r1bqkb1r/pp2pppp/2np1n2/8/3P4/2N2N2/PPP1PPPP/R1BQKB1R";
   const openingNoteEl = root?.querySelector("[data-opening-note]");
   let whiteMoveCount = 0;
 
+  const classifyOpening = (from: string, to: string, role: string) => {
+    if (role === "pawn" && from === "e2" && to === "e4") {
+      return ["King's Pawn Game", "1.e4", "Open games, fast development, and lots of tactical branches."];
+    }
+    if (role === "pawn" && from === "d2" && to === "d4") {
+      return ["Queen's Pawn Game", "1.d4", "A central space claim that often becomes positional and structure-heavy."];
+    }
+    if (role === "pawn" && from === "c2" && to === "c4") {
+      return ["English Opening", "1.c4", "A flank opening that pressures the center before occupying it."];
+    }
+    if (role === "knight" && from === "g1" && to === "f3") {
+      return ["Reti Opening", "1.Nf3", "Flexible development that waits to reveal the central plan."];
+    }
+    return ["Off-book experiment", `1.${to}`, "Not in the tiny local book yet, which is honestly part of the fun."];
+  };
+
   const updateOpening = (from: string, to: string, role: string) => {
     whiteMoveCount += 1;
     if (whiteMoveCount > 1 || !openingNameEl || !openingCodeEl || !openingNoteEl) return;
