@@ -59,7 +59,7 @@ export const profile = {
       chip: { bg: "#e0e7ff", text: "#3730a3" }
     },
     {
-      name: "Omcp",
+      name: "OMCP",
       description: "CLI that gives any server an MCP",
       url: "https://github.com/jruttan1/omcp",
       chip: { bg: "#f1f5f9", text: "#334155" }
