@@ -6,6 +6,7 @@ const email = profile.contact.find((item) => item.label === "Email");
 const github = profile.contact.find((item) => item.label === "GitHub");
 const linkedin = profile.contact.find((item) => item.label === "LinkedIn");
 const [titleLead, titleRest] = profile.title.split(" I like ");
+const [availabilityLead, availabilityRest] = profile.availability.split(" · ");
 ---
 
 <section class="profile-panel min-h-[100svh] bg-paper px-5 py-5 text-ink sm:px-8 lg:h-[100vh] lg:overflow-hidden lg:px-10 lg:py-8">
@@ -23,17 +24,18 @@ const [titleLead, titleRest] = profile.title.split(" I like ");
         </div>
       </header>
 
-      <div class="mt-8 max-w-xl">
+      <div class="mt-6 max-w-xl">
         <p class="max-w-md text-lg font-semibold leading-7 text-ink sm:text-xl">
           {titleLead}
           {titleRest && <><br />I like {titleRest}</>}
         </p>
         <div class="mt-5 border-r border-line pr-4">
-          <p class="font-mono text-[12px] uppercase leading-5 tracking-[0.16em] text-ink/48">
+          <p class="font-mono text-[13px] uppercase leading-5 tracking-[0.16em] text-ink/50">
             {profile.education}
           </p>
-          <p class="mt-1 font-mono text-[11px] uppercase leading-5 tracking-[0.16em] text-accent">
-            {profile.availability}
+          <p class="mt-1.5 font-mono text-[11px] uppercase leading-5 tracking-[0.16em] text-accent">
+            {availabilityLead}
+            {availabilityRest && <><br />{availabilityRest}</>}
           </p>
         </div>
       </div>

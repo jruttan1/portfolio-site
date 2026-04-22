@@ -1,6 +1,6 @@
 export const profile = {
   name: "Jack Ruttan",
-  title: "Building AI systems, backend & products. \n I like the research too",
+  title: "Building AI/ML and products. \n I like the research too.",
   location: "London, Ontario",
   education: "CS + Math @ Western University",
   availability: "Open to internship opportunities · grad 2028",
