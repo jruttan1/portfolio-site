@@ -1,6 +1,6 @@
 # Portfolio
 
-My personal site built and designed by me with help from Codex, Claude Codex
+My personal site built and designed by me with help from Codex, Claude Code
 
 ## Coming soon
 
