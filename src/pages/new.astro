@@ -102,7 +102,6 @@ const projectVideos = ["/optimate-demo-1758064916274.mp4", "/doppels-demo.mp4"];
           <div class="research-layout">
             <ResearchVisual />
             <article class="publication">
-              <p class="publication-year">2025</p>
               <div class="publication-copy">
                 <p class="publication-venue">AmericasNLP · Association for Computational Linguistics</p>
                 <h3>{profile.research[0].title}</h3>
@@ -198,9 +197,8 @@ const projectVideos = ["/optimate-demo-1758064916274.mp4", "/doppels-demo.mp4"];
   .project-info-small h3 { font-size: 18px; }
   .project-info-small small { margin-top: 5px; color: var(--muted); font-size: 11px; line-height: 1.45; }
   .research-layout { display: grid; grid-template-columns: minmax(440px, 1.12fr) minmax(360px, .88fr); gap: clamp(38px, 4vw, 64px); align-items: stretch; }
-  .publication { display: grid; grid-template-columns: 54px minmax(0, 1fr); gap: 24px; align-items: stretch; padding: 4px 0 28px; }
+  .publication { display: block; padding: 4px 0 28px; }
   .publication-copy { display: flex; height: 100%; min-width: 0; flex-direction: column; }
-  .publication-year { margin: 6px 0 0; color: var(--muted); font: 11px/1.4 var(--font-mono); }
   .publication-venue { margin: 0 0 14px; color: var(--muted); font-size: 12px; }
   .publication h3 { max-width: 680px; margin: 0; font-size: clamp(22px, 2.4vw, 30px); font-weight: 550; letter-spacing: -.035em; line-height: 1.17; }
   .publication-authors { max-width: 730px; margin: 18px 0 0; color: var(--muted); font-size: 13px; line-height: 1.55; }
@@ -239,8 +237,7 @@ const projectVideos = ["/optimate-demo-1758064916274.mp4", "/doppels-demo.mp4"];
     .project-grid { grid-template-columns: 1fr; gap: 54px; margin-top: 58px; }
     .project-grid .project-visual { min-height: 0; }
     .research-layout { grid-template-columns: 1fr; gap: 42px; }
-    .publication { grid-template-columns: 1fr; gap: 12px; padding-top: 0; }
-    .publication-year { margin: 0; }
+    .publication { padding-top: 0; }
     .publication h3 { font-size: 25px; }
     footer { margin-right: 0; padding-top: 88px; }
   }
