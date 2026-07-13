@@ -18,6 +18,7 @@ const previewImageUrl = new URL("/preview.png", Astro.site).toString();
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
+    <link rel="icon" href="/favicon.svg" />
     <meta name="description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={url} />
@@ -30,9 +31,6 @@ const previewImageUrl = new URL("/preview.png", Astro.site).toString();
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={previewImageUrl} />
-    <script is:inline>
-      document.title = window.location.hostname.replace(/^www\./, "");
-    </script>
   </head>
   <body>
     <slot />

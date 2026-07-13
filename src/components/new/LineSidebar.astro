@@ -1,0 +1,55 @@
+---
+interface Item { label: string; target: string; }
+interface Props { items: Item[]; }
+const { items } = Astro.props;
+---
+
+<nav class="line-nav" aria-label="Page sections" data-line-nav>
+  <ul>
+    {items.map((item, index) => (
+      <li class:list={{ active: index === 0 }} data-target={item.target}>
+        <span class="marker" aria-hidden="true"></span>
+        <a href={`#${item.target}`}>
+          <small>{String(index + 1).padStart(2, "0")}</small>
+          <span>{item.label}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>
+
+<script>
+  const nav = document.querySelector<HTMLElement>("[data-line-nav]");
+  const items = [...(nav?.querySelectorAll<HTMLElement>("li[data-target]") ?? [])];
+
+  nav?.addEventListener("pointermove", (event) => {
+    items.forEach((item) => {
+      const rect = item.getBoundingClientRect();
+      const distance = Math.abs(event.clientY - (rect.top + rect.height / 2));
+      item.style.setProperty("--effect", String(Math.max(0, 1 - distance / 90)));
+    });
+  });
+
+  nav?.addEventListener("pointerleave", () => items.forEach((item) => item.style.setProperty("--effect", "0")));
+
+  const observer = new IntersectionObserver((entries) => {
+    const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+    if (!visible) return;
+    items.forEach((item) => item.classList.toggle("active", item.dataset.target === visible.target.id));
+  }, { rootMargin: "-24% 0px -60%", threshold: [0, 0.2, 0.5] });
+
+  items.forEach((item) => {
+    const section = document.getElementById(item.dataset.target ?? "");
+    if (section) observer.observe(section);
+  });
+</script>
+
+<style>
+  ul { display: flex; flex-direction: column; gap: 17px; margin: 0; padding: 0; list-style: none; }
+  li { --effect: 0; --active: 0; position: relative; padding-left: 42px; }
+  li.active { --active: 1; }
+  a { display: inline-flex; gap: 9px; color: color-mix(in srgb, #d9482b calc(max(var(--effect), var(--active)) * 100%), rgba(20, 20, 18, .42)); font-size: 12px; font-weight: 600; text-decoration: none; transform: translateX(calc(max(var(--effect), var(--active)) * 10px)); }
+  small { font-family: var(--font-mono); font-size: 9px; font-weight: 400; }
+  .marker { position: absolute; top: 50%; left: 0; width: 32px; height: 1px; background: color-mix(in srgb, #d9482b calc(max(var(--effect), var(--active)) * 100%), rgba(20, 20, 18, .28)); transform: scaleX(calc(.72 + max(var(--effect), var(--active)) * .28)); transform-origin: left; }
+  @media (prefers-reduced-motion: reduce) { a, .marker { transform: none; } }
+</style>

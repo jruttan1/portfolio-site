@@ -5,7 +5,6 @@ import MusicWidget from "./MusicWidget.astro";
 const email = profile.contact.find((item) => item.label === "Email");
 const github = profile.contact.find((item) => item.label === "GitHub");
 const linkedin = profile.contact.find((item) => item.label === "LinkedIn");
-const [titleLead, titleRest] = profile.title.split(" I like ");
 const [availabilityLead, availabilityRest] = profile.availability.split(" · ");
 ---
 
@@ -26,8 +25,7 @@ const [availabilityLead, availabilityRest] = profile.availability.split(" · ");
 
       <div class="mt-6 max-w-xl">
         <p class="max-w-md text-lg font-semibold leading-7 text-ink sm:text-xl">
-          {titleLead}
-          {titleRest && <><br />I like {titleRest}</>}
+          {profile.title}
         </p>
         <div class="mt-5 lg:border-r lg:border-line lg:pr-4">
           <p class="font-mono text-[13px] uppercase leading-5 tracking-[0.16em] text-ink/50">
@@ -49,7 +47,7 @@ const [availabilityLead, availabilityRest] = profile.availability.split(" · ");
           <p class="hidden text-center font-mono font-semibold uppercase text-ink/45 lg:block lg:text-right lg:text-[11px] lg:tracking-[0.2em]">Contact</p>
           <div class="flex min-w-0 flex-wrap items-center justify-center gap-x-3 gap-y-1.5 lg:mt-3 lg:justify-end lg:gap-x-6 lg:gap-y-4">
             {email && (
-              <a href={email.href} class="group/contact min-w-0 text-ink/70 transition hover:text-ink">
+              <a href={email.href} aria-label={`Email ${email.href.replace("mailto:", "")}`} class="group/contact min-w-0 text-ink/70 transition hover:text-ink">
                 <span class="flex min-w-0 items-center justify-center gap-2 lg:justify-end lg:gap-2.5">
               <svg class="h-7 w-7 shrink-0 text-ink/60 transition group-hover/contact:text-accent lg:h-7 lg:w-7" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
@@ -85,7 +83,7 @@ const [availabilityLead, availabilityRest] = profile.availability.split(" · ");
         <h2 class="font-mono text-[11px] uppercase tracking-[0.18em] text-ink/60">Experience</h2>
         <ol class="mt-4 divide-y divide-line border-b border-line">
           {profile.experience.map((role) => (
-            <li class="grid gap-2 py-4 first:pt-0 sm:grid-cols-[minmax(0,1fr)_8rem] sm:gap-6">
+            <li class="experience-item grid gap-3 py-5 first:pt-0 sm:grid-cols-[minmax(0,1fr)_8rem] sm:gap-6">
               <div class="min-w-0">
                 <div class="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
                   {role.logo === "red-cross" ? (
@@ -97,21 +95,18 @@ const [availabilityLead, availabilityRest] = profile.availability.split(" · ");
                   ) : (
                     <img class="profile-logo" src={role.logo} alt="" loading="lazy" decoding="async" aria-hidden="true" />
                   )}
-                  {role.name === "Primate.sh" ? (
-                    <a
-                      class="preview-trigger text-lg font-semibold leading-tight text-ink underline decoration-ink/25 underline-offset-3 transition hover:text-accent"
-                      href={role.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      data-url={role.url}
-                      data-name={role.name}
-                    >{role.name}</a>
-                  ) : (
-                    <span class="text-lg font-semibold leading-tight text-ink">{role.name}</span>
-                  )}
-                  <span class="text-base leading-tight text-ink/58">{role.role.replace("- ", "")}</span>
+                  <a class="text-lg font-semibold leading-tight text-ink transition hover:text-accent" href={role.url} target="_blank" rel="noopener noreferrer">{role.name}</a>
+                  <span class="text-base leading-tight text-ink/58">{role.role}</span>
                 </div>
-                <p class="mt-2 max-w-2xl text-base leading-6 text-ink/72">{role.description}</p>
+                <p class="mt-2 max-w-2xl text-base font-medium leading-6 text-ink/85">{role.description}</p>
+                <ul class="mt-3 space-y-1.5 text-sm leading-5 text-ink/65">
+                  {role.highlights.map((highlight) => (
+                    <li class="flex gap-2">
+                      <span class="mt-[0.55rem] h-1 w-1 shrink-0 rounded-full bg-accent" aria-hidden="true"></span>
+                      <span>{highlight}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
               <p class="font-mono text-[11px] uppercase tracking-[0.15em] text-ink/38 sm:pr-6 sm:text-right">
                 {role.name === "Primate.sh" ? "Current" : role.name === "Canadian Red Cross" ? "FW 25/26" : role.period.replace(" — ", " - ")}

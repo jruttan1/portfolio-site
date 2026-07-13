@@ -3,104 +3,144 @@ import "@lichess-org/chessground/assets/chessground.base.css";
 import "@lichess-org/chessground/assets/chessground.brown.css";
 import "@lichess-org/chessground/assets/chessground.cburnett.css";
 
+interface Props {
+  compact?: boolean;
+}
+
+const { compact = false } = Astro.props;
 const initialFen = "r1bqkb1r/pp2pppp/2np1n2/8/3P4/2N2N2/PPP1PPPP/R1BQKB1R";
+const roles: Record<string, string> = {
+  p: "pawn",
+  r: "rook",
+  n: "knight",
+  b: "bishop",
+  q: "queen",
+  k: "king"
+};
+const fallbackPieces = initialFen.split("/").flatMap((rank, rankIndex) => {
+  let fileIndex = 0;
+  return [...rank].flatMap((symbol) => {
+    if (/\d/.test(symbol)) {
+      fileIndex += Number(symbol);
+      return [];
+    }
+
+    const piece = {
+      role: roles[symbol.toLowerCase()],
+      color: symbol === symbol.toUpperCase() ? "white" : "black",
+      x: fileIndex * 100,
+      y: rankIndex * 100
+    };
+    fileIndex += 1;
+    return [piece];
+  });
+});
 ---
 
-<section class="widget-chess border border-line bg-white/70 p-4 lg:flex lg:flex-col">
-  <div class="flex items-center justify-between gap-4">
-    <h2 class="font-mono text-[11px] uppercase tracking-[0.18em] text-ink/70">Play a sketchy line</h2>
+<section class:list={["widget-chess", compact && "widget-chess--compact"]} data-chess-widget>
+  <div
+    class="chessground-board cg-wrap"
+    data-board
+    data-fen={initialFen}
+    aria-label="Interactive Lichess chess board"
+  >
+    <cg-container aria-hidden="true">
+      <cg-board>
+        {fallbackPieces.map((piece) => (
+          <piece
+            class={`${piece.color} ${piece.role}`}
+            style={`transform: translate(${piece.x}%, ${piece.y}%);`}
+          ></piece>
+        ))}
+      </cg-board>
+    </cg-container>
   </div>
-
-  <div class="mt-3 grid items-start gap-4 lg:flex lg:min-h-0 lg:flex-1 lg:items-start">
-    <div class="chessground-board cg-wrap shrink-0 border border-ink bg-ink/10" data-board data-fen={initialFen} aria-label="Chess board"></div>
-    <div class="flex flex-col gap-4 lg:flex-1 lg:min-w-0 lg:overflow-hidden">
-      <p class="text-sm leading-6 text-ink/70">Move pieces around the board and use the position as a small opening sketchpad.</p>
-      <div class="border-l-2 border-accent pl-3">
-        <p class="font-mono text-[11px] uppercase tracking-[0.18em] text-ink/45">board state</p>
-        <p class="mt-2 text-sm font-medium text-ink" data-chess-status>Chessground ready.</p>
-      </div>
-      <div class="border border-line bg-[#fbfaf7] p-3">
-        <div class="flex items-start justify-between gap-3">
-          <div>
-            <p class="font-mono text-[11px] uppercase tracking-[0.18em] text-ink/45">white opening</p>
-            <p class="mt-2 text-sm font-semibold text-ink" data-opening-name>Book pending</p>
-          </div>
-          <span class="border border-line px-2 py-1 font-mono text-[11px] text-ink/50" data-opening-code>--</span>
-        </div>
-        <p class="mt-2 text-xs leading-5 text-ink/60" data-opening-note>Make a white move to classify the first idea.</p>
-      </div>
-    </div>
+  <div class="board-footer">
+    <span data-chess-status>Move a white piece</span>
+    <button type="button" data-board-reset>Reset</button>
   </div>
 </section>
 
 <script>
   import { Chessground } from "@lichess-org/chessground";
 
-  const root = document.querySelector(".widget-chess");
-  const boardEl = root?.querySelector<HTMLElement>("[data-board]");
-  const statusEl = root?.querySelector("[data-chess-status]");
-  const openingNameEl = root?.querySelector("[data-opening-name]");
-  const openingCodeEl = root?.querySelector("[data-opening-code]");
-  const openingNoteEl = root?.querySelector("[data-opening-note]");
-  let whiteMoveCount = 0;
+  document.querySelectorAll<HTMLElement>("[data-chess-widget]").forEach((root) => {
+    const board = root.querySelector<HTMLElement>("[data-board]");
+    const status = root.querySelector<HTMLElement>("[data-chess-status]");
+    const reset = root.querySelector<HTMLButtonElement>("[data-board-reset]");
 
-  const classifyOpening = (from: string, to: string, role: string) => {
-    if (role === "pawn" && from === "e2" && to === "e4") {
-      return ["King's Pawn Game", "1.e4", "Open games, fast development, and lots of tactical branches."];
-    }
-    if (role === "pawn" && from === "d2" && to === "d4") {
-      return ["Queen's Pawn Game", "1.d4", "A central space claim that often becomes positional and structure-heavy."];
-    }
-    if (role === "pawn" && from === "c2" && to === "c4") {
-      return ["English Opening", "1.c4", "A flank opening that pressures the center before occupying it."];
-    }
-    if (role === "knight" && from === "g1" && to === "f3") {
-      return ["Reti Opening", "1.Nf3", "Flexible development that waits to reveal the central plan."];
-    }
-    return ["Off-book experiment", `1.${to}`, "Not in the tiny local book yet, which is honestly part of the fun."];
-  };
+    if (!board) return;
 
-  const updateOpening = (from: string, to: string, role: string) => {
-    whiteMoveCount += 1;
-    if (whiteMoveCount > 1 || !openingNameEl || !openingCodeEl || !openingNoteEl) return;
-    const [name, code, note] = classifyOpening(from, to, role);
-    openingNameEl.textContent = name;
-    openingCodeEl.textContent = code;
-    openingNoteEl.textContent = note;
-  };
-
-  if (boardEl) {
-    const ground = Chessground(boardEl, {
-      fen: boardEl.dataset.fen,
+    const initialFen = board.dataset.fen;
+    const ground = Chessground(board, {
+      fen: initialFen,
       coordinates: false,
       animation: { enabled: true, duration: 180 },
       movable: {
         color: "white",
         free: true,
-        showDests: false,
+        showDests: true,
         events: {
           after: (from, to) => {
-            const moved = ground.state.pieces.get(to);
-            if (moved?.color === "white") updateOpening(from, to, moved.role);
-            if (statusEl) statusEl.textContent = `${from} → ${to}`;
+            if (status) status.textContent = `${from} → ${to}`;
           }
         }
       }
     });
-  }
+
+    reset?.addEventListener("click", () => {
+      ground.set({ fen: initialFen });
+      if (status) status.textContent = "Move a white piece";
+    });
+  });
 </script>
 
 <style>
-  .chessground-board.cg-wrap {
-    width: 16rem;
-    height: 16rem;
+  .widget-chess {
+    width: 18.5rem;
     max-width: 100%;
   }
 
-  @media (min-width: 1024px) {
-    .chessground-board.cg-wrap {
-      width: 18.5rem;
-      height: 18.5rem;
+  .chessground-board.cg-wrap {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    background: #d8d3c9;
+    box-shadow: 0 8px 25px rgba(21, 21, 19, 0.08);
+  }
+
+  .board-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 8px;
+    color: rgba(21, 21, 19, 0.58);
+    font-size: 11px;
+  }
+
+  .board-footer button {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+
+  .board-footer button:hover {
+    color: #d9482b;
+  }
+
+  .widget-chess--compact {
+    width: 11.5rem;
+  }
+
+  @media (max-width: 720px) {
+    .widget-chess--compact {
+      width: 9rem;
     }
   }
 </style>
