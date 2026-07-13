@@ -51,8 +51,7 @@ export const profile = {
       pdf: "https://aclanthology.org/2025.americasnlp-1.4.pdf",
       doi: "https://doi.org/10.18653/v1/2025.americasnlp-1.4",
       title: "Advancing Uto-Aztecan Language Technologies: A Case Study on the Endangered Comanche Language",
-      authors: "Jesus Alvarez C, Daua Karajeanes, Ashley Prado, John Ruttan, Ivory Yang, Sean O’Brien, Vasu Sharma, and Kevin Zhu",
-      description: "We built the first digitized Comanche dataset—412 phrases—and a low-cost way to expand it: generate translations from a small set of trusted examples, compare them with human-verified answers using normalized Levenshtein similarity, and keep only outputs that pass a quality threshold",
+      description: "We compiled the first digitized Comanche dataset and a low-cost way to expand it with the goal of preserving a critically endangered language. We built a pipeline togenerate translations from a small set of trusted examples, compare them with human-verified answers using normalized Levenshtein similarity, and keep only outputs that pass a quality threshold",
       venues: [
         { name: "AmericasNLP 2025", note: "Proceedings of the Fifth Workshop on NLP for Indigenous Languages of the Americas", logo: "/Association_for_Computational_Linguistics_logo.svg" }
       ]
@@ -83,6 +82,10 @@ export const profile = {
   contact: [
     { label: "Email", href: "mailto:jruttan3@uwo.ca" },
     { label: "GitHub", href: "https://github.com/jruttan1" },
-    { label: "LinkedIn", href: "https://linkedin.com/in/jack-ruttan" }
+    { label: "LinkedIn", href: "https://linkedin.com/in/jack-ruttan" },
+    { label: "X", href: "https://x.com/jruttan0" },
+    { label: "Google Scholar", href: "#" }, // TODO: add Google Scholar URL
+    { label: "Resume", href: "#" }, // TODO: add résumé URL
+    { label: "Cal.com", href: "#" } // TODO: add Cal.com URL
   ]
 };

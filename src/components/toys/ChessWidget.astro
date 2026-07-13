@@ -56,7 +56,7 @@ const fallbackPieces = initialFen.split("/").flatMap((rank, rankIndex) => {
     </cg-container>
   </div>
   <div class="board-footer">
-    <span data-chess-status>Move a white piece</span>
+    <span data-chess-status>Move any piece</span>
     <button type="button" data-board-reset>Reset</button>
   </div>
 </section>
@@ -64,35 +64,49 @@ const fallbackPieces = initialFen.split("/").flatMap((rank, rankIndex) => {
 <script>
   import { Chessground } from "@lichess-org/chessground";
 
-  document.querySelectorAll<HTMLElement>("[data-chess-widget]").forEach((root) => {
-    const board = root.querySelector<HTMLElement>("[data-board]");
-    const status = root.querySelector<HTMLElement>("[data-chess-status]");
-    const reset = root.querySelector<HTMLButtonElement>("[data-board-reset]");
+  const initializeChessWidgets = () => {
+    document.querySelectorAll<HTMLElement>("[data-chess-widget]").forEach((root) => {
+      if (root.dataset.chessReady === "true") return;
 
-    if (!board) return;
+      const board = root.querySelector<HTMLElement>("[data-board]");
+      const status = root.querySelector<HTMLElement>("[data-chess-status]");
+      const reset = root.querySelector<HTMLButtonElement>("[data-board-reset]");
 
-    const initialFen = board.dataset.fen;
-    const ground = Chessground(board, {
-      fen: initialFen,
-      coordinates: false,
-      animation: { enabled: true, duration: 180 },
-      movable: {
-        color: "white",
-        free: true,
-        showDests: true,
-        events: {
-          after: (from, to) => {
-            if (status) status.textContent = `${from} → ${to}`;
+      if (!board) return;
+
+      const initialFen = board.dataset.fen;
+      const ground = Chessground(board, {
+        fen: initialFen,
+        coordinates: false,
+        animation: { enabled: true, duration: 180 },
+        movable: {
+          color: "both",
+          free: true,
+          showDests: true,
+          events: {
+            after: (from, to) => {
+              if (status) status.textContent = `${from} → ${to}`;
+            }
           }
         }
-      }
-    });
+      });
 
-    reset?.addEventListener("click", () => {
-      ground.set({ fen: initialFen });
-      if (status) status.textContent = "Move a white piece";
+      reset?.addEventListener("click", () => {
+        ground.set({
+          fen: initialFen,
+          turnColor: "white",
+          lastMove: undefined,
+          movable: { color: "both", free: true }
+        });
+        if (status) status.textContent = "Move any piece";
+      });
+
+      root.dataset.chessReady = "true";
     });
-  });
+  };
+
+  initializeChessWidgets();
+  document.addEventListener("astro:page-load", initializeChessWidgets);
 </script>
 
 <style>

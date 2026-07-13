@@ -4,8 +4,8 @@
     <div class="stage stage-teach">
       <span class="step">01</span>
       <div class="stage-copy">
-        <strong>Give GPT-4o trusted examples</strong>
-        <small>80 human-verified Comanche ↔ English translations</small>
+        <strong>Give an LLM trusted examples</strong>
+        <small>80 human-verified Comanche ↔ English translation pairs</small>
       </div>
       <div class="example-dots" aria-hidden="true">
         {Array.from({ length: 20 }).map(() => <i></i>)}
@@ -21,19 +21,19 @@
         <small>The model translates 20 phrases it did not see in the examples</small>
       </div>
       <div class="model-flow" aria-hidden="true">
-        <span class="model">GPT-4o</span>
+        <span class="model">LLM</span>
         <span class="flow-line"><i></i></span>
-        <span class="candidate">candidate</span>
+        <span class="candidate">generated translation</span>
       </div>
     </div>
 
-    <div class="connector" aria-hidden="true"><i></i></div>
+    <div class="connector connector-to-compare" aria-hidden="true"><i></i></div>
 
     <div class="stage stage-compare">
       <span class="step">03</span>
       <div class="stage-copy">
         <strong>Check each generated translation</strong>
-        <small>Compare it with the human translation by counting character edits</small>
+        <small>Compare it with the real translation using the Levenshtein similarity algorithm</small>
       </div>
 
       <div class="comparison" aria-hidden="true">
@@ -48,12 +48,12 @@
       </div>
 
       <div class="decision">
-        <span>Similarity passes the minimum quality threshold</span>
+        <span>Similarity ≥ minimum threshold</span>
+        <span class="decision-arrow" aria-hidden="true">→</span>
         <strong>keep</strong>
       </div>
     </div>
   </div>
-  <figcaption>Normalized Levenshtein similarity is the quality check; only passing translations are kept.</figcaption>
 </figure>
 
 <style>
@@ -65,11 +65,12 @@
   .stage-copy { min-width: 0; }
   .stage-copy strong { display: block; font-size: 13px; font-weight: 600; line-height: 1.35; }
   .stage-copy small { display: block; max-width: 330px; margin-top: 4px; color: rgba(23, 23, 21, .58); font-size: 11px; line-height: 1.45; }
-  .example-dots { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(10, 5px); gap: 6px; margin: 13px 0 0 36px; }
+  .example-dots { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(10, 5px); gap: 6px; margin: 2px 0 4px 36px; }
   .example-dots i { width: 5px; height: 5px; border-radius: 50%; background: rgba(23, 23, 21, .38); animation: example-pulse 2.4s ease-in-out infinite; }
   .example-dots i:nth-child(3n) { animation-delay: .2s; }
   .example-dots i:nth-child(4n) { animation-delay: .45s; }
   .connector { position: relative; width: 1px; height: 19px; margin: 7px 0 7px 47px; overflow: hidden; background: rgba(23, 23, 21, .16); }
+  .connector-to-compare { margin-left: clamp(190px, 42%, 220px); }
   .connector i { position: absolute; top: -5px; left: -2px; width: 5px; height: 5px; border-radius: 50%; background: #d9482b; animation: travel-down 2.4s ease-in-out infinite; }
   .model-flow { grid-column: 1 / -1; display: flex; align-items: center; gap: 8px; margin: 13px 0 0 36px; }
   .model, .candidate { display: grid; min-height: 29px; padding: 0 10px; place-items: center; border-radius: 999px; font-size: 10px; font-weight: 600; white-space: nowrap; }
@@ -83,7 +84,8 @@
   .comparison-row > div { display: flex; gap: 3px; }
   .comparison-row i { display: block; width: clamp(9px, 1.6vw, 13px); height: clamp(9px, 1.6vw, 13px); background: rgba(23, 23, 21, .3); }
   .comparison-row i.mismatch { background: rgba(217, 72, 43, .68); animation: mismatch-pulse 2.4s ease-in-out infinite; }
-  .decision { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; gap: 14px; margin: 14px 0 0 36px; padding-top: 11px; border-top: 1px solid rgba(23, 23, 21, .12); color: rgba(23, 23, 21, .62); font: 10px/1.4 ui-sans-serif, system-ui, sans-serif; }
+  .decision { grid-column: 1 / -1; display: grid; grid-template-columns: auto auto auto; align-items: center; justify-content: start; gap: 8px; margin: 14px 0 0 36px; padding-top: 11px; border-top: 1px solid rgba(23, 23, 21, .12); color: rgba(23, 23, 21, .62); font: 10px/1.4 ui-sans-serif, system-ui, sans-serif; white-space: nowrap; }
+  .decision-arrow { color: rgba(23, 23, 21, .42); font-size: 14px; line-height: 1; }
   .decision strong { color: #d9482b; font: 600 11px ui-sans-serif, system-ui, sans-serif; text-transform: uppercase; }
   figcaption { padding-top: 10px; color: rgba(23, 23, 21, .58); font-size: 11px; line-height: 1.45; }
 
@@ -96,7 +98,8 @@
     .visual-inner { padding: 22px 18px; }
     .example-dots, .model-flow, .comparison, .decision { margin-left: 30px; }
     .connector { margin-left: 41px; }
-    .decision { align-items: flex-start; flex-direction: column; gap: 5px; }
+    .connector-to-compare { margin-left: min(200px, calc(100% - 22px)); }
+    .decision { gap: 7px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
