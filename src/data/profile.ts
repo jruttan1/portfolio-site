@@ -9,11 +9,6 @@ export const profile = {
       name: "Lifemark Health Group",
       role: "AI Systems Engineer · Technical Consultant",
       period: "Current",
-      description: "Building AI systems that improve workflow and productivity across Lifemark's internal CRM and IME platform.",
-      highlights: [
-        "Working directly with stakeholders to identify operational problems and shape practical solutions",
-        "Combining hands-on engineering with technical consulting across internal teams"
-      ],
       url: "https://www.lifemarkhealthgroup.ca",
       logo: "/lifemark-logo.png",
       chip: { bg: "#fde8d8", text: "#c2410c" }
@@ -84,8 +79,8 @@ export const profile = {
     { label: "GitHub", href: "https://github.com/jruttan1" },
     { label: "LinkedIn", href: "https://linkedin.com/in/jack-ruttan" },
     { label: "X", href: "https://x.com/jruttan0" },
-    { label: "Google Scholar", href: "#" }, // TODO: add Google Scholar URL
-    { label: "Resume", href: "#" }, // TODO: add résumé URL
-    { label: "Cal.com", href: "#" } // TODO: add Cal.com URL
+    { label: "Google Scholar", href: "https://scholar.google.com/citations?user=ItZcN84AAAAJ&hl=en&authuser=1" },
+    { label: "Resume", href: "/Jack_Ruttan_Resume.pdf" },
+    { label: "Cal.com", href: "https://cal.com/jack-ruttan" }
   ]
 };
