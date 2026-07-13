@@ -44,12 +44,76 @@ const { items } = Astro.props;
   });
 </script>
 
-<style>
-  ul { display: flex; flex-direction: column; gap: 17px; margin: 0; padding: 0; list-style: none; }
-  li { --effect: 0; --active: 0; position: relative; padding-left: 42px; }
-  li.active { --active: 1; }
-  a { display: inline-flex; gap: 9px; color: color-mix(in srgb, #d9482b calc(max(var(--effect), var(--active)) * 100%), rgba(20, 20, 18, .42)); font-size: 12px; font-weight: 600; text-decoration: none; transform: translateX(calc(max(var(--effect), var(--active)) * 10px)); }
-  small { font-family: var(--font-mono); font-size: 9px; font-weight: 400; }
-  .marker { position: absolute; top: 50%; left: 0; width: 32px; height: 1px; background: color-mix(in srgb, #d9482b calc(max(var(--effect), var(--active)) * 100%), rgba(20, 20, 18, .28)); transform: scaleX(calc(.72 + max(var(--effect), var(--active)) * .28)); transform-origin: left; }
-  @media (prefers-reduced-motion: reduce) { a, .marker { transform: none; } }
+<style is:global>
+  .line-nav {
+    width: max-content;
+  }
+
+  .line-nav ul {
+    display: flex;
+    flex-direction: column;
+    gap: 17px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .line-nav li {
+    --effect: 0;
+    position: relative;
+    padding-left: 42px;
+  }
+
+  .line-nav a {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 9px;
+    color: rgba(20, 20, 18, .42);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.25;
+    text-decoration: none;
+    transform: translateX(calc(var(--effect) * 10px));
+    transition: color 160ms ease, transform 160ms ease;
+  }
+
+  .line-nav small {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 400;
+  }
+
+  .line-nav .marker {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 32px;
+    height: 1px;
+    background: rgba(20, 20, 18, .28);
+    transform: scaleX(calc(.72 + var(--effect) * .28));
+    transform-origin: left;
+    transition: background-color 160ms ease, transform 160ms ease;
+  }
+
+  .line-nav li.active a,
+  .line-nav li:hover a,
+  .line-nav li:focus-within a {
+    color: #d9482b;
+    transform: translateX(10px);
+  }
+
+  .line-nav li.active .marker,
+  .line-nav li:hover .marker,
+  .line-nav li:focus-within .marker {
+    background: #d9482b;
+    transform: scaleX(1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .line-nav a,
+    .line-nav .marker {
+      transition: none;
+      transform: none;
+    }
+  }
 </style>
