@@ -18,10 +18,6 @@ export const profile = {
       role: "Technical Project Lead",
       period: "Fall 2025 — Winter 2026",
       description: "Led the technical direction for internal knowledge retrieval systems at a national nonprofit.",
-      highlights: [
-        "Translated an ambiguous operational need into a usable internal tool",
-        "Coordinated technical decisions across stakeholders and project contributors"
-      ],
       url: "https://redcross.ca",
       logo: "red-cross",
       chip: { bg: "#fee2e2", text: "#991b1b" }
@@ -31,10 +27,6 @@ export const profile = {
       role: "Applied AI Intern",
       period: "Summer 25",
       description: "Built clinical triage agents and evaluation pipelines in a hospital research setting.",
-      highlights: [
-        "Prototyped agent workflows for a high-stakes clinical context",
-        "Created evaluation processes to make model behaviour easier to inspect and improve"
-      ],
       url: "https://unityhealth.to",
       logo: "https://www.google.com/s2/favicons?sz=64&domain=unityhealth.to",
       chip: { bg: "#d1fae5", text: "#065f46" }
