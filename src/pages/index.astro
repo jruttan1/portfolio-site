@@ -1,10 +1,429 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import ProfilePanel from "../components/ProfilePanel.astro";
+import MusicWidget from "../components/MusicWidget.astro";
+import ChessWidget from "../components/toys/ChessWidget.astro";
+import LineSidebar from "../components/new/LineSidebar.astro";
+import ResearchVisual from "../components/new/ResearchVisual.astro";
+import { profile } from "../data/profile";
+
+const navItems = [
+  { label: "About", target: "top" },
+  { label: "Projects", target: "projects" },
+  { label: "Research", target: "research" }
+];
+const projectVideos = ["/optimate-demo-1758064916274.mp4", "/doppels-demo.mp4"];
+const availabilityItems = profile.availability.split(" · ");
 ---
 
-<BaseLayout title="Jack Ruttan">
-  <main class="min-h-[100svh] bg-paper text-ink">
-    <ProfilePanel />
+<BaseLayout>
+  <main class="portfolio-new">
+    <div class="site-grid">
+      <aside class="side-nav">
+        <div class="side-nav-stack">
+          <LineSidebar items={navItems} />
+          <div class="side-music">
+            <MusicWidget />
+          </div>
+        </div>
+      </aside>
+
+      <div class="content">
+        <div id="top" class="top-anchor section-anchor">
+          <header class="site-header">
+            <h1>Jack Ruttan</h1>
+            <div class="header-contact">
+              <span class="header-contact-label">Contact</span>
+              <nav class="header-links" aria-label="Contact links">
+                {profile.contact.map((item) => (
+                  <a
+                    href={item.href}
+                    target={item.href.startsWith("http") ? "_blank" : undefined}
+                    rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                    aria-label={item.label}
+                    title={item.label}
+                  >
+                  {item.label === "Email" && (
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <rect x="2.5" y="4.5" width="19" height="15" rx="2" />
+                      <path d="m3.5 7 7.3 5.1a2 2 0 0 0 2.4 0L20.5 7" />
+                    </svg>
+                  )}
+                  {item.label === "GitHub" && (
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d="M12 2.25a9.75 9.75 0 0 0-3.08 19c.49.09.67-.21.67-.47v-1.86c-2.73.59-3.3-1.16-3.3-1.16-.45-1.13-1.09-1.43-1.09-1.43-.89-.61.07-.6.07-.6.98.07 1.5 1.01 1.5 1.01.88 1.5 2.3 1.07 2.86.82.09-.64.34-1.07.62-1.31-2.18-.25-4.47-1.09-4.47-4.86 0-1.07.38-1.95 1.01-2.64-.1-.25-.44-1.25.1-2.6 0 0 .82-.26 2.69 1.01A9.35 9.35 0 0 1 12 6.83c.83 0 1.66.11 2.45.33 1.87-1.27 2.69-1.01 2.69-1.01.53 1.35.2 2.35.1 2.6.63.69 1.01 1.57 1.01 2.64 0 3.78-2.3 4.6-4.49 4.85.35.3.67.9.67 1.82v2.72c0 .26.18.57.68.47A9.75 9.75 0 0 0 12 2.25Z" />
+                    </svg>
+                  )}
+                  {item.label === "LinkedIn" && (
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d="M5.36 3.5A2.11 2.11 0 1 1 5.35 7.72 2.11 2.11 0 0 1 5.36 3.5ZM3.53 9.25h3.65V20.5H3.53V9.25Zm5.92 0h3.5v1.54H13c.49-.92 1.68-1.9 3.46-1.9 3.7 0 4.38 2.43 4.38 5.6v6.01h-3.65v-5.58c0-1.33-.03-3.04-1.86-3.04-1.86 0-2.14 1.45-2.14 2.94v5.68H9.45V9.25Z" />
+                    </svg>
+                  )}
+                  {item.label === "X" && (
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d="M18.9 3H22l-6.77 7.74L23.2 21h-6.24l-4.89-6.39L6.48 21H3.36l7.26-8.3L2.98 3h6.4l4.42 5.84L18.9 3Zm-1.09 16.2h1.72L8.44 4.7H6.6l11.21 14.5Z" />
+                    </svg>
+                  )}
+                  {item.label === "Google Scholar" && (
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d="M12 3 1.8 8.65 12 14.3l8.2-4.54v5.65H22V8.65L12 3Zm-6.55 9.4v4.1c0 2.02 2.93 3.65 6.55 3.65s6.55-1.63 6.55-3.65v-4.1L12 16.03 5.45 12.4Z" />
+                    </svg>
+                  )}
+                  {item.label === "Resume" && (
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M6.25 2.75h8.1l3.4 3.55v15H6.25z" />
+                      <path d="M14.35 2.75V6.3h3.4" />
+                      <path d="M9.25 11h5.5M9.25 14.5h5.5M9.25 18h3.25" />
+                      <path d="M9.25 8.65h2.6" stroke-width="2.1" />
+                    </svg>
+                  )}
+                  {item.label === "Cal.com" && (
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <rect x="3.25" y="4.25" width="17.5" height="17" rx="4" fill="currentColor" />
+                      <path d="M7.5 8.25h9" stroke="#f6f4ef" stroke-width="1.5" stroke-linecap="round" />
+                      <path d="M14.85 12.25c-.65-.6-1.45-.9-2.4-.9-1.8 0-3.25 1.2-3.25 3.15s1.45 3.15 3.25 3.15c.95 0 1.75-.3 2.4-.9" stroke="#f6f4ef" stroke-width="1.7" stroke-linecap="round" />
+                      <path d="M7.5 3.25v2.5M16.5 3.25v2.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+                    </svg>
+                  )}
+                  </a>
+                ))}
+              </nav>
+            </div>
+          </header>
+
+          <section class="overview" aria-labelledby="about-heading">
+            <div class="about-details">
+              <div class="about-copy">
+                <h2 id="about-heading">About</h2>
+                <p>I’m a computer science and math student at <span class="about-word about-word-western">Western University<span class="western-stamp-scene" aria-hidden="true"><span class="western-stamp"><img src="/stamp_5518846.png" alt="" /></span><span class="western-mark"><img src="/uwo-classic-stamp.png" alt="" /></span></span></span> working on AI systems, building products, and research.</p>
+                <p>Right now, I’m working at <span class="about-word about-word-lifemark">Lifemark Health Group<svg class="lifemark-ecg" viewBox="0 0 100 20" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M0 10h24l6-8 8 16 8-12 7 4h47"></path></svg></span> on internal AI systems and building my startup <span class="about-word about-word-primate">Primate<span class="primate-monkey-jump" aria-hidden="true"><img src="/monkey-transparent.gif" alt="" /></span></span>.</p>
+                <p class="location">
+                  <span>{profile.location}</span>
+                  {availabilityItems.map((item) => (
+                    <>
+                      <span class="location-separator" aria-hidden="true">·</span>
+                      <span>{item}</span>
+                    </>
+                  ))}
+                </p>
+              </div>
+
+              <div class="experience">
+                <h2>Experience</h2>
+                <ol>
+                  {profile.experience.map((role) => (
+                    <li>
+                      <div class="role-copy">
+                        <div class="role-heading">
+                          {role.logo === "red-cross" ? (
+                            <span class="employer-logo employer-logo-cross" aria-hidden="true">
+                              <svg viewBox="0 0 16 16">
+                                <path d="M6.2 1.8h3.6v4.4h4.4v3.6H9.8v4.4H6.2V9.8H1.8V6.2h4.4z" fill="currentColor" />
+                              </svg>
+                            </span>
+                          ) : (
+                            <img class="employer-logo" src={role.logo} alt="" loading="lazy" decoding="async" aria-hidden="true" />
+                          )}
+                          <h3><a href={role.url} target="_blank" rel="noopener noreferrer">{role.name}</a></h3>
+                        </div>
+                        <p class="role-title">{role.role}</p>
+                      </div>
+                      <span class="period">{role.period}</span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            </div>
+
+            <div class="chess-feature">
+              <ChessWidget />
+              <div class="chess-copy">
+                <p>A transformer based, human like chess bot that improves by playing opponents on this site through RL. This model is currently training and it'll be playable here soon!</p>
+                <a href="https://github.com/jruttan1/KaspaRLov/tree/main" target="_blank" rel="noopener noreferrer">Follow its training on GitHub</a>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <section id="projects" class="section section-anchor" aria-label="Projects">
+          <article class="project project-featured">
+            <video class="project-visual primate-video" autoplay muted loop playsinline preload="metadata" poster="/primate.svg">
+              <source src="/primate-demo-vid.mp4" type="video/mp4" />
+            </video>
+            <div class="project-info project-featured-info">
+              <img class="project-logo project-logo-primate" src="/primate-logo.png" alt="" aria-hidden="true" />
+              <div class="project-featured-copy">
+                <div class="project-featured-heading">
+                  <h3>
+                    <a class="project-title-link" href={profile.projects[0].url} target="_blank" rel="noopener noreferrer">
+                      {profile.projects[0].name}
+                      <span class="inline-arrow" aria-hidden="true">↗</span>
+                    </a>
+                  </h3>
+                  <a class="project-domain" href={profile.projects[0].url} target="_blank" rel="noopener noreferrer">primate.sh</a>
+                </div>
+                <p class="featured-project-description">{profile.projects[0].description}</p>
+              </div>
+            </div>
+          </article>
+
+          <div class="project-grid">
+            {profile.projects.slice(1).map((project, index) => (
+              <article class="project">
+                <a class="project-video-link" href={project.url} target="_blank" rel="noopener noreferrer" aria-label={`Open ${project.name}`}>
+                  <video class="project-visual project-demo" autoplay muted loop playsinline preload="metadata" aria-label={`${project.name} product demo`}>
+                    <source src={projectVideos[index]} type="video/mp4" />
+                  </video>
+                </a>
+                <div class="project-info project-info-small">
+                  <h3>
+                    <a class="project-title-link" href={project.url} target="_blank" rel="noopener noreferrer">
+                      {project.name}
+                      <span class="inline-arrow" aria-hidden="true">↗</span>
+                    </a>
+                  </h3>
+                  <p>{project.description}</p>
+                  {project.prizes?.map((prize) => (
+                    <div class="project-prize">
+                      <img class="hackathon-logo" src={prize.logo} alt="" loading="lazy" decoding="async" aria-hidden="true" />
+                      <div class="project-prize-copy">
+                        <strong>{prize.name}</strong>
+                        <small>{prize.note}</small>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section id="research" class="section section-anchor" aria-label="Research">
+          <div class="research-layout">
+            <ResearchVisual />
+            <article class="publication">
+              <div class="publication-copy">
+                <div class="publication-heading">
+                  <h3>{profile.research[0].title}</h3>
+                </div>
+                <p class="publication-summary">{profile.research[0].description}.</p>
+                <a class="paper-link" href={profile.research[0].url} target="_blank" rel="noopener noreferrer" aria-label="Read the paper" title="Read the paper">
+                  <span>Read paper</span>
+                  <span aria-hidden="true">↗</span>
+                </a>
+                <div class="publication-meta">
+                  <p class="publication-venue">
+                    <span class="publication-status">Published in</span>
+                    <img src={profile.research[0].venues[0].logo} alt="" loading="lazy" decoding="async" aria-hidden="true" />
+                    <span>AmericasNLP 2025 @ NAACL</span>
+                  </p>
+                  <p class="publication-venue-note">{profile.research[0].venues[0].note}</p>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+        <footer>
+          <p>Designed and developed by me</p>
+        </footer>
+      </div>
+    </div>
   </main>
 </BaseLayout>
+
+<style>
+  :global(html) { scroll-behavior: smooth; }
+  :global(body) { margin: 0; background: #f6f4ef; }
+  .portfolio-new, .portfolio-new * { box-sizing: border-box; }
+  .portfolio-new {
+    --ink: #171715;
+    --muted: #73726c;
+    --accent: #d9482b;
+    min-height: 100vh;
+    background: #f6f4ef;
+    color: var(--ink);
+  }
+  .site-grid {
+    display: grid;
+    grid-template-columns: 120px minmax(0, 1fr);
+    gap: 48px;
+    width: min(100% - 64px, 1680px);
+    margin: 0 auto;
+  }
+  .side-nav { padding-top: 43px; }
+  .side-nav-stack { position: sticky; top: 36px; }
+  .side-music { margin-top: 28px; padding-top: 8px; }
+  .side-music :global(.widget-music > div) { width: 120px; max-width: 120px; }
+  .side-music :global(.widget-music [data-play]) { width: 4.25rem; }
+  .side-music :global(.widget-music .flex.h-4.w-44) { width: 120px; }
+  .content { min-width: 0; }
+  .top-anchor { scroll-margin-top: 0; }
+  .section-anchor { scroll-margin-top: 40px; }
+  .site-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 32px; padding: 36px 0 35px; }
+  .site-header h1 { margin: 0; font-size: 45px; font-weight: 600; letter-spacing: -.03em; line-height: 1; }
+  .header-contact { display: flex; align-items: center; gap: 16px; margin-right: clamp(30px, 4vw, 60px); padding-top: 10px; border-top: 1px solid rgba(23, 23, 21, .2); }
+  .header-contact-label { color: rgba(23, 23, 21, .42); font: 10px/1 var(--font-mono); letter-spacing: .18em; text-transform: uppercase; }
+  .header-links { display: flex; align-items: center; gap: 12px; }
+  .header-links a { position: relative; display: grid; width: 32px; height: 38px; color: rgba(23, 23, 21, .72); text-decoration: none; place-items: center; transition: color 160ms ease, transform 160ms ease; }
+  .header-links a::after { position: absolute; right: 6px; bottom: 3px; left: 6px; height: 1px; background: var(--accent); content: ""; opacity: 0; transform: scaleX(.35); transition: opacity 160ms ease, transform 160ms ease; }
+  .header-links a:hover { color: var(--accent); transform: translateY(-1px); }
+  .header-links a:hover::after { opacity: 1; transform: scaleX(1); }
+  .header-links svg { display: block; width: 21px; height: 21px; }
+  .overview { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(420px, .95fr); gap: clamp(48px, 5vw, 84px); align-items: start; }
+  .about-details { min-width: 0; }
+  .overview h2, .section > h2 { margin: 0 0 26px; color: var(--muted); font-family: inherit; font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+  .section-label { display: flex; align-items: center; gap: 15px; margin-bottom: 30px !important; font-family: var(--font-mono) !important; font-size: 11px !important; font-weight: 500 !important; letter-spacing: .2em !important; }
+  .section-label::after { display: block; width: 42px; height: 1px; background: rgba(23, 23, 21, .18); content: ""; }
+  .about-copy > p { max-width: 620px; margin: 0 0 21px; font-size: 18px; letter-spacing: -.012em; line-height: 1.55; }
+  .about-word { position: relative; display: inline-block; z-index: 1; color: inherit; font-weight: 600; }
+  .about-word::before { position: absolute; right: 0; bottom: .05em; left: 0; z-index: -1; height: 2px; background: var(--word-accent); content: ""; opacity: .35; transform: scaleX(.16); transform-origin: left; transition: opacity 200ms ease, transform 260ms cubic-bezier(.22, 1, .36, 1); }
+  .about-word-western { --word-accent: linear-gradient(90deg, #4f2683 0 78%, #f4c430 78%); }
+  .about-word-lifemark { --word-accent: #e4573d; }
+  .about-word-primate { --word-accent: #e0ae18; }
+  .about-word:hover::before { opacity: .85; transform: scaleX(1); }
+  .western-stamp-scene { position: absolute; right: -46px; bottom: calc(100% - 7px); width: 50px; height: 82px; pointer-events: none; }
+  .western-mark { position: absolute; right: 0; bottom: 0; width: 48px; height: 54px; overflow: hidden; opacity: 0; mix-blend-mode: multiply; transform: rotate(-3deg) scaleX(.98); }
+  .western-mark img { display: block; width: 100%; height: 100%; object-fit: contain; filter: contrast(1.38) saturate(.82); opacity: .86; }
+  .western-mark::after { position: absolute; inset: 4px; background: radial-gradient(circle at 18% 24%, var(--paper) 0 1px, transparent 1.4px), radial-gradient(circle at 72% 18%, var(--paper) 0 .7px, transparent 1.2px), radial-gradient(circle at 43% 62%, var(--paper) 0 1.1px, transparent 1.6px), radial-gradient(circle at 84% 76%, var(--paper) 0 .8px, transparent 1.3px), radial-gradient(circle at 28% 86%, var(--paper) 0 .7px, transparent 1.2px); background-size: 13px 11px, 17px 15px, 19px 14px, 11px 17px, 16px 13px; content: ""; opacity: .72; transform: rotate(2deg); }
+  .western-stamp { position: absolute; top: 0; left: 4px; z-index: 2; width: 42px; height: 42px; visibility: hidden; transform: translateY(-12px) rotate(1deg); transform-origin: 50% 100%; }
+  .western-stamp img { display: block; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 3px 2px rgba(23, 23, 21, .18)); }
+  .about-word-western:hover .western-stamp { visibility: visible; animation: western-stamp-down 760ms cubic-bezier(.22, 1, .36, 1) forwards; }
+  .about-word-western:hover .western-mark { animation: western-mark-appear 760ms steps(1, end) forwards; }
+  .lifemark-ecg { position: absolute; right: 0; bottom: -.34em; left: 0; width: 100%; height: 14px; overflow: visible; opacity: 0; pointer-events: none; }
+  .lifemark-ecg path { fill: none; stroke: #e4573d; stroke-width: 2; vector-effect: non-scaling-stroke; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .about-word-lifemark:hover::before { opacity: 0; }
+  .about-word-lifemark:hover .lifemark-ecg { opacity: 1; }
+  .about-word-lifemark:hover .lifemark-ecg path { animation: ecg-pulse 1s ease-out forwards; }
+  .primate-monkey-jump { position: absolute; bottom: -3px; left: calc(100% + 9px); z-index: 4; width: 30px; height: 35px; opacity: 0; pointer-events: none; }
+  .primate-monkey-jump img { display: block; width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; }
+  .about-word-primate:hover .primate-monkey-jump { opacity: 1; }
+  @keyframes western-stamp-down { 0% { opacity: 1; transform: translateY(-12px) rotate(1deg); } 48% { opacity: 1; transform: translateY(28px) rotate(-1deg); } 58% { opacity: 1; filter: drop-shadow(0 1px 0 rgba(23, 23, 21, .28)); transform: translateY(31px) scaleY(.93) scaleX(1.04); } 70% { opacity: 1; transform: translateY(23px) rotate(1deg); } 100% { opacity: 0; transform: translateY(-9px) rotate(0); } }
+  @keyframes western-mark-appear { 0%, 56% { opacity: 0; transform: rotate(-3deg) scale(.94, .9); } 57% { opacity: 1; transform: rotate(-3deg) scale(1.03, .97); } 66%, 100% { opacity: 1; transform: rotate(-3deg) scaleX(.98); } }
+  @keyframes ecg-pulse { 0% { stroke-dashoffset: 1; opacity: 0; } 12% { opacity: 1; } 76% { stroke-dashoffset: 0; opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 0; } }
+  .about-copy .location { display: flex; max-width: 620px; flex-wrap: wrap; align-items: center; gap: 7px 10px; margin-top: 34px; color: var(--muted); font-size: 12px; letter-spacing: .005em; line-height: 1.4; }
+  .location-separator { color: var(--accent); font-size: 13px; }
+  .experience ol { display: grid; gap: 27px; margin: 0; padding: 0; list-style: none; }
+  .experience li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; }
+  .period { max-width: 120px; padding-top: 3px; color: var(--muted); font: 10px/1.45 var(--font-mono); text-align: right; text-transform: uppercase; }
+  .role-heading { display: flex; align-items: center; gap: 9px; min-width: 0; }
+  .employer-logo { width: 18px; height: 18px; flex: 0 0 18px; object-fit: contain; opacity: .82; }
+  .employer-logo-cross { display: grid; color: #b91c1c; place-items: center; }
+  .employer-logo-cross svg { display: block; width: 16px; height: 16px; }
+  .role-copy h3 { margin: 0; font-size: 15px; font-weight: 650; line-height: 1.25; }
+  .role-copy h3 a { color: inherit; text-decoration: none; }
+  .role-copy h3 a:hover { color: var(--accent); }
+  .role-title { margin: 4px 0 0; color: var(--muted); font-size: 13px; line-height: 1.4; }
+  .experience { margin-top: 64px; }
+  .chess-feature { --chess-size: 38rem; display: flex; width: 100%; min-width: 0; flex-direction: column; align-items: center; padding-top: 40px; transform: translateX(-20px); }
+  .chess-feature :global(.widget-chess) { width: min(100%, var(--chess-size)); }
+  .chess-feature :global(.chessground-board.cg-wrap) { width: 100%; height: auto; }
+  .chess-copy { width: min(100%, var(--chess-size)); margin-top: 18px; }
+  .chess-copy p { max-width: 420px; margin: 0 0 11px; color: var(--muted); font-size: 13px; line-height: 1.55; }
+  .chess-copy a, .project-info a, .publication-links a { color: var(--ink); font-size: 12px; font-weight: 600; text-underline-offset: 4px; }
+  .chess-copy a:hover, .project-info a:hover, .publication-links a:hover { color: var(--accent); }
+  .section { margin-right: clamp(30px, 4vw, 60px); padding: 108px 0 24px; }
+  #projects { padding-top: 56px; padding-bottom: 64px; }
+  #research { padding-top: 72px; border-top: 1px solid rgba(23, 23, 21, .16); }
+  .section > h2 { margin-bottom: 32px; }
+  .project { min-width: 0; }
+  .project-visual { display: grid; width: 100%; overflow: hidden; border-radius: 10px; background: #e5e2da; place-items: center; }
+  .primate-video { aspect-ratio: 16 / 8.7; object-fit: cover; }
+  .project-info { display: grid; grid-template-columns: 150px minmax(0, 1fr) auto; gap: 24px; align-items: baseline; padding-top: 18px; }
+  .project-info h3 { margin: 0; font-size: 20px; font-weight: 600; letter-spacing: -.02em; line-height: 1.2; }
+  .project-title-link { color: inherit; text-decoration: none; }
+  .project-title-link:hover { color: var(--accent); }
+  .inline-arrow { display: inline-block; margin-left: 5px; color: rgba(23, 23, 21, .38); font-size: .72em; font-weight: 400; letter-spacing: 0; transform: translateY(-.08em); transition: color 160ms ease, transform 160ms ease; }
+  .project-title-link:hover .inline-arrow { color: var(--accent); transform: translate(2px, -.16em); }
+  .project-featured .project-info { padding-top: 18px; }
+  .project-featured-info { grid-template-columns: 46px minmax(0, 1fr); gap: 14px; align-items: start; }
+  .project-featured-copy { min-width: 0; }
+  .project-featured-heading { display: flex; align-items: baseline; gap: 12px; }
+  .project-featured-heading h3 { line-height: 1.1; }
+  .project-featured-heading .project-title-link { font-size: 18px; }
+  .project-featured-heading .inline-arrow { display: none; }
+  .project-domain { display: inline-block; color: var(--muted) !important; font: 10px/1.3 var(--font-mono) !important; letter-spacing: .06em; text-decoration: none; }
+  .project-domain:hover { color: var(--accent) !important; }
+  .featured-project-description { max-width: 760px; margin: 7px 0 0 !important; color: var(--muted); font-size: 14px !important; font-weight: 400; line-height: 1.5 !important; }
+  .project-logo { width: 18px; height: 18px; flex: 0 0 18px; object-fit: contain; }
+  .project-logo-primate { width: 46px; height: 46px; flex-basis: 46px; align-self: center; border-radius: 7px; }
+  .project-info > p { max-width: 620px; margin: 0; font-size: 14px; line-height: 1.55; }
+  .project-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; margin-top: 48px; }
+  .project-video-link { display: block; color: var(--ink); text-decoration: none; }
+  .project-grid .project-visual { min-height: 0; aspect-ratio: 16 / 10; object-fit: cover; }
+  .project-info-small { grid-template-columns: 1fr; gap: 8px; }
+  .project-info-small h3 { font-size: 18px; }
+  .project-prize { display: flex; align-items: flex-start; gap: 8px; margin-top: 8px; }
+  .hackathon-logo { width: 22px; height: 22px; flex: 0 0 22px; object-fit: contain; opacity: .9; }
+  .project-prize-copy { display: grid; min-width: 0; gap: 3px; }
+  .project-prize-copy strong { color: var(--muted); font: 10px/1.25 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; }
+  .project-prize-copy small { color: var(--ink); font-size: 12px; font-weight: 600; line-height: 1.4; }
+  .research-layout { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(300px, .88fr); gap: clamp(42px, 5vw, 76px); align-items: stretch; }
+  .research-layout > :global(.research-visual) { grid-column: 2; grid-row: 1; height: calc(100% - 16px); }
+  .publication { display: block; grid-column: 1; grid-row: 1; padding: 0 0 28px; }
+  .publication-copy { display: flex; height: 100%; min-width: 0; flex-direction: column; }
+  .publication-heading { display: flex; align-items: flex-start; gap: 18px; }
+  .publication-venue { display: flex; align-items: center; gap: 9px; margin: 0; color: var(--muted); font-size: 12px; line-height: 1.45; }
+  .publication-venue img { width: 22px; height: 18px; flex: 0 0 22px; object-fit: contain; opacity: .8; }
+  .publication h3 { max-width: 760px; margin: 0; font-size: clamp(24px, 2.65vw, 35px); font-weight: 550; letter-spacing: -.035em; line-height: 1.14; }
+  .publication-summary { max-width: 680px; margin: 22px 0 0; color: var(--muted); font-size: 16px; line-height: 1.6; }
+  .publication-meta { margin-top: 20px; }
+  .publication-status { color: var(--accent); font: 10px/1.25 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; }
+  .publication-venue-note { max-width: 680px; margin: 8px 0 0 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+  .paper-link { display: inline-flex; align-items: baseline; gap: 5px; flex: 0 0 auto; margin-top: 20px; color: var(--muted); font: 10px/1.2 var(--font-mono); letter-spacing: .08em; text-decoration: none; text-transform: uppercase; white-space: nowrap; }
+  .paper-link:hover { color: var(--accent); }
+  .paper-link span:last-child { font-family: inherit; font-size: 14px; letter-spacing: 0; }
+  footer { margin-right: clamp(30px, 4vw, 60px); padding: 104px 0 42px; color: rgba(23, 23, 21, .44); text-align: center; }
+  footer p { margin: 0; font-size: 11px; letter-spacing: .015em; line-height: 1.5; }
+
+  @media (max-width: 1050px) {
+    .site-grid { grid-template-columns: 92px minmax(0, 1fr); gap: 40px; width: min(100% - 48px, 1120px); }
+    .overview { grid-template-columns: 1fr; gap: 52px; }
+    .chess-feature { --chess-size: 22rem; }
+    .project-info { grid-template-columns: 120px 1fr; }
+    .project-info > a { grid-column: 2; }
+    .research-layout { grid-template-columns: 1fr; gap: 42px; }
+    .research-layout > :global(.research-visual) { grid-column: 1; grid-row: 2; height: auto; }
+    .publication { grid-column: 1; grid-row: 1; }
+    .research-layout > :global(.research-visual) { max-width: 500px; }
+  }
+
+  @media (max-width: 720px) {
+    .site-grid { display: block; width: calc(100% - 32px); }
+    .side-nav { display: none; }
+    .site-header { padding: 26px 0 42px; }
+    .site-header h1 { font-size: 28px; }
+    .header-contact { gap: 10px; margin-right: 0; padding-top: 8px; }
+    .header-contact-label { font-size: 9px; }
+    .header-links { gap: 5px; }
+    .header-links a { width: 29px; height: 34px; }
+    .header-links svg { width: 18px; height: 18px; }
+    .overview { gap: 44px; }
+    .chess-feature { --chess-size: 19rem; transform: none; }
+    .about-copy > p { font-size: 17px; }
+    .experience li { grid-template-columns: minmax(0, 1fr) auto; gap: 16px; }
+    .experience { margin-top: 52px; }
+    .section { margin-right: 0; padding-top: 84px; }
+    #projects { padding-top: 48px; padding-bottom: 52px; }
+    #research { padding-top: 60px; }
+    .project-info { grid-template-columns: 1fr; gap: 8px; }
+    .project-featured .project-info { grid-template-columns: 42px minmax(0, 1fr); gap: 12px; align-items: start; }
+    .project-logo-primate { width: 42px; height: 42px; flex-basis: 42px; }
+    .project-info > a { grid-column: auto; }
+    .project-grid { grid-template-columns: 1fr; gap: 54px; margin-top: 58px; }
+    .project-grid .project-visual { min-height: 0; }
+    .research-layout { grid-template-columns: 1fr; gap: 42px; }
+    .publication { padding-top: 0; }
+    .publication h3 { font-size: 25px; }
+    footer { margin-right: 0; padding-top: 88px; }
+  }
+
+  @media (min-width: 721px) and (max-height: 820px) {
+    .chess-feature { --chess-size: 22rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(html) { scroll-behavior: auto; }
+    .primate-video { display: none; }
+    .about-word, .about-word::before, .western-stamp, .western-mark, .lifemark-ecg path, .primate-monkey-jump { animation: none !important; transition: none !important; }
+    .western-stamp-scene, .lifemark-ecg, .primate-monkey-jump { display: none; }
+  }
+</style>

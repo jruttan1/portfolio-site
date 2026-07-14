@@ -3,7 +3,7 @@ export const profile = {
   title: "AI Systems, Product, and Research",
   location: "London, Ontario",
   education: "CS + Math @ Western University",
-  availability: "Open to internship opportunities · grad 2028",
+  availability: "Open to summer 2027 internship opportunities · grad 2029",
   experience: [
     {
       name: "Lifemark Health Group",
@@ -47,7 +47,7 @@ export const profile = {
   projects: [
      {
       name: "Primate",
-      description: "Agentic visual QA that catches UI bugs before they ship",
+      description: "Visual QA for frontend teams, agents identify UI bugs on pull requests and catches regressions before they ship.",
       url: "https://primate.sh",
       chip: { bg: "#f1f5f9", text: "#334155" }
     },
@@ -55,12 +55,12 @@ export const profile = {
       name: "Optimate",
       description: "AI copilot for insurance underwriting",
       url: "https://devpost.com/software/optimate",
-      prizes: [{ name: "Hack the North", note: "YC Unicorn · Federato RiskOps Gold Sponsor", logo: "/HTNLogo.148bc3f0.webp" }],
+      prizes: [{ name: "Hack the North", note: "Y Cominator Unicorn Prize · Federato RiskOps Gold Sponsor", logo: "/HTNLogo.148bc3f0.webp" }],
       chip: { bg: "#ede9fe", text: "#5b21b6" }
     },
     {
       name: "Doppels",
-      description: "Agents converse before humans connect",
+      description: "Agents converse then humans connect",
       url: "https://doppels.vercel.app",
       prizes: [{ name: "McHacks", note: "Best Product Design · Top 5 Finalist", logo: "/mchacks-martlet-tight.c15b06650e3e5cda2d82cb370481b855.svg" }],
       chip: { bg: "#e0e7ff", text: "#3730a3" }
