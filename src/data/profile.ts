@@ -1,9 +1,9 @@
 export const profile = {
   name: "Jack Ruttan",
   title: "AI Systems, Product, and Research",
-  location: "London, Ontario",
+  location: "Hamilton, Ontario",
   education: "CS + Math @ Western University",
-  availability: "Open to summer 2027 internship opportunities · grad 2029",
+  availability: "Open to summer 2027 internship opportunities · Grad 2029",
   experience: [
     {
       name: "Lifemark Health Group",
@@ -25,7 +25,7 @@ export const profile = {
     {
       name: "Unity Health Toronto",
       role: "Applied AI Intern",
-      period: "Summer 25",
+      period: "Summer 2025",
       description: "Built clinical triage agents and evaluation pipelines in a hospital research setting.",
       url: "https://unityhealth.to",
       logo: "https://www.google.com/s2/favicons?sz=64&domain=unityhealth.to",
