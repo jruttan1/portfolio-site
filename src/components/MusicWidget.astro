@@ -10,7 +10,7 @@ const tracksJson = JSON.stringify(tracks);
         <span aria-hidden="true">‹</span>
       </button>
 
-      <button class="group relative grid aspect-square w-20 place-items-center rounded-full shadow-[0_8px_18px_rgba(17,17,17,0.18)] transition hover:scale-[1.02]" type="button" data-play aria-label="Play">
+      <button class="group relative grid aspect-square w-20 place-items-center rounded-full shadow-[0_8px_18px_rgba(17,17,17,0.18)] transition-shadow duration-300 ease-out hover:shadow-[0_10px_24px_rgba(17,17,17,0.22)]" type="button" data-play aria-label="Play">
         <div class="absolute inset-0 overflow-hidden rounded-full bg-ink" data-disc>
           <img class="h-full w-full object-cover" src={tracks[0].cover} alt="" data-cover />
           <div class="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_50%_50%,#fbfaf7_0_10%,transparent_11%),radial-gradient(circle_at_50%_50%,rgba(17,17,17,0.24)_0_17%,transparent_18%),linear-gradient(135deg,rgba(255,255,255,0.18),transparent_34%,rgba(0,0,0,0.2)_62%,rgba(255,255,255,0.12))]"></div>
@@ -46,6 +46,7 @@ const tracksJson = JSON.stringify(tracks);
   let playing = false;
   let audio = new Audio(tracks[index].audio);
   audio.volume = defaultVolume;
+  const emitCue = (cue) => window.dispatchEvent(new CustomEvent("portfolio:audio-cue", { detail: { cue } }));
 
   const render = () => {
     const track = tracks[index];
@@ -56,6 +57,9 @@ const tracksJson = JSON.stringify(tracks);
       disc.style.animationPlayState = playing ? "running" : "paused";
     }
     play?.setAttribute("aria-label", playing ? "Pause" : "Play");
+    window.dispatchEvent(new CustomEvent("portfolio:music", {
+      detail: { playing, title: track.title }
+    }));
   };
 
   const loadTrack = () => {
@@ -76,11 +80,13 @@ const tracksJson = JSON.stringify(tracks);
       try {
         audio.volume = defaultVolume;
         await audio.play();
+        emitCue("play");
       } catch {
         playing = false;
       }
     } else {
       audio.pause();
+      emitCue("pause");
     }
     render();
   });
@@ -89,6 +95,7 @@ const tracksJson = JSON.stringify(tracks);
     const wasPlaying = playing;
     index = (index - 1 + tracks.length) % tracks.length;
     loadTrack();
+    emitCue("skip-previous");
     if (wasPlaying) {
       try {
         audio.volume = defaultVolume;
@@ -104,6 +111,7 @@ const tracksJson = JSON.stringify(tracks);
     const wasPlaying = playing;
     index = (index + 1) % tracks.length;
     loadTrack();
+    emitCue("skip-next");
     if (wasPlaying) {
       try {
         audio.volume = defaultVolume;

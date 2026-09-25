@@ -85,7 +85,8 @@ const fallbackPieces = initialFen.split("/").flatMap((rank, rankIndex) => {
           showDests: true,
           events: {
             after: (from, to) => {
-              if (status) status.textContent = `${from} → ${to}`;
+              if (status) status.textContent = `${from} to ${to}`;
+              window.dispatchEvent(new CustomEvent("portfolio:audio-cue", { detail: { cue: "drop" } }));
             }
           }
         }
@@ -99,6 +100,7 @@ const fallbackPieces = initialFen.split("/").flatMap((rank, rankIndex) => {
           movable: { color: "both", free: true }
         });
         if (status) status.textContent = "Move any piece";
+        window.dispatchEvent(new CustomEvent("portfolio:audio-cue", { detail: { cue: "back" } }));
       });
 
       root.dataset.chessReady = "true";

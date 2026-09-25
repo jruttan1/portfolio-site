@@ -49,7 +49,6 @@
 
       <div class="decision">
         <span>Similarity ≥ minimum threshold</span>
-        <span class="decision-arrow" aria-hidden="true">→</span>
         <strong>keep</strong>
       </div>
     </div>
@@ -85,7 +84,6 @@
   .comparison-row i { display: block; width: clamp(8px, 1.4vw, 11px); height: clamp(8px, 1.4vw, 11px); background: rgba(23, 23, 21, .3); }
   .comparison-row i.mismatch { background: rgba(217, 72, 43, .68); animation: mismatch-pulse 2.4s ease-in-out infinite; }
   .decision { grid-column: 1 / -1; display: grid; grid-template-columns: auto auto auto; align-items: center; justify-content: start; gap: 7px; margin: 10px 0 0 34px; padding-top: 8px; border-top: 1px solid rgba(23, 23, 21, .12); color: rgba(23, 23, 21, .62); font: 9px/1.35 ui-sans-serif, system-ui, sans-serif; white-space: nowrap; }
-  .decision-arrow { color: rgba(23, 23, 21, .42); font-size: 14px; line-height: 1; }
   .decision strong { color: #d9482b; font: 600 11px ui-sans-serif, system-ui, sans-serif; text-transform: uppercase; }
   figcaption { padding-top: 10px; color: rgba(23, 23, 21, .58); font-size: 11px; line-height: 1.45; }
 

@@ -2,8 +2,15 @@
 import Analytics from "@vercel/analytics/astro";
 import "../styles/global.css";
 
-const title = "Jack Ruttan";
-const description = "My projects, work and research";
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Jack Ruttan",
+  description = "My projects, work and research"
+} = Astro.props;
 const url = new URL(Astro.url.pathname, Astro.site).toString();
 const previewImageUrl = new URL("/preview.png", Astro.site).toString();
 ---

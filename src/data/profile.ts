@@ -9,24 +9,25 @@ export const profile = {
       name: "Lifemark Health Group",
       role: "AI Systems Engineer · Technical Consultant",
       period: "Current",
+      description: "Building internal AI tools to automate repetitive clinical and administrative work.",
       url: "https://www.lifemarkhealthgroup.ca",
       logo: "/lifemark-logo.png",
       chip: { bg: "#fde8d8", text: "#c2410c" }
     },
     {
-      name: "Canadian Red Cross",
-      role: "Technical Project Lead",
-      period: "Fall 2025 — Winter 2026",
-      description: "Led the technical direction for internal knowledge retrieval systems at a national nonprofit.",
-      url: "https://redcross.ca",
-      logo: "red-cross",
+      name: "Tech for Social Impact",
+      role: "Project Manager",
+      period: "2025 — 2026",
+      description: "Leading development of pro-bono software projects with the Canadian Red Cross and Brain Tumour Foundation of Canada.",
+      url: "https://tethos.ca",
+      logo: "/tethosassociation_logo.jpeg",
       chip: { bg: "#fee2e2", text: "#991b1b" }
     },
     {
       name: "Unity Health Toronto",
       role: "Applied AI Intern",
       period: "Summer 2025",
-      description: "Built clinical triage agents and evaluation pipelines in a hospital research setting.",
+      description: "Built clinical interview agents and evaluation pipelines for healthcare research.",
       url: "https://unityhealth.to",
       logo: "https://www.google.com/s2/favicons?sz=64&domain=unityhealth.to",
       chip: { bg: "#d1fae5", text: "#065f46" }
@@ -47,12 +48,14 @@ export const profile = {
   projects: [
      {
       name: "Primate",
+      slug: "primate",
       description: "Visual QA for frontend teams, agents identify UI bugs on pull requests and catches regressions before they ship.",
       url: "https://primate.sh",
       chip: { bg: "#f1f5f9", text: "#334155" }
     },
     {
       name: "Optimate",
+      slug: "optimate",
       description: "AI copilot for insurance underwriting",
       url: "https://devpost.com/software/optimate",
       prizes: [{ name: "Hack the North", note: "Y Cominator Unicorn Prize · Federato RiskOps Gold Sponsor", logo: "/HTNLogo.148bc3f0.webp" }],
@@ -60,6 +63,7 @@ export const profile = {
     },
     {
       name: "Doppels",
+      slug: "doppels",
       description: "Agents converse then humans connect",
       url: "https://doppels.vercel.app",
       prizes: [{ name: "McHacks", note: "Best Product Design · Top 5 Finalist", logo: "/mchacks-martlet-tight.c15b06650e3e5cda2d82cb370481b855.svg" }],

@@ -26,6 +26,14 @@ body {
   text-rendering: geometricPrecision;
 }
 
+@media (hover: hover) {
+  a,
+  button,
+  [role="button"] {
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+
 button,
 canvas {
   touch-action: manipulation;
@@ -134,6 +142,7 @@ a:focus-visible {
 
 .disc-spin {
   animation: spin 5.5s linear infinite;
+  will-change: transform;
 }
 
 @keyframes spin {
