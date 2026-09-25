@@ -80,20 +80,20 @@ const reactionFor = (element: Element | null): string | null => {
   if (element.closest(".chess-copy")) return "A patient explanation";
   if (element.closest(".chessground-board")) return "Not ready yet sorry";
   if (element.closest(".chess-feature")) return "Chess has appeared";
-  if (element.closest(".project-prize")) return "They gave it a prize";
+  if (element.closest(".project-prize")) return "They gave it prizes";
   if (element.closest(".project-video-link")) return "Moving pictures Helpful";
   if (element.closest(".project-featured")) return "Serious monkey business";
   if (element.closest(".project-primate")) return "Serious monkey business";
   if (element.closest(".project-optimate")) return "Insurance, sounds boring";
-  if (element.closest(".project-doppels")) return "Looks familiar";
+  if (element.closest(".project-doppels")) return "Dystopian maybe";
   if (element.closest("#projects .mobile-section-heading")) return "Things he made";
   if (element.closest(".paper-link")) return "The paper, in full";
   if (element.closest(".publication-venue")) return "Published Officially";
   if (element.closest(".publication-heading")) return "A very long title";
   if (element.closest(".publication-summary")) return "The slightly longer version";
-  if (element.closest(".research-visual")) return "Research, but visual";
+  if (element.closest(".research-visual")) return "More moving explanations";
   if (element.closest("#research .mobile-section-heading")) return "Things he proved";
-  if (element.closest(".research-layout")) return "Apparently publishable";
+  if (element.closest(".research-layout")) return "Apparently publishable after heavy review";
   if (element.closest("footer")) return "Made by the guy above";
 
   const navItem = element.closest<HTMLElement>(".side-nav a");
