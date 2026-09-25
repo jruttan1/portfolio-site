@@ -24,12 +24,12 @@ const AMBIENT_QUESTIONS = [
   "Still with me?"
 ];
 const CLICK_STATES: Array<{ state: OrbState; label: string }> = [
-  { state: "shaping", label: "Trying something else" },
-  { state: "weaving", label: "This seems productive" },
-  { state: "connecting", label: "Connecting a few dots" },
-  { state: "solving", label: "Nearly had a thought" },
-  { state: "searching", label: "Looking around" },
-  { state: "working", label: "Very busy now" }
+  { state: "shaping", label: "Need something?" },
+  { state: "weaving", label: "Still here" },
+  { state: "connecting", label: "Yes?" },
+  { state: "solving", label: "You can keep doing that" },
+  { state: "searching", label: "Quite persistent" },
+  { state: "working", label: "Alright then" }
 ];
 
 const reactionFor = (element: Element | null): string | null => {
@@ -38,13 +38,13 @@ const reactionFor = (element: Element | null): string | null => {
   const contact = element.closest<HTMLElement>(".header-links a")?.getAttribute("aria-label");
   if (contact) {
     return ({
-      Email: "A formal hello",
-      GitHub: "Made with computers",
+      Email: "Say what's up",
+      GitHub: "Lots of code",
       LinkedIn: "Professionally formatted",
-      X: "Some thoughts escaped",
-      "Google Scholar": "He brought citations",
+      X: "Don't click this one",
+      "Google Scholar": "Citations are here",
       Resume: "The short version",
-      "Cal.com": "Pick a time Bold"
+      "Cal.com": "Pick a time please"
     } as Record<string, string>)[contact] ?? null;
   }
 
@@ -53,7 +53,7 @@ const reactionFor = (element: Element | null): string | null => {
   if (element.closest(".widget-music [data-next]")) return "Another fine selection";
   if (element.closest(".widget-music [data-play]")) return "Press for atmosphere";
   if (element.closest(".widget-music")) return "A tasteful little soundtrack";
-  if (element.closest(".site-header h1")) return "Correct That is his name";
+  if (element.closest(".site-header h1")) return "Legally named John for some reason";
   if (element.closest(".header-contact-label")) return "Several ways to say hello";
   if (element.closest("#about-heading")) return "The general idea";
   if (element.closest(".about-word-western")) return "Going to every class";
@@ -84,7 +84,7 @@ const reactionFor = (element: Element | null): string | null => {
   if (element.closest(".project-video-link")) return "Moving pictures Helpful";
   if (element.closest(".project-featured")) return "Serious monkey business";
   if (element.closest(".project-primate")) return "Serious monkey business";
-  if (element.closest(".project-optimate")) return "Calendars, slightly improved";
+  if (element.closest(".project-optimate")) return "Insurance, sounds boring";
   if (element.closest(".project-doppels")) return "Looks familiar";
   if (element.closest("#projects .mobile-section-heading")) return "Things he made";
   if (element.closest(".paper-link")) return "The paper, in full";
@@ -406,8 +406,8 @@ export default function ThinkingCompanion() {
 
   useLayoutEffect(() => {
     const textHeight = Math.ceil(statusRef.current?.scrollHeight ?? 0);
-    const frameHeight = orbSize === 64 ? 63 : 46;
-    const minimumHeight = orbSize === 64 ? 78 : 58;
+    const frameHeight = orbSize === 64 ? 68 : 50;
+    const minimumHeight = orbSize === 64 ? 83 : 62;
     setCompanionHeight(Math.max(minimumHeight, frameHeight + textHeight));
   }, [displayedStatus, orbSize]);
 

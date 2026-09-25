@@ -22,7 +22,7 @@
   justify-items: center;
   grid-template-rows: 44px auto;
   gap: 3px;
-  padding: 7px 8px;
+  padding: 7px 8px 12px;
   border: 0;
   border-radius: 25px;
   background: transparent;
@@ -95,7 +95,7 @@
     height: 82px;
     grid-template-rows: 30px auto;
     gap: 2px;
-    padding: 6px 5px;
+    padding: 6px 5px 10px;
     border-radius: 21px;
   }
 
