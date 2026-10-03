@@ -106,7 +106,7 @@ const nextStudy = caseStudies[(currentIndex + 1) % caseStudies.length];
 </BaseLayout>
 
 <style>
-  .case-layout { display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 40px; width: min(100% - 64px, 1220px); margin: 0 auto; }
+  .case-layout { display: grid; grid-template-columns: 140px minmax(0, 1fr) 140px; gap: 40px; width: min(100% - 64px, 1400px); margin: 0 auto; }
   .case-dj { padding-top: 120px; }
   .case-dj-dock { position: sticky; top: 36px; }
   .case-study { min-width: 0; color: #242522; padding-bottom: 40px; }
@@ -148,10 +148,10 @@ const nextStudy = caseStudies[(currentIndex + 1) % caseStudies.length];
   .product-screen img { margin-top: 20px; }
   footer { display: flex; justify-content: space-between; gap: 24px; margin-top: 64px; padding: 24px 0; border-top: 1px solid #dedbd2; font-size: 14px; }
   @media (max-width: 1050px) {
-    .case-layout { grid-template-columns: 112px minmax(0, 1fr); gap: 32px; width: calc(100% - 48px); }
+    .case-layout { grid-template-columns: 112px minmax(0, 1fr) 112px; gap: 32px; width: calc(100% - 48px); }
     .project-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
   }
-  @media (max-width: 720px) {
+  @media (max-width: 900px) {
     .case-layout { display: block; width: calc(100% - 36px); }
     .case-dj { position: fixed; right: max(8px, env(safe-area-inset-right)); bottom: max(10px, env(safe-area-inset-bottom)); z-index: 40; padding: 8px 4px; border: 1px solid rgba(23, 23, 21, .1); border-radius: 18px; background: rgba(246, 244, 239, .84); box-shadow: 0 10px 32px rgba(23, 23, 21, .1); -webkit-backdrop-filter: blur(16px) saturate(1.2); backdrop-filter: blur(16px) saturate(1.2); }
     .case-dj-dock { position: static; }
