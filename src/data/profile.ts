@@ -3,7 +3,7 @@ export const profile = {
   title: "AI Systems, Product, and Research",
   location: "Hamilton, Ontario",
   education: "CS + Math @ Western University",
-  availability: "Open to summer 2027 internship opportunities · Grad 2029",
+  availability: "Open to summer 2027 internship opportunities · Grad 2028",
   experience: [
     {
       name: "Lifemark Health Group",
@@ -39,7 +39,7 @@ export const profile = {
       pdf: "https://aclanthology.org/2025.americasnlp-1.4.pdf",
       doi: "https://doi.org/10.18653/v1/2025.americasnlp-1.4",
       title: "Advancing Uto-Aztecan Language Technologies: A Case Study on the Endangered Comanche Language",
-      description: "We compiled the first digitized Comanche dataset and a low-cost way to expand it with the goal of preserving a critically endangered language. We built a pipeline togenerate translations from a small set of trusted examples, compare them with human-verified answers using normalized Levenshtein similarity, and keep only outputs that pass a quality threshold",
+      description: "We compiled the first digitized Comanche dataset and a low-cost way to expand it with the goal of preserving a critically endangered language. We built a pipeline to generate translations from a small set of trusted examples, compare them with human-verified answers using normalized Levenshtein similarity, and keep only outputs that pass a quality threshold",
       venues: [
         { name: "AmericasNLP 2025", note: "Proceedings of the Fifth Workshop on NLP for Indigenous Languages of the Americas", logo: "/Association_for_Computational_Linguistics_logo.svg" }
       ]
@@ -49,22 +49,30 @@ export const profile = {
      {
       name: "Primate",
       slug: "primate",
-      description: "Visual QA for frontend teams, agents identify UI bugs on pull requests and catches regressions before they ship.",
+      description: "Checks changed pages for UI bugs and posts screenshots in your pull request.",
       url: "https://primate.sh",
       chip: { bg: "#f1f5f9", text: "#334155" }
     },
     {
+      name: "Whim",
+      slug: "whim",
+      description: "Plan, shop, and play in your iMessage group chat with an AI agent.",
+      url: "https://github.com/chang-07/htn-26",
+      prizes: [{ name: "Hack the North 2026", note: "Best Use of Linq · Cloudflare Best Agent with a Brain", logo: "/HTNLogo.148bc3f0.webp" }],
+      chip: { bg: "#ffe3ec", text: "#c72462" }
+    },
+    {
       name: "Optimate",
       slug: "optimate",
-      description: "AI copilot for insurance underwriting",
+      description: "Ranks insurance submissions by how well they fit an insurer’s risk appetite.",
       url: "https://devpost.com/software/optimate",
-      prizes: [{ name: "Hack the North", note: "Y Cominator Unicorn Prize · Federato RiskOps Gold Sponsor", logo: "/HTNLogo.148bc3f0.webp" }],
+      prizes: [{ name: "Hack the North 2025", note: "Y Combinator Unicorn Prize · Federato RiskOps Gold Sponsor", logo: "/HTNLogo.148bc3f0.webp" }],
       chip: { bg: "#ede9fe", text: "#5b21b6" }
     },
     {
       name: "Doppels",
       slug: "doppels",
-      description: "Agents converse then humans connect",
+      description: "A networking prototype where AI agents talk to find common ground between people.",
       url: "https://doppels.vercel.app",
       prizes: [{ name: "McHacks", note: "Best Product Design · Top 5 Finalist", logo: "/mchacks-martlet-tight.c15b06650e3e5cda2d82cb370481b855.svg" }],
       chip: { bg: "#e0e7ff", text: "#3730a3" }

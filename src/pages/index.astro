@@ -1,18 +1,18 @@
 ---
+import DemoVideo from "../components/DemoVideo.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import MusicWidget from "../components/MusicWidget.astro";
 import ChessWidget from "../components/toys/ChessWidget.astro";
 import LineSidebar from "../components/new/LineSidebar.astro";
 import ResearchVisual from "../components/new/ResearchVisual.astro";
-import ThinkingCompanion from "../components/ThinkingCompanion";
+import PocketDJ from "../components/PocketDJ.astro";
 import { profile } from "../data/profile";
+import { getCaseStudy } from "../data/caseStudies";
 
 const navItems = [
   { label: "About", target: "top" },
   { label: "Projects", target: "projects" },
   { label: "Research", target: "research" }
 ];
-const projectVideos = ["/optimate-demo-1758064916274.mp4", "/doppels-demo.mp4"];
 const availabilityItems = profile.availability.split(" · ");
 ---
 
@@ -23,9 +23,8 @@ const availabilityItems = profile.availability.split(" · ");
         <div class="side-nav-stack">
           <LineSidebar items={navItems} />
           <div class="side-music">
-            <MusicWidget />
             <div class="side-companion">
-              <ThinkingCompanion client:only="react" />
+              <PocketDJ />
             </div>
           </div>
         </div>
@@ -143,36 +142,18 @@ const availabilityItems = profile.availability.split(" · ");
 
         <section id="projects" class="section section-anchor" aria-label="Projects">
           <h2 class="mobile-section-heading">Projects</h2>
-          <article class="project project-featured">
-            <a class="project-video-link" href={`/projects/${profile.projects[0].slug}`} aria-label="Read the Primate case study">
-              <video class="project-visual primate-video" autoplay muted loop playsinline preload="auto">
-                <source src="/primate-demo-vid.mp4" type="video/mp4" />
-              </video>
-            </a>
-            <div class="project-info project-featured-info">
-              <img class="project-logo project-logo-primate" src="/primate-logo.png" alt="" aria-hidden="true" />
-              <div class="project-featured-copy">
-                <div class="project-featured-heading">
-                  <h3>
-                    <a class="project-title-link" href={`/projects/${profile.projects[0].slug}`}>
-                      {profile.projects[0].name}
-                    </a>
-                  </h3>
-                  <span class="project-kicker">Startup</span>
-                </div>
-                <p class="featured-project-description">{profile.projects[0].description}</p>
-              </div>
-            </div>
-          </article>
-
           <div class="project-grid">
-            {profile.projects.slice(1).map((project, index) => (
+            {profile.projects.map((project) => (
               <article class={`project project-${project.name.toLowerCase()}`}>
-                <a class="project-video-link" href={`/projects/${project.slug}`} aria-label={`Read the ${project.name} case study`}>
-                  <video class="project-visual project-demo" autoplay muted loop playsinline preload="auto" aria-label={`${project.name} product demo`}>
-                    <source src={projectVideos[index]} type="video/mp4" />
-                  </video>
-                </a>
+                <div class="project-video-link">
+                  {getCaseStudy(project.slug)?.media ? (
+                    <DemoVideo class="project-visual project-demo" src={getCaseStudy(project.slug)!.media!} poster={getCaseStudy(project.slug)?.poster ?? `/demos/${project.slug}-poster.jpg`} label={`${project.name} product demo`} href={`/projects/${project.slug}`} linkLabel={`Read the ${project.name} case study`} />
+                  ) : (
+                    <a href={`/projects/${project.slug}`} aria-label={`Read the ${project.name} case study`}>
+                      <img class="project-visual" src={getCaseStudy(project.slug)?.poster} alt={`${project.name} on an iPhone`} loading="lazy" />
+                    </a>
+                  )}
+                </div>
                 <div class="project-info project-info-small">
                   <h3 class="project-secondary-title">
                     <a class="project-title-link project-secondary-title-link" href={`/projects/${project.slug}`}>
@@ -181,7 +162,7 @@ const availabilityItems = profile.availability.split(" · ");
                         <img class="project-link-icon" src="https://cdn.jsdelivr.net/npm/simple-icons@v16/icons/devpost.svg" alt="" aria-hidden="true" />
                       )}
                     </a>
-                    <a class="project-icon-link" href={project.url} target="_blank" rel="noopener noreferrer" aria-label={`${project.name} link`} title={project.name === "Optimate" ? "Open Optimate on Devpost" : "Open Doppels link"}>
+                    {project.slug !== "primate" && <a class="project-icon-link" href={project.url} target="_blank" rel="noopener noreferrer" aria-label={`${project.name} link`} title={project.name === "Optimate" ? "Open Optimate on Devpost" : `Open ${project.name} link`}>
                       {project.name === "Optimate" ? (
                         <svg viewBox="0 0 24 24" aria-hidden="true">
                           <rect x="2.5" y="2.5" width="19" height="19" rx="4" />
@@ -192,9 +173,17 @@ const availabilityItems = profile.availability.split(" · ");
                           <path fill-rule="evenodd" d="M12 2.5a9.5 9.5 0 0 0-3 18.51c.48.09.66-.2.66-.46v-1.8c-2.68.58-3.25-1.14-3.25-1.14-.44-1.1-1.07-1.4-1.07-1.4-.87-.6.07-.59.07-.59.96.07 1.47.99 1.47.99.86 1.47 2.25 1.05 2.8.8.09-.62.34-1.05.61-1.29-2.14-.24-4.39-1.07-4.39-4.75 0-1.05.37-1.91 1-2.59-.1-.24-.43-1.23.1-2.55 0 0 .81-.26 2.65 1a9.2 9.2 0 0 1 4.83 0c1.84-1.26 2.65-1 2.65-1 .53 1.32.2 2.31.1 2.55.63.68 1 1.54 1 2.59 0 3.69-2.26 4.5-4.41 4.74.35.3.66.88.66 1.78v2.66c0 .26.18.56.67.46A9.5 9.5 0 0 0 12 2.5Z" clip-rule="evenodd" />
                         </svg>
                       )}
-                    </a>
+                    </a>}
                   </h3>
                   <p>{project.description}</p>
+                  {project.slug === "primate" && (
+                    <div class="project-prize project-site">
+                      <img class="hackathon-logo" src="/primate.svg" alt="" loading="lazy" decoding="async" aria-hidden="true" />
+                      <div class="project-prize-copy">
+                        <a class="project-live-link" href={project.url} target="_blank" rel="noopener noreferrer">Visit Primate</a>
+                      </div>
+                    </div>
+                  )}
                   {project.prizes?.map((prize) => (
                     <div class="project-prize">
                       <img class="hackathon-logo" src={prize.logo} alt="" loading="lazy" decoding="async" aria-hidden="true" />
@@ -279,18 +268,15 @@ const availabilityItems = profile.availability.split(" · ");
   }
   .site-grid {
     display: grid;
-    grid-template-columns: 120px minmax(0, 1fr);
-    gap: 48px;
+    grid-template-columns: 140px minmax(0, 1fr);
+    gap: 40px;
     width: min(100% - 64px, 1680px);
     margin: 0 auto;
   }
   .side-nav { padding-top: 43px; }
   .side-nav-stack { position: sticky; top: 36px; }
   .side-music { display: grid; justify-items: center; gap: 14px; margin-top: 28px; padding-top: 8px; }
-  .side-companion { display: grid; width: 120px; justify-items: center; }
-  .side-music :global(.widget-music > div) { width: 120px; max-width: 120px; }
-  .side-music :global(.widget-music [data-play]) { width: 4.25rem; }
-  .side-music :global(.widget-music .flex.h-4.w-44) { width: 120px; }
+  .side-companion { display: grid; width: 140px; justify-items: center; }
   .content { min-width: 0; }
   .portfolio-new { overflow-x: clip; }
   .top-anchor { scroll-margin-top: 0; }
@@ -382,10 +368,16 @@ const availabilityItems = profile.availability.split(" · ");
   .project-logo { width: 18px; height: 18px; flex: 0 0 18px; object-fit: contain; }
   .project-logo-primate { width: 46px; height: 46px; flex-basis: 46px; align-self: center; border-radius: 7px; }
   .project-info > p { max-width: 620px; margin: 0; font-size: 14px; line-height: 1.55; }
-  .project-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; margin-top: 48px; }
+  .project-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; margin-top: 0; }
+  @media (min-width: 721px) {
+    .project { display: grid; grid-row: span 4; grid-template-rows: subgrid; row-gap: 8px; }
+    .project-grid .project-info-small { display: grid; grid-row: span 3; grid-template-rows: subgrid; padding-top: 10px; }
+    .project-prize { align-self: start; }
+  }
   .project-video-link { display: block; color: var(--ink); text-decoration: none; }
   .project-grid .project-visual { min-height: 0; aspect-ratio: 16 / 10; object-fit: cover; }
-  .project-info-small { grid-template-columns: 1fr; gap: 8px; }
+  .project-whim .project-visual { object-fit: contain; background: #faf9f6; }
+  .project-grid .project-info-small { grid-template-columns: 1fr; gap: 8px; }
   .project-info-small h3 { font-size: 18px; font-weight: 700; }
   .project-secondary-title-link { display: inline-flex !important; align-items: center; gap: 8px; font-size: 18px !important; font-weight: 700 !important; line-height: 1.2; }
   .project-secondary-title { display: flex; align-items: center; gap: 8px; }
@@ -408,6 +400,9 @@ const availabilityItems = profile.availability.split(" · ");
   .project-prize-copy { display: grid; min-width: 0; gap: 3px; }
   .project-prize-copy strong { color: var(--muted); font: 10px/1.25 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; }
   .project-prize-copy small { color: var(--ink); font-size: 12px; font-weight: 600; line-height: 1.4; }
+  .project-site { align-items: center; align-self: start; margin-top: 8px; }
+  .project-live-link { width: fit-content; color: var(--ink); font-size: 12px; font-weight: 600; line-height: 1.4; text-decoration: underline; text-underline-offset: 3px; }
+  .project-live-link:hover { color: var(--accent); }
   .research-layout { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(300px, .88fr); gap: clamp(42px, 5vw, 76px); align-items: stretch; }
   .research-layout > :global(.research-visual) { grid-column: 2; grid-row: 1; height: calc(100% - 16px); }
   .publication { display: block; grid-column: 1; grid-row: 1; padding: 0 0 28px; }
@@ -428,7 +423,8 @@ const availabilityItems = profile.availability.split(" · ");
   footer p { margin: 0; font-size: 11px; letter-spacing: .015em; line-height: 1.5; }
 
   @media (max-width: 1050px) {
-    .site-grid { grid-template-columns: 92px minmax(0, 1fr); gap: 40px; width: min(100% - 48px, 1120px); }
+    .side-companion { width: 112px; }
+    .site-grid { grid-template-columns: 112px minmax(0, 1fr); gap: 32px; width: min(100% - 48px, 1120px); }
     .overview { grid-template-columns: 1fr; gap: 52px; }
     .chess-feature { --chess-size: 22rem; }
     .project-info { grid-template-columns: 120px 1fr; }
@@ -445,12 +441,7 @@ const availabilityItems = profile.availability.split(" · ");
     .side-nav-stack { position: static; }
     .side-nav-stack > :global(.line-nav) { display: none; }
     .side-music { gap: 9px; margin: 0; padding: 8px 4px; border: 1px solid rgba(23, 23, 21, .1); border-radius: 18px; background: rgba(246, 244, 239, .84); box-shadow: 0 10px 32px rgba(23, 23, 21, .1); -webkit-backdrop-filter: blur(16px) saturate(1.2); backdrop-filter: blur(16px) saturate(1.2); }
-    .side-music :global(.widget-music > div) { width: 82px; max-width: 82px; gap: 2px; }
-    .side-music :global(.widget-music [data-play]) { width: 3.25rem; }
-    .side-music :global(.widget-music .flex.h-4.w-44) { width: 76px; }
-    .side-music :global(.widget-music [data-prev]),
-    .side-music :global(.widget-music [data-next]) { padding-right: 2px; padding-left: 2px; }
-    .side-companion { width: 82px; }
+    .side-companion { width: 112px; }
     .site-header { align-items: stretch; flex-direction: column; gap: 10px; padding: max(22px, env(safe-area-inset-top)) 0 20px; }
     .site-header h1 { font-size: 28px; }
     .header-contact { justify-content: space-between; gap: 0; margin-right: 0; padding-top: 0; }
@@ -519,7 +510,7 @@ const availabilityItems = profile.availability.split(" · ");
     .featured-project-description,
     .project-info-small > p { max-width: none; margin-top: 7px !important; color: var(--muted); font-size: 14px !important; font-weight: 400; line-height: 1.5 !important; }
     .project-info > a { grid-column: auto; }
-    .project-grid { grid-template-columns: 1fr; gap: 38px; margin-top: 40px; }
+    .project-grid { grid-template-columns: 1fr; gap: 38px; margin-top: 0; }
     .project-grid .project-visual { min-height: 0; }
     .research-layout { grid-template-columns: 1fr; gap: 18px; }
     .publication { padding-top: 0; padding-bottom: 0; }

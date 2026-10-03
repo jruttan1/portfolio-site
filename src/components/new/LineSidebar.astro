@@ -19,29 +19,63 @@ const { items } = Astro.props;
 </nav>
 
 <script>
-  const nav = document.querySelector<HTMLElement>("[data-line-nav]");
-  const items = [...(nav?.querySelectorAll<HTMLElement>("li[data-target]") ?? [])];
-
-  nav?.addEventListener("pointermove", (event) => {
-    items.forEach((item) => {
-      const rect = item.getBoundingClientRect();
-      const distance = Math.abs(event.clientY - (rect.top + rect.height / 2));
-      item.style.setProperty("--effect", String(Math.max(0, 1 - distance / 90)));
+  let cleanupNav: (() => void) | undefined;
+  const initializeNav = () => {
+    cleanupNav?.();
+    const nav = document.querySelector<HTMLElement>("[data-line-nav]");
+    if (!nav) return;
+    const items = [...nav.querySelectorAll<HTMLElement>("li[data-target]")];
+    const sections = items.flatMap((item) => {
+      const section = document.getElementById(item.dataset.target ?? "");
+      return section ? [{ item, section }] : [];
     });
-  });
+    const events = new AbortController();
+    let frame = 0;
 
-  nav?.addEventListener("pointerleave", () => items.forEach((item) => item.style.setProperty("--effect", "0")));
+    const updateActive = () => {
+      frame = 0;
+      // Use a reading line near the top, independent of each section's height.
+      const readingLine = window.innerHeight * 0.3;
+      let active = sections[0];
+      for (const entry of sections) {
+        if (entry.section.getBoundingClientRect().top <= readingLine) active = entry;
+      }
+      const atBottom = window.scrollY > 0 &&
+        window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2;
+      if (atBottom) active = sections[sections.length - 1];
+      for (const { item } of sections) {
+        const selected = item === active?.item;
+        item.classList.toggle("active", selected);
+        const link = item.querySelector("a");
+        if (selected) link?.setAttribute("aria-current", "location");
+        else link?.removeAttribute("aria-current");
+      }
+    };
+    const scheduleUpdate = () => {
+      if (!frame) frame = window.requestAnimationFrame(updateActive);
+    };
 
-  const observer = new IntersectionObserver((entries) => {
-    const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-    if (!visible) return;
-    items.forEach((item) => item.classList.toggle("active", item.dataset.target === visible.target.id));
-  }, { rootMargin: "-24% 0px -60%", threshold: [0, 0.2, 0.5] });
-
-  items.forEach((item) => {
-    const section = document.getElementById(item.dataset.target ?? "");
-    if (section) observer.observe(section);
-  });
+    nav.addEventListener("pointermove", (event) => {
+      items.forEach((item) => {
+        const rect = item.getBoundingClientRect();
+        const distance = Math.abs(event.clientY - (rect.top + rect.height / 2));
+        item.style.setProperty("--effect", String(Math.max(0, 1 - distance / 90)));
+      });
+    }, { signal: events.signal });
+    nav.addEventListener("pointerleave", () => items.forEach((item) => item.style.setProperty("--effect", "0")), { signal: events.signal });
+    window.addEventListener("scroll", scheduleUpdate, { passive: true, signal: events.signal });
+    window.addEventListener("resize", scheduleUpdate, { passive: true, signal: events.signal });
+    const resizeObserver = new ResizeObserver(scheduleUpdate);
+    sections.forEach(({ section }) => resizeObserver.observe(section));
+    updateActive();
+    cleanupNav = () => {
+      events.abort();
+      resizeObserver.disconnect();
+      window.cancelAnimationFrame(frame);
+    };
+  };
+  document.addEventListener("astro:page-load", initializeNav);
+  document.addEventListener("astro:before-swap", () => cleanupNav?.());
 </script>
 
 <style is:global>

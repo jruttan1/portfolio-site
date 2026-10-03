@@ -26,6 +26,17 @@ body {
   text-rendering: geometricPrecision;
 }
 
+/* Restore content list markers removed by Tailwind's reset. */
+.prose ul {
+  list-style: disc outside;
+  padding-inline-start: 1.5rem;
+}
+
+.prose ol {
+  list-style: decimal outside;
+  padding-inline-start: 1.5rem;
+}
+
 @media (hover: hover) {
   a,
   button,

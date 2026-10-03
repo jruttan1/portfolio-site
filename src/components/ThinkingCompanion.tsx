@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   MODE_FRAMES,
   paintFrame,
@@ -9,106 +9,11 @@ import {
   type OrbSize,
   type OrbState
 } from "thinking-orbs/engine";
-import { unlockAndPlayUISFX } from "../lib/uiSfx";
+import { getMusicPlayer } from "../lib/musicPlayer";
+import { tracks } from "../data/music";
 import "./ThinkingCompanion.css";
 
-const TRANSITION_MS = 520;
-const WELCOME_MESSAGE = "Oh hello there";
-const AMBIENT_QUESTIONS = [
-  "Finding everything alright?",
-  "Do you always scroll this carefully?",
-  "Seen anything good yet?",
-  "Are you here on purpose?",
-  "Should I be taking notes?",
-  "How is the browsing going?",
-  "Still with me?"
-];
-const CLICK_STATES: Array<{ state: OrbState; label: string }> = [
-  { state: "shaping", label: "Need something?" },
-  { state: "weaving", label: "Still here" },
-  { state: "connecting", label: "Yes?" },
-  { state: "solving", label: "You can keep doing that" },
-  { state: "searching", label: "Quite persistent" },
-  { state: "working", label: "Alright then" }
-];
-
-const reactionFor = (element: Element | null): string | null => {
-  if (!element) return null;
-
-  const contact = element.closest<HTMLElement>(".header-links a")?.getAttribute("aria-label");
-  if (contact) {
-    return ({
-      Email: "Say what's up",
-      GitHub: "Lots of code",
-      LinkedIn: "Professionally formatted",
-      X: "Don't click this one",
-      "Google Scholar": "Citations are here",
-      Resume: "The short version",
-      "Cal.com": "Pick a time please"
-    } as Record<string, string>)[contact] ?? null;
-  }
-
-  if (element.closest(".thinking-companion__button")) return "Yes, that is me";
-  if (element.closest(".widget-music [data-prev]")) return "The previous selection";
-  if (element.closest(".widget-music [data-next]")) return "Another fine selection";
-  if (element.closest(".widget-music [data-play]")) return "Press for atmosphere";
-  if (element.closest(".widget-music")) return "A tasteful little soundtrack";
-  if (element.closest(".site-header h1")) return "Legally named John for some reason";
-  if (element.closest(".header-contact-label")) return "Several ways to say hello";
-  if (element.closest("#about-heading")) return "The general idea";
-  if (element.closest(".about-word-western")) return "Going to every class";
-  if (element.closest(".about-word-lifemark")) return "Grateful for job :)";
-  if (element.closest(".about-word-primate")) return "The monkey means business";
-  if (element.closest(".location-place")) return "Living over there";
-  if (element.closest(".location")) return "Available within reason";
-  if (element.closest(".about-copy > p:first-of-type")) return "A brief introduction";
-  if (element.closest(".about-copy > p:nth-of-type(2)")) return "The current situation";
-  if (element.closest(".experience h2")) return "Has done jobs";
-
-  const role = element.closest<HTMLElement>(".experience li");
-  if (role) {
-    const name = role.querySelector("h3")?.textContent?.trim();
-    return ({
-      "Lifemark Health Group": "Yes I am employed.",
-      "Tech for Social Impact": "Software but impactful.",
-      "Unity Health Toronto": "AI doctors? No"
-    } as Record<string, string>)[name ?? ""] ?? "Has done jobs";
-  }
-
-  if (element.closest("[data-board-reset]")) return "A clean slate Convenient";
-  if (element.closest(".chess-copy a")) return "The training continues";
-  if (element.closest(".chess-copy")) return "A patient explanation";
-  if (element.closest(".chessground-board")) return "Not ready yet sorry";
-  if (element.closest(".chess-feature")) return "Chess has appeared";
-  if (element.closest(".project-prize")) return "They gave it prizes";
-  if (element.closest(".project-video-link")) return "Moving pictures Helpful";
-  if (element.closest(".project-featured")) return "Serious monkey business";
-  if (element.closest(".project-primate")) return "Serious monkey business";
-  if (element.closest(".project-optimate")) return "Insurance, sounds boring";
-  if (element.closest(".project-doppels")) return "Dystopian maybe";
-  if (element.closest("#projects .mobile-section-heading")) return "Things he made";
-  if (element.closest(".paper-link")) return "The paper, in full";
-  if (element.closest(".publication-venue")) return "Published Officially";
-  if (element.closest(".publication-heading")) return "A very long title";
-  if (element.closest(".publication-summary")) return "The slightly longer version";
-  if (element.closest(".research-visual")) return "More moving explanations";
-  if (element.closest("#research .mobile-section-heading")) return "Things he proved";
-  if (element.closest(".research-layout")) return "Apparently publishable after heavy review";
-  if (element.closest("footer")) return "Made by the guy above";
-
-  const navItem = element.closest<HTMLElement>(".side-nav a");
-  if (navItem) {
-    const label = navItem.textContent?.trim();
-    return label ? ({
-      About: "Back to the introduction",
-      Projects: "Things he made",
-      Research: "Things he proved"
-    } as Record<string, string>)[label] ?? null : null;
-  }
-
-  return null;
-};
-
+const TRANSITION_MS = 720;
 type DotPair = { from: number; to: number };
 type LinePair = { from: number | null; to: number | null };
 
@@ -198,6 +103,7 @@ function AnimatedOrb({ state, size, displaySize }: { state: OrbState; size: OrbS
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const targetState = useRef(state);
   const lastFrame = useRef<OrbFrame | null>(null);
+  const beat = useRef({ level: 0, time: 0 });
   const transition = useRef<{
     startedAt: number;
     from: OrbFrame;
@@ -231,21 +137,22 @@ function AnimatedOrb({ state, size, displaySize }: { state: OrbState; size: OrbS
 
     const dpr = Math.min(2, window.devicePixelRatio || 1);
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const tint = { r: 217, g: 72, b: 43 };
+    const tint = { r: 61, g: 99, b: 221 };
     let animationFrame = 0;
 
-    canvas.width = Math.round(size * dpr);
-    canvas.height = Math.round(size * dpr);
+    const pixels = Math.round(size * dpr);
+    if (canvas.width !== pixels) canvas.width = pixels;
+    if (canvas.height !== pixels) canvas.height = pixels;
 
     const draw = (time: number) => {
       const preset = resolvePreset(targetState.current, size);
-      const target = MODE_FRAMES[preset.mode](size, (time / 1000) * preset.speed * 0.88, preset.opts);
+      const target = MODE_FRAMES[preset.mode](size, reducedMotion ? 0 : (time / 1000) * preset.speed * 0.88, preset.opts);
       const activeTransition = transition.current;
       let frame = target;
 
       if (activeTransition && !reducedMotion) {
         const progress = Math.min(1, (time - activeTransition.startedAt) / TRANSITION_MS);
-        const eased = 1 - Math.pow(1 - progress, 3);
+        const eased = progress * progress * (3 - 2 * progress);
         frame = morphFrame(activeTransition.from, target, activeTransition.dots, activeTransition.lines, eased);
         if (progress >= 1) transition.current = null;
       } else if (reducedMotion) {
@@ -254,7 +161,21 @@ function AnimatedOrb({ state, size, displaySize }: { state: OrbState; size: OrbS
 
       context.setTransform(dpr, 0, 0, dpr, 0, 0);
       context.clearRect(0, 0, size, size);
+      const targetEnergy = reducedMotion ? 0 : getMusicPlayer().energy();
+      const elapsed = Math.min(50, Math.max(0, time - beat.current.time));
+      const response = targetEnergy > beat.current.level ? 90 : 260;
+      beat.current.level += (targetEnergy - beat.current.level) * (1 - Math.exp(-elapsed / response));
+      beat.current.time = time;
+      const energy = reducedMotion ? 0 : beat.current.level;
+      const head = canvas.closest<HTMLElement>(".dj-head");
+      if (head) head.style.setProperty("--beat", String(energy));
+      canvas.closest<HTMLElement>(".thinking-companion")?.style.setProperty("--level", String(energy));
+      context.save();
+      context.translate(size / 2, size / 2);
+      context.scale(1 + energy * 0.12, 1 + energy * 0.12);
+      context.translate(-size / 2, -size / 2);
       paintFrame(context, frame, true, tint);
+      context.restore();
       lastFrame.current = frame;
 
       if (!reducedMotion) animationFrame = window.requestAnimationFrame(draw);
@@ -269,166 +190,196 @@ function AnimatedOrb({ state, size, displaySize }: { state: OrbState; size: OrbS
       ref={canvasRef}
       className="thinking-companion__orb"
       role="img"
-      aria-label={`Companion is ${state}`}
+      aria-hidden="true"
       style={{ width: displaySize, height: displaySize }}
     />
   );
 }
 
+function ScrollingTrackText({ text, className }: { text: string; className: string }) {
+  const windowRef = useRef<HTMLSpanElement>(null);
+  const textRef = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    const frame = windowRef.current!;
+    const content = textRef.current!;
+    const measure = () => {
+      const distance = Math.max(0, Math.ceil(content.getBoundingClientRect().width - frame.clientWidth));
+      frame.dataset.overflow = String(distance > 1);
+      frame.style.setProperty("--text-pan", `-${distance}px`);
+      frame.style.setProperty("--text-pan-duration", `${Math.max(8, distance / 18 + 4)}s`);
+    };
+    const observer = new ResizeObserver(measure);
+    observer.observe(frame);
+    observer.observe(content);
+    measure();
+    return () => observer.disconnect();
+  }, [text]);
+
+  return <span ref={windowRef} className={className}><span ref={textRef} className="dj-track-scroll">{text}</span></span>;
+}
+
+function RecordArtwork({ src }: { src: string }) {
+  const [covers, setCovers] = useState({ current: src, previous: null as string | null });
+
+  useEffect(() => {
+    let cancelled = false;
+    const image = new Image();
+    image.src = src;
+    // Don't spend the fade waiting for the new artwork to download or decode.
+    void image.decode().then(() => {
+      if (cancelled) return;
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      setCovers((previous) => previous.current === src ? previous : {
+        current: src,
+        previous: reducedMotion ? null : previous.current
+      });
+    }).catch(() => { /* Keep the last usable cover if this image fails. */ });
+    return () => { cancelled = true; };
+  }, [src]);
+
+  return <>
+    {covers.previous && <span key={covers.previous} className="dj-cover-layer dj-cover-out" style={{ backgroundImage: `url(${JSON.stringify(covers.previous)})` }} aria-hidden="true" />}
+    <span key={covers.current} className={`dj-cover-layer dj-cover-current${covers.previous ? " dj-cover-entering" : ""}`}
+      style={{ backgroundImage: `url(${JSON.stringify(covers.current)})` }} aria-hidden="true"
+      onAnimationEnd={(event) => {
+        if (event.animationName === "dj-cover-in") setCovers((current) => ({ ...current, previous: null }));
+      }} />
+  </>;
+}
+
 export default function ThinkingCompanion() {
-  const [reaction, setReaction] = useState<string | null>(null);
-  const [ambientMessage, setAmbientMessage] = useState<string | null>(WELCOME_MESSAGE);
-  const [orbSize, setOrbSize] = useState<64 | 32>(64);
-  const [musicPlaying, setMusicPlaying] = useState(false);
-  const [clickedState, setClickedState] = useState<(typeof CLICK_STATES)[number] | null>(null);
-  const clickIndex = useRef(0);
-  const clickTimer = useRef<number | undefined>(undefined);
-  const reactionTimer = useRef<number | undefined>(undefined);
-  const pendingReaction = useRef<string | null>(null);
-  const ambientTimer = useRef<number | undefined>(undefined);
-  const ambientClearTimer = useRef<number | undefined>(undefined);
-  const lastQuestion = useRef(-1);
+  const [music, setMusic] = useState<ReturnType<ReturnType<typeof getMusicPlayer>["snapshot"]> | null>(null);
+  const [stopping, setStopping] = useState(false);
+  const [scratching, setScratching] = useState(false);
+  const scratchTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const scratchReadyAt = useRef(0);
+  const vinylPointer = useRef<{ x: number; y: number; distance: number } | null>(null);
+  const triggerScratch = useCallback(() => {
+    const player = getMusicPlayer();
+    const snapshot = player.snapshot();
+    const now = performance.now();
+    if (now < scratchReadyAt.current || !snapshot.playing || snapshot.volume <= 0 ||
+      (snapshot.phase !== "playing" && snapshot.phase !== "echo")) return;
+    scratchReadyAt.current = now + 1800;
+    player.scratch();
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) setScratching(true);
+    clearTimeout(scratchTimer.current);
+    scratchTimer.current = setTimeout(() => setScratching(false), 1350);
+  }, []);
+  const lastScratchTransition = useRef<number | null>(null);
+  const djRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const scheduleQuestion = () => {
-      const delay = 16000 + Math.random() * 18000;
-      ambientTimer.current = window.setTimeout(() => {
-        let index = Math.floor(Math.random() * AMBIENT_QUESTIONS.length);
-        if (index === lastQuestion.current) index = (index + 1) % AMBIENT_QUESTIONS.length;
-        lastQuestion.current = index;
-        setAmbientMessage(AMBIENT_QUESTIONS[index]);
-        ambientClearTimer.current = window.setTimeout(() => {
-          setAmbientMessage(null);
-          scheduleQuestion();
-        }, 6000);
-      }, delay);
+    const player = getMusicPlayer();
+    let wasPlaying = false;
+    let stopTimer: ReturnType<typeof setTimeout> | undefined;
+    const update = () => {
+      const next = player.snapshot();
+      if (wasPlaying && !next.playing) {
+        clearTimeout(scratchTimer.current);
+        setScratching(false);
+        vinylPointer.current = null;
+        djRef.current?.querySelectorAll<HTMLElement>(".dj-hand, .dj-tonearm, .dj-vinyl-motion").forEach((element) => {
+          element.style.setProperty("--pause-from", getComputedStyle(element).transform);
+        });
+        setStopping(true);
+        clearTimeout(stopTimer);
+        stopTimer = setTimeout(() => setStopping(false), 1400);
+      } else if (next.playing && !wasPlaying) {
+        scratchReadyAt.current = performance.now() + 1600;
+        clearTimeout(stopTimer);
+        setStopping(false);
+      }
+      wasPlaying = next.playing;
+      setMusic(next);
     };
-
-    ambientClearTimer.current = window.setTimeout(() => {
-      setAmbientMessage(null);
-      scheduleQuestion();
-    }, 4800);
-
-    return () => {
-      window.clearTimeout(ambientTimer.current);
-      window.clearTimeout(ambientClearTimer.current);
-    };
+    update();
+    const unsubscribe = player.subscribe(update);
+    return () => { unsubscribe(); clearTimeout(stopTimer); clearTimeout(scratchTimer.current); };
   }, []);
+
+  const playing = music?.playing ?? false;
+  const track = music?.track ?? tracks[0];
+  const [trackLayers, setTrackLayers] = useState<{ current: typeof track; previous: typeof track | null }>({ current: track, previous: null });
+  if (trackLayers.current !== track) setTrackLayers({ current: track, previous: trackLayers.current });
+  useEffect(() => {
+    if (!trackLayers.previous) return;
+    const timer = setTimeout(() => setTrackLayers((layers) => ({ ...layers, previous: null })), 700);
+    return () => clearTimeout(timer);
+  }, [trackLayers.current]);
+  const state: OrbState = playing ? (music?.echo ? "weaving" : "composing") : "breathing";
 
   useEffect(() => {
-    const media = window.matchMedia("(max-width: 720px)");
-    const updateSize = () => setOrbSize(media.matches ? 32 : 64);
-
-    updateSize();
-    media.addEventListener("change", updateSize);
-
-    const onMusic = (event: Event) => {
-      const detail = (event as CustomEvent<{ playing: boolean; title: string }>).detail;
-      setMusicPlaying(detail.playing);
-    };
-
-    const queueReaction = (next: string | null, delay: number) => {
-      if (pendingReaction.current === next) return;
-      pendingReaction.current = next;
-      window.clearTimeout(reactionTimer.current);
-      reactionTimer.current = window.setTimeout(() => setReaction(next), delay);
-    };
-
-    const onPointerOver = (event: PointerEvent) => {
-      const target = event.target instanceof Element ? event.target : null;
-      const next = reactionFor(target);
-      queueReaction(next, next ? 180 : 420);
-    };
-
-    const onFocusIn = (event: FocusEvent) => {
-      const target = event.target instanceof Element ? event.target : null;
-      queueReaction(reactionFor(target), 120);
-    };
-
-    const onFocusOut = (event: FocusEvent) => {
-      const target = event.relatedTarget instanceof Element ? event.relatedTarget : null;
-      queueReaction(reactionFor(target), 240);
-    };
-
-    window.addEventListener("portfolio:music", onMusic);
-    document.addEventListener("pointerover", onPointerOver, { passive: true });
-    document.addEventListener("focusin", onFocusIn);
-    document.addEventListener("focusout", onFocusOut);
-
-    return () => {
-      media.removeEventListener("change", updateSize);
-      window.removeEventListener("portfolio:music", onMusic);
-      document.removeEventListener("pointerover", onPointerOver);
-      document.removeEventListener("focusin", onFocusIn);
-      document.removeEventListener("focusout", onFocusOut);
-      window.clearTimeout(clickTimer.current);
-      window.clearTimeout(reactionTimer.current);
-    };
-  }, []);
-
-  const changeState = () => {
-    const next = CLICK_STATES[clickIndex.current % CLICK_STATES.length];
-    clickIndex.current += 1;
-    setClickedState(next);
-    window.clearTimeout(clickTimer.current);
-    clickTimer.current = window.setTimeout(() => setClickedState(null), 2200);
-    void unlockAndPlayUISFX("select", 0.6);
-  };
-
-  const status = clickedState?.label ?? reaction ?? ambientMessage ?? (musicPlaying ? "Good song" : "Just looking");
-  const [displayedStatus, setDisplayedStatus] = useState(status);
-  const [statusVisible, setStatusVisible] = useState(true);
-  const [companionHeight, setCompanionHeight] = useState(80);
-  const statusRef = useRef<HTMLSpanElement>(null);
-  const displayedStatusRef = useRef(status);
-  const statusSwapTimer = useRef<number | undefined>(undefined);
-  const statusFrame = useRef<number | undefined>(undefined);
-
-  useEffect(() => {
-    window.clearTimeout(statusSwapTimer.current);
-    window.cancelAnimationFrame(statusFrame.current ?? 0);
-    if (status === displayedStatusRef.current) {
-      setStatusVisible(true);
-      return;
-    }
-    setStatusVisible(false);
-    statusSwapTimer.current = window.setTimeout(() => {
-      displayedStatusRef.current = status;
-      setDisplayedStatus(status);
-      statusFrame.current = window.requestAnimationFrame(() => setStatusVisible(true));
-    }, 170);
-  }, [status]);
-
-  useEffect(() => () => {
-    window.clearTimeout(statusSwapTimer.current);
-    window.cancelAnimationFrame(statusFrame.current ?? 0);
-  }, []);
-
-  useLayoutEffect(() => {
-    const textHeight = Math.ceil(statusRef.current?.scrollHeight ?? 0);
-    const frameHeight = orbSize === 64 ? 68 : 50;
-    const minimumHeight = orbSize === 64 ? 83 : 62;
-    setCompanionHeight(Math.max(minimumHeight, frameHeight + textHeight));
-  }, [displayedStatus, orbSize]);
-
-  const askingQuestion = ambientMessage !== null && ambientMessage !== WELCOME_MESSAGE;
-  const state: OrbState = clickedState?.state
-    ?? (reaction ? "listening" : musicPlaying ? "composing" : askingQuestion ? "searching" : "breathing");
+    setScratching(false);
+    const count = music?.transitionCount;
+    if (count === undefined) return;
+    const previous = lastScratchTransition.current;
+    lastScratchTransition.current = count;
+    if (!playing || previous === null || count === previous) return;
+    const timer = setTimeout(() => {
+      const snapshot = getMusicPlayer().snapshot();
+      if (document.visibilityState === "visible" && !window.matchMedia("(prefers-reduced-motion: reduce)").matches && snapshot.playing && (snapshot.phase === "playing" || snapshot.phase === "echo") && snapshot.volume > 0) {
+        triggerScratch();
+      }
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [playing, music?.transitionCount, triggerScratch]);
 
   return (
-    <aside className="thinking-companion" aria-label="Site companion" style={{ height: companionHeight }}>
-      <button
-        className="thinking-companion__button"
-        type="button"
-        aria-label="Change orb state"
-        onClick={changeState}
-        style={{ height: companionHeight - 2 }}
-      >
-        <AnimatedOrb state={state} size={orbSize} displaySize={orbSize === 64 ? 40 : 24} />
-        <span ref={statusRef} className={`thinking-companion__status${statusVisible ? " is-visible" : ""}`} aria-live="polite">
-          {displayedStatus}
-        </span>
+    <aside ref={djRef} className="thinking-companion" data-playing={playing} data-stopping={stopping} data-scratching={scratching} data-mixing={music?.phase === "echo" || music?.phase === "transitioning" || music?.phase === "cueing"} aria-label="Pocket DJ">
+      <button className="dj-head" type="button" onClick={() => getMusicPlayer().toggle()}
+        aria-label={playing ? "Pause music" : "Play music"} title={playing ? "Pause music" : "Play music"}>
+        <span className="dj-headphones" aria-hidden="true" />
+        <AnimatedOrb state={state} size={64} displaySize={54} />
+        <span className="dj-face" aria-hidden="true"><i /><i /></span>
       </button>
+      <div className="dj-booth">
+        <span className="dj-hand dj-hand--left" aria-hidden="true" />
+        <span className="dj-hand dj-hand--right" aria-hidden="true" />
+        <div className="dj-turntable">
+          <button className="dj-record" type="button" onClick={() => getMusicPlayer().toggle()}
+            onPointerEnter={(event) => {
+              if (event.pointerType === "mouse") vinylPointer.current = { x: event.clientX, y: event.clientY, distance: 0 };
+            }}
+            onPointerLeave={() => { vinylPointer.current = null; }}
+            onPointerMove={(event) => {
+              const previous = vinylPointer.current;
+              if (event.pointerType !== "mouse" || event.buttons !== 0 || !previous) return;
+              const distance = previous.distance + Math.hypot(event.clientX - previous.x, event.clientY - previous.y);
+              vinylPointer.current = { x: event.clientX, y: event.clientY, distance: distance >= 10 ? 0 : distance };
+              if (distance >= 10) triggerScratch();
+            }}
+            aria-label={playing ? "Pause music" : "Play music"} title={playing ? "Pause music" : "Play music"}>
+            <span className="dj-vinyl-motion">
+            <span className="dj-vinyl">
+              <RecordArtwork src={track.cover} /><i />
+            </span>
+            </span>
+          </button>
+          <span className="dj-tonearm" aria-hidden="true" />
+          <span className="dj-meters" aria-hidden="true"><i /><i /><i /></span>
+        </div>
+        <div className="dj-display" aria-live="polite" aria-atomic="true" title={`${track.title} — ${track.artist}`}>
+          <span className="dj-now-playing">Now playing<span className="dj-now-playing-glow" aria-hidden="true">Now playing</span></span>
+          <span className="dj-display-light" aria-hidden="true"><i /></span>
+          <div className="dj-track-window" data-track-changing={Boolean(trackLayers.previous)}>
+            {trackLayers.previous && <div className="dj-track-details dj-track-out" aria-hidden="true">
+              <span className="dj-track-title">{trackLayers.previous.title}</span>
+              <span className="dj-track-artist">{trackLayers.previous.artist}</span>
+            </div>}
+            <div key={track.cover} className="dj-track-details dj-track-current">
+              <ScrollingTrackText className="dj-track-title" text={track.title} />
+              <ScrollingTrackText className="dj-track-artist" text={track.artist} />
+            </div>
+          </div>
+        </div>
+        <div className="dj-progress">
+          <span className="dj-progress-fill" key={track.cover} aria-hidden="true" style={{ transform: `scaleX(${Math.min(1, Math.max(0, (music?.position ?? 0) / (music?.duration || 1)))})` }} />
+          <progress value={music?.position ?? 0} max={music?.duration || 1} aria-label="Track progress" />
+        </div>
+      </div>
+      <p className="dj-status" aria-live="polite">{music?.error || ""}</p>
     </aside>
   );
 }

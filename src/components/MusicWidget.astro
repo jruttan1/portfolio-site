@@ -1,6 +1,5 @@
 ---
 import { tracks } from "../data/music";
-const tracksJson = JSON.stringify(tracks);
 ---
 
 <section class="widget-music text-ink">
@@ -32,94 +31,29 @@ const tracksJson = JSON.stringify(tracks);
   </div>
 </section>
 
-<script is:inline define:vars={{ tracksJson }}>
-  const tracks = JSON.parse(tracksJson);
-  const root = document.querySelector(".widget-music");
-  const play = root?.querySelector("[data-play]");
-  const prev = root?.querySelector("[data-prev]");
-  const next = root?.querySelector("[data-next]");
-  const disc = root?.querySelector("[data-disc]");
-  const cover = root?.querySelector("[data-cover]");
-  const title = root?.querySelector("[data-title]");
-  const defaultVolume = 0.18;
-  let index = 0;
-  let playing = false;
-  let audio = new Audio(tracks[index].audio);
-  audio.volume = defaultVolume;
-  const emitCue = (cue) => window.dispatchEvent(new CustomEvent("portfolio:audio-cue", { detail: { cue } }));
+<script>
+  import { getMusicPlayer } from "../lib/musicPlayer";
 
-  const render = () => {
-    const track = tracks[index];
-    if (title) title.textContent = track.title;
-    if (cover) cover.setAttribute("src", track.cover);
-    if (disc instanceof HTMLElement) {
-      if (playing) disc.classList.add("disc-spin");
-      disc.style.animationPlayState = playing ? "running" : "paused";
-    }
-    play?.setAttribute("aria-label", playing ? "Pause" : "Play");
-    window.dispatchEvent(new CustomEvent("portfolio:music", {
-      detail: { playing, title: track.title }
-    }));
-  };
-
-  const loadTrack = () => {
-    audio.pause();
-    audio = new Audio(tracks[index].audio);
-    audio.volume = defaultVolume;
-    audio.addEventListener("ended", () => {
-      playing = false;
-      render();
-    });
-  };
-
-  loadTrack();
-
-  play?.addEventListener("click", async () => {
-    playing = !playing;
-    if (playing) {
-      try {
-        audio.volume = defaultVolume;
-        await audio.play();
-        emitCue("play");
-      } catch {
-        playing = false;
+  document.querySelectorAll<HTMLElement>(".widget-music").forEach((root) => {
+    const player = getMusicPlayer();
+    const play = root.querySelector<HTMLButtonElement>("[data-play]");
+    const disc = root.querySelector<HTMLElement>("[data-disc]");
+    const cover = root.querySelector<HTMLImageElement>("[data-cover]");
+    const title = root.querySelector<HTMLElement>("[data-title]");
+    const render = () => {
+      const { playing, track, error } = player.snapshot();
+      if (title) title.textContent = error || track.title;
+      if (cover) cover.src = track.cover;
+      if (disc) {
+        if (playing) disc.classList.add("disc-spin");
+        disc.style.animationPlayState = playing ? "running" : "paused";
       }
-    } else {
-      audio.pause();
-      emitCue("pause");
-    }
-    render();
-  });
-
-  prev?.addEventListener("click", async () => {
-    const wasPlaying = playing;
-    index = (index - 1 + tracks.length) % tracks.length;
-    loadTrack();
-    emitCue("skip-previous");
-    if (wasPlaying) {
-      try {
-        audio.volume = defaultVolume;
-        await audio.play();
-      } catch {
-        playing = false;
-      }
-    }
-    render();
-  });
-
-  next?.addEventListener("click", async () => {
-    const wasPlaying = playing;
-    index = (index + 1) % tracks.length;
-    loadTrack();
-    emitCue("skip-next");
-    if (wasPlaying) {
-      try {
-        audio.volume = defaultVolume;
-        await audio.play();
-      } catch {
-        playing = false;
-      }
-    }
+      play?.setAttribute("aria-label", playing ? "Pause music" : "Play music");
+    };
+    play?.addEventListener("click", () => player.toggle());
+    root.querySelector("[data-prev]")?.addEventListener("click", () => player.skip(-1));
+    root.querySelector("[data-next]")?.addEventListener("click", () => player.skip(1));
+    player.subscribe(render);
     render();
   });
 </script>
