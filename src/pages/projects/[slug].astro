@@ -1,0 +1,166 @@
+---
+import DemoVideo from "../../components/DemoVideo.astro";
+import ArrowIcon from "../../components/ArrowIcon.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PocketDJ from "../../components/PocketDJ.astro";
+import { caseStudies, type CaseStudy } from "../../data/caseStudies";
+
+export function getStaticPaths() {
+  return caseStudies.map((study) => ({ params: { slug: study.slug }, props: { study } }));
+}
+const { study } = Astro.props as { study: CaseStudy };
+const currentIndex = caseStudies.findIndex((item) => item.slug === study.slug);
+const nextStudy = caseStudies[(currentIndex + 1) % caseStudies.length];
+---
+
+<BaseLayout title={`${study.name} · Jack Ruttan`} description={study.overview}>
+  <div class="case-layout">
+    <aside class="case-dj" aria-label="Music player">
+      <div class="case-dj-dock"><PocketDJ /></div>
+    </aside>
+  <main class="case-study">
+    <nav class="case-nav" aria-label="Project navigation">
+      <a href="/"><ArrowIcon direction="left" /> <span>Back</span></a>
+      <a href={study.externalUrl} target="_blank" rel="noopener noreferrer"><span>{study.externalLabel}</span> <ArrowIcon /></a>
+    </nav>
+
+    <article>
+      <header>
+        <p class="project-context">{study.eyebrow}</p>
+        <h1>{study.name}</h1>
+        <p class="subtitle">{study.title}</p>
+        <p class="intro">{study.overview}</p>
+      </header>
+
+      <figure class:list={["cover", { "cover-phone": study.slug === "whim" }]}>
+        {study.media ? (
+          <DemoVideo src={study.media} poster={study.poster ?? `/demos/${study.slug}-poster.jpg`} aspectRatio={study.mediaAspectRatio ?? (study.slug === "optimate" ? "48 / 25" : "16 / 9")} label={`${study.name} product demo`} />
+        ) : (
+          <img src={study.poster} alt={`${study.name} running on an iPhone`} />
+        )}
+      </figure>
+      {study.demoNote && <p class="demo-note prose">{study.demoNote}</p>}
+
+      <dl class="project-facts" style={`--fact-columns: ${2 + Number(Boolean(study.role)) + Number(study.skills.length > 0)}`}>
+        {study.role && <div><dt>My role</dt><dd>{study.role}</dd></div>}
+        <div><dt>When</dt><dd>{study.timeline}</dd></div>
+        <div><dt>Team</dt><dd>{study.team}</dd></div>
+        {study.skills.length > 0 && <div><dt>Built with</dt><dd>{study.skills.join(", ")}</dd></div>}
+      </dl>
+
+      {study.personalContext && <section class="prose">
+        <h2>{study.personalContext.title}</h2>
+        <p>{study.personalContext.body}</p>
+      </section>}
+
+      {study.contributions && <section class="prose">
+        <h2>My work</h2>
+        {study.contributions.map((contribution) => (
+          <div>
+            <h3>{contribution.title}</h3>
+            <p>{contribution.body}</p>
+          </div>
+        ))}
+      </section>}
+
+      <section class="product" aria-label="Screenshots and demos">
+        {study.screenshots.map((screen) => (
+          <figure class="product-screen">
+            <div class="prose"><h3>{screen.title}</h3>{screen.caption && <p>{screen.caption}</p>}</div>
+            <a href={screen.src} target="_blank" rel="noopener noreferrer" aria-label={`Open screenshot: ${screen.title}`}>
+              <img src={screen.src} alt={screen.caption || screen.title} loading="lazy" />
+            </a>
+          </figure>
+        ))}
+        {study.featureDemos && <div class="feature-demos">
+          {study.featureDemos.map((demo) => (
+            <figure class="feature-demo">
+              <h3>{demo.title}</h3>
+              <p>{demo.caption}</p>
+              <video controls playsinline muted preload="none" poster={demo.poster} style={`aspect-ratio: ${demo.aspectRatio}`} aria-label={demo.title}>
+                <source src={demo.src} type="video/mp4" />
+              </video>
+            </figure>
+          ))}
+        </div>}
+      </section>
+
+      {study.process && <section class="prose">
+        <h2>{study.processTitle}</h2>
+        <p>{study.process}</p>
+      </section>}
+
+      <section class="prose outcomes">
+        <h2>{study.outcomeTitle}</h2>
+        {study.outcomeNote && <p>{study.outcomeNote}</p>}
+        {study.outcomes.length > 0 && <ul>{study.outcomes.map((outcome) => <li>{outcome}</li>)}</ul>}
+      </section>
+
+      <footer>
+        <a href="/"><ArrowIcon direction="left" /> <span>Back</span></a>
+        <a href={`/projects/${nextStudy.slug}`}><span>{nextStudy.name}</span> <ArrowIcon direction="right" /></a>
+      </footer>
+    </article>
+  </main>
+  </div>
+</BaseLayout>
+
+<style>
+  .case-layout { display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 40px; width: min(100% - 64px, 1220px); margin: 0 auto; }
+  .case-dj { padding-top: 120px; }
+  .case-dj-dock { position: sticky; top: 36px; }
+  .case-study { min-width: 0; color: #242522; padding-bottom: 40px; }
+  a { color: inherit; text-underline-offset: 4px; }
+  .case-nav { display: flex; justify-content: space-between; gap: 24px; padding: 28px 0; font-size: 14px; }
+  .case-nav a, footer a { display: inline-flex; align-items: center; gap: 8px; line-height: 1; text-decoration: none; }
+  .case-nav :global(.arrow-icon), footer :global(.arrow-icon) { transform: translateY(-1px); }
+  a:hover { color: #65655d; }
+  header { max-width: 72ch; padding: 54px 0 34px; }
+  .project-context { margin: 0 0 14px; color: #74746b; font-size: 14px; }
+  h1 { margin: 0; font-size: clamp(42px, 6vw, 64px); font-weight: 500; line-height: 1.1; letter-spacing: -.045em; }
+  .subtitle { margin: 14px 0 0; font-size: clamp(20px, 2.5vw, 26px); line-height: 1.4; letter-spacing: -.02em; }
+  .intro { margin: 20px 0 0; color: #64645e; font-size: 17px; line-height: 1.7; }
+  figure { margin: 0; }
+  figure a { display: block; }
+  img, .cover :global(.demo-video) { display: block; width: 100%; border-radius: 6px; background: #e8e6df; }
+  img { height: auto; }
+  img { border: 1px solid #dedbd2; box-sizing: border-box; }
+  figcaption { margin-top: 12px; color: #74746b; font-size: 13px; line-height: 1.6; max-width: 720px; }
+  .cover-phone { max-width: 480px; }
+  .demo-note { color: #74746b; font-size: 14px; line-height: 1.6; margin-top: 18px; }
+  .feature-demos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; margin-top: 40px; align-items: start; }
+  .feature-demo { min-width: 0; }
+  .feature-demo p { color: #64645e; font-size: 15px; line-height: 1.7; margin: 0 0 20px; }
+  .feature-demo video { display: block; width: 100%; max-width: 340px; height: auto; border-radius: 16px; background: #111; }
+  @media (max-width: 640px) { .feature-demos { grid-template-columns: 1fr; } }
+  .project-facts { display: grid; grid-template-columns: repeat(var(--fact-columns, 4), minmax(0, 1fr)); gap: 24px; margin: 30px 0 0; padding: 24px 0; border-block: 1px solid #dedbd2; }
+  dt { color: #74746b; font-size: 13px; margin-bottom: 6px; }
+  dd { margin: 0; font-size: 14px; line-height: 1.6; }
+  .prose { max-width: 72ch; margin-inline: 0; text-align: left; }
+  section { margin-top: 58px; }
+  h2 { margin: 0 0 18px; font-size: 27px; font-weight: 500; line-height: 1.3; letter-spacing: -.03em; }
+  h3 { margin: 0 0 10px; font-size: 19px; font-weight: 500; line-height: 1.4; letter-spacing: -.015em; }
+  .prose p, .prose li { color: #64645e; font-size: 16px; line-height: 1.8; }
+  .prose p { margin: 0 0 16px; }
+  .prose ol, .prose ul { padding-left: 22px; margin: 20px 0 0; }
+  .prose li { padding-left: 6px; margin: 7px 0; }
+  .product-screen { margin-top: 32px; }
+  .product-screen img { margin-top: 20px; }
+  footer { display: flex; justify-content: space-between; gap: 24px; margin-top: 64px; padding: 24px 0; border-top: 1px solid #dedbd2; font-size: 14px; }
+  @media (max-width: 1050px) {
+    .case-layout { grid-template-columns: 112px minmax(0, 1fr); gap: 32px; width: calc(100% - 48px); }
+    .project-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+  }
+  @media (max-width: 720px) {
+    .case-layout { display: block; width: calc(100% - 36px); }
+    .case-dj { position: fixed; right: max(8px, env(safe-area-inset-right)); bottom: max(10px, env(safe-area-inset-bottom)); z-index: 40; padding: 8px 4px; border: 1px solid rgba(23, 23, 21, .1); border-radius: 18px; background: rgba(246, 244, 239, .84); box-shadow: 0 10px 32px rgba(23, 23, 21, .1); -webkit-backdrop-filter: blur(16px) saturate(1.2); backdrop-filter: blur(16px) saturate(1.2); }
+    .case-dj-dock { position: static; }
+  }
+  @media (max-width: 640px) {
+    .case-nav { font-size: 13px; padding: 22px 0; }
+    header { padding-top: 32px; }
+    .project-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+    section { margin-top: 42px; }
+    h2 { font-size: 24px; }
+  }
+</style>
