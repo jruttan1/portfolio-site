@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "slug": "optimate",
+  "root": {
+    "props": {
+      "name": "Optimate",
+      "eyebrow": "Optimate · Hack the North 2025",
+      "title": "An underwriting prototype",
+      "overview": "Optimate helps underwriters decide which insurance submissions to look at first, based on the risks their company wants to cover.",
+      "role": "Product design and full-stack development",
+      "timeline": "September 2025",
+      "team": "Karan Anand, Lucas Vuong, Tanuj Dargan, and me",
+      "media": "/demos/optimate.mp4",
+      "demoNote": "",
+      "externalUrl": "https://devpost.com/software/optimate",
+      "externalLabel": "View on Devpost",
+      "skills": "Next.js, Python, Cohere, AWS, Data visualization",
+      "poster": "/demos/optimate-poster.jpg",
+      "mediaAspectRatio": "48 / 25"
+    }
+  },
+  "content": [
+    {
+      "type": "Text",
+      "props": {
+        "id": "optimate-1",
+        "title": "The project",
+        "body": "We built this for Federato’s challenge at Hack the North 2025. They gave us a dataset of insurance policy details and asked us to rethink how underwriters review submissions."
+      }
+    },
+    {
+      "type": "Contributions",
+      "props": {
+        "id": "optimate-2",
+        "title": "My work",
+        "items": [
+          {
+            "title": "Product design and full-stack work",
+            "body": "I did some of the overall product design and built features across the frontend and backend. One was an LLM chat tied to a specific policy, so an underwriter could ask questions about it. I also worked on some of the risk processing logic."
+          }
+        ]
+      }
+    },
+    {
+      "type": "Image",
+      "props": {
+        "id": "optimate-3",
+        "src": "/projects/optimate/appetite-analysis.png",
+        "title": "Reviewing a submission",
+        "caption": "The policy details, appetite score, and reasons for the recommendation in one view."
+      }
+    },
+    {
+      "type": "Text",
+      "props": {
+        "id": "optimate-4",
+        "title": "How it works",
+        "body": "We took the policy data they gave us and added more context. For example, we researched the risk of natural disasters based on where a policy was located. We then used Cohere Rerank with the company’s risk appetite as input to rank the policies by how well they fit. The dashboard let underwriters look through the ranking, open individual policies, and compare them with charts and maps."
+      }
+    },
+    {
+      "type": "Outcomes",
+      "props": {
+        "id": "optimate-5",
+        "title": "Hack the North 2025",
+        "body": "",
+        "items": [
+          {
+            "text": "Federato’s RiskOps challenge winner"
+          },
+          {
+            "text": "Y Combinator Unicorn Prize"
+          }
+        ]
+      }
+    }
+  ]
+}

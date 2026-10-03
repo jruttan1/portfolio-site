@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "slug": "doppels",
+  "root": {
+    "props": {
+      "name": "Doppels",
+      "eyebrow": "Doppels · McHacks 2026",
+      "title": "A networking prototype",
+      "overview": "Doppels lets AI agents have a conversation on behalf of two people to see what they have in common. A third LLM judges the conversation as it goes and scores the match.",
+      "role": "Primary developer",
+      "timeline": "2026",
+      "team": "Karan Anand, Yazdan Rasoulzadeh, Eldiiar Bekbolotov, and me",
+      "media": "/demos/doppels.mp4",
+      "demoNote": "",
+      "externalUrl": "https://doppels.vercel.app",
+      "externalLabel": "Visit Doppels",
+      "skills": "",
+      "poster": "/demos/doppels-poster.jpg",
+      "mediaAspectRatio": "16 / 9"
+    }
+  },
+  "content": [
+    {
+      "type": "Text",
+      "props": {
+        "id": "doppels-1",
+        "title": "My part",
+        "body": "I built pretty much all of Doppels at McHacks, apart from some frontend design that my teammates worked on. We wanted to see if having agents talk first could help people find someone they’d want to meet."
+      }
+    },
+    {
+      "type": "Image",
+      "props": {
+        "id": "doppels-2",
+        "src": "/projects/doppels/agent-conversation.png",
+        "title": "An agent conversation",
+        "caption": "The judge updates the match score as the two agents talk."
+      }
+    },
+    {
+      "type": "Text",
+      "props": {
+        "id": "doppels-3",
+        "title": "How the scoring works",
+        "body": "The judge scores the conversation live as the agents talk, rather than waiting until the end. We gave it a scale in the system prompt: 100% meant a perfect match, and around 90% meant a very good match with some differences or weaknesses in the conversation. Those numbers were arbitrary. It was a hackathon proof of concept, and we didn’t test whether a high score actually led to a good connection."
+      }
+    },
+    {
+      "type": "Outcomes",
+      "props": {
+        "id": "doppels-4",
+        "title": "McHacks 2026",
+        "body": "",
+        "items": [
+          {
+            "text": "Best Product Design"
+          },
+          {
+            "text": "Top-five overall finalist"
+          }
+        ]
+      }
+    }
+  ]
+}

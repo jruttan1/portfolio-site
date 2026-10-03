@@ -6,15 +6,18 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro check && astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "test:admin": "node --import tsx --test scripts/test-admin.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
     "@astrojs/react": "^4.4.2",
+    "@astrojs/vercel": "^8.2.11",
     "@fontsource/dm-sans": "^5.2.8",
     "@fontsource/geist-sans": "^5.2.5",
     "@fontsource/instrument-sans": "^5.2.8",
     "@lichess-org/chessground": "^10.1.1",
+    "@puckeditor/core": "^0.23.0",
     "@tailwindcss/vite": "^4.1.11",
     "@vercel/analytics": "^2.0.1",
     "astro": "^5.12.8",
@@ -24,6 +27,10 @@
     "tailwindcss": "^4.1.11",
     "thinking-orbs": "^0.3.2",
     "typescript": "^5.8.3",
-    "uisfx": "^0.4.0"
+    "uisfx": "^0.4.0",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "tsx": "^4.23.15"
   }
 }

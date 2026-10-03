@@ -1,0 +1,19 @@
+---
+import CaseStudyEditor from '../components/admin/CaseStudyEditor';
+import { session, settings, privateHeaders } from '../lib/admin/server';
+export const prerender = false;
+Object.entries(privateHeaders).forEach(([key,value]) => Astro.response.headers.set(key,value));
+let current = null;
+let configured = true;
+try { settings(); current = session(Astro); } catch { configured = false; Astro.response.status = 503; }
+const error = Astro.url.searchParams.get('error');
+---
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><meta name="robots" content="noindex,nofollow" /><meta name="referrer" content="no-referrer" /><title>Case studies · Editor</title></head>
+<body>
+  {current ? <CaseStudyEditor client:only="react" csrf={current.csrf} login={current.login} /> : <main class="login">
+    <a href="/">Back to portfolio</a><h1>Case studies</h1>
+    {configured ? <><p>Edit your case studies and publish changes through GitHub.</p>{error && <p role="alert">{error === 'access' ? 'This editor is only available to Jack’s GitHub account.' : 'Sign-in could not be completed. Please try again.'}</p>}<a class="sign-in" href="/api/admin/auth/login">Sign in with GitHub</a></> : <><p>The editor is installed. GitHub login still needs to be configured.</p><p>Set GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, ADMIN_SESSION_SECRET, and ADMIN_SITE_URL in Vercel, then redeploy.</p></>}
+  </main>}
+</body></html>
+<style>.login{max-width:480px;margin:14vh auto;padding:24px;font:16px/1.6 system-ui,sans-serif;color:#242522}.login h1{font-size:36px}.login a{color:inherit}.sign-in{display:inline-block;padding:12px 18px;background:#242522;color:white!important;border-radius:8px;text-decoration:none}.login p[role=alert]{color:#9f3425}</style>

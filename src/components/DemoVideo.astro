@@ -12,59 +12,104 @@ interface Props {
 const { src, label, class: className, poster, aspectRatio = "16 / 9", href, linkLabel, ...attrs } = Astro.props;
 ---
 <div {...attrs} class:list={["demo-video", className]} style={`--demo-aspect-ratio: ${aspectRatio}`}>
-  <video data-demo-video autoplay muted loop playsinline preload="auto" poster={poster} aria-label={label} disablepictureinpicture disableRemotePlayback controlslist="nodownload nofullscreen noremoteplayback" x-webkit-airplay="deny">
+  <video data-demo-video autoplay muted loop playsinline preload="auto" poster={poster} aria-hidden="true" tabindex="-1" disablepictureinpicture disableRemotePlayback controlslist="nodownload nofullscreen noremoteplayback" x-webkit-airplay="deny">
     <source src={src} type="video/mp4" />
   </video>
+  <canvas class="demo-canvas" role="img" aria-label={label}></canvas>
   <img class="demo-poster" src={poster} alt="" aria-hidden="true" decoding="async" />
   {href && <a class="demo-link" href={href} aria-label={linkLabel ?? `Read the case study for ${label}`} />}
-  <button class="demo-play" type="button" aria-label={`Play ${label}`}>
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z" /></svg>
-    <span>Play demo</span>
-  </button>
 </div>
 
 <script>
-  const initialized = new WeakSet<HTMLVideoElement>();
+  const initialized = new WeakMap<HTMLVideoElement, () => void>();
+  const cleanups = new Set<() => void>();
   const startDemos = () => {
     document.querySelectorAll<HTMLVideoElement>("video[data-demo-video]").forEach((video) => {
       video.defaultMuted = true;
       video.muted = true;
       video.controls = false;
       if (!initialized.has(video)) {
-        initialized.add(video);
         const frame = video.parentElement!;
-        frame.querySelector<HTMLButtonElement>(".demo-play")!.addEventListener("click", (event) => {
-          event.preventDefault();
-          event.stopPropagation();
-          void video.play().catch(() => {});
-        });
-        video.addEventListener("playing", () => { frame.dataset.playing = "true"; });
-        const showPoster = () => { delete frame.dataset.playing; };
-        video.addEventListener("pause", showPoster);
+        const canvas = frame.querySelector<HTMLCanvasElement>(".demo-canvas")!;
+        const context = canvas.getContext("2d", { alpha: false });
+        if (!context) return;
+
+        let callback: number | undefined;
+        let lastTime = -1;
+        let visible = false;
+        const stopDrawing = () => {
+          if (callback === undefined) return;
+          cancelAnimationFrame(callback);
+          callback = undefined;
+        };
+        const draw = () => {
+          callback = undefined;
+          if (video.paused || video.ended) return;
+          if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA && video.currentTime !== lastTime) {
+            // Match the source ratio; CSS applies the card's cover/contain sizing.
+            const width = Math.min(video.videoWidth, 1920);
+            const height = Math.round(width * video.videoHeight / video.videoWidth);
+            if (canvas.width !== width || canvas.height !== height) {
+              canvas.width = width;
+              canvas.height = height;
+            }
+            context.drawImage(video, 0, 0, width, height);
+            lastTime = video.currentTime;
+            frame.dataset.rendered = "true";
+          }
+          // Hidden video surfaces may not receive video-frame callbacks in Safari.
+          callback = requestAnimationFrame(draw);
+        };
+        const startDrawing = () => { stopDrawing(); draw(); };
+        video.addEventListener("playing", startDrawing);
+        video.addEventListener("pause", stopDrawing);
+        const showPoster = () => { stopDrawing(); delete frame.dataset.rendered; };
         video.addEventListener("error", showPoster);
+        // Cached media may already be playing when this script initializes.
+        if (!video.paused) startDrawing();
+
+        // Draw only visible demos and restart when they scroll into view.
+        const playVisible = () => { if (visible) void video.play().catch(() => {}); };
+        initialized.set(video, playVisible);
+        const observer = new IntersectionObserver(([entry]) => {
+          visible = entry.isIntersecting;
+          if (visible) playVisible();
+          else video.pause();
+        });
+        observer.observe(frame);
+        const cleanup = () => {
+          observer.disconnect();
+          video.pause();
+          stopDrawing();
+          video.removeEventListener("playing", startDrawing);
+          video.removeEventListener("pause", stopDrawing);
+          video.removeEventListener("error", showPoster);
+          initialized.delete(video);
+          cleanups.delete(cleanup);
+        };
+        cleanups.add(cleanup);
       }
       // play() waits for data; a blocked autoplay leaves the poster visible.
-      void video.play().then(() => {
-        // Cached media may already be playing before the listener was attached.
-        if (!video.paused) video.parentElement!.dataset.playing = "true";
-      }).catch(() => {});
+      initialized.get(video)?.();
     });
   };
   startDemos();
   document.addEventListener("astro:page-load", startDemos);
+  document.addEventListener("astro:before-swap", () => { cleanups.forEach((cleanup) => cleanup()); });
   window.addEventListener("pageshow", startDemos);
 </script>
 
 <style>
   .demo-video { position: relative; display: block; width: 100%; aspect-ratio: var(--demo-aspect-ratio); overflow: hidden; object-fit: contain; }
-  video, .demo-poster { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: inherit; pointer-events: none; }
-  .demo-poster { z-index: 1; }
-  .demo-video[data-playing] .demo-poster { visibility: hidden; }
-  .demo-link { position: absolute; inset: 0; z-index: 2; border-radius: inherit; }
-  .demo-play { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 3; display: inline-flex; align-items: center; gap: 7px; min-height: 44px; padding: 10px 16px; border: 1px solid rgb(255 255 255 / 40%); border-radius: 999px; background: rgb(20 20 20 / 85%); color: white; font: inherit; font-size: 13px; font-weight: 600; white-space: nowrap; cursor: pointer; box-shadow: 0 2px 12px rgb(0 0 0 / 20%); }
-  .demo-play:hover { background: #111; }
-  .demo-play:focus-visible, .demo-link:focus-visible { outline: 3px solid #fff; outline-offset: -5px; box-shadow: inset 0 0 0 2px #111; }
-  .demo-video[data-playing] .demo-play { display: none; }
+  video, .demo-canvas, .demo-poster { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: inherit; pointer-events: none; }
+  /* Safari's native glass controls belong to the video surface. Keep that
+     surface hidden and display only decoded frames on the canvas. */
+  video { visibility: hidden; }
+  .demo-canvas { z-index: 1; }
+  .demo-poster { z-index: 2; }
+  .demo-video[data-rendered] .demo-poster { visibility: hidden; }
+  .demo-link { position: absolute; inset: 0; z-index: 3; border-radius: inherit; }
+  .demo-link:focus-visible { outline: 3px solid #fff; outline-offset: -5px; box-shadow: inset 0 0 0 2px #111; }
   video::-webkit-media-controls,
   video::-webkit-media-controls-enclosure,
   video::-webkit-media-controls-panel,

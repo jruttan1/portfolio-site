@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "slug": "primate",
+  "root": {
+    "props": {
+      "name": "Primate",
+      "eyebrow": "Primate · 2026",
+      "title": "Browser testing for pull requests",
+      "overview": "Primate reads a code diff, checks the affected pages in a browser, and posts screenshots and bug reports on the pull request.",
+      "role": "Co-founder and engineer",
+      "timeline": "About 6 months · 2026",
+      "team": "Conor Roberts, Jeremy Bell, and me",
+      "media": "/primate-demo.mp4",
+      "demoNote": "",
+      "externalUrl": "https://primate.sh",
+      "externalLabel": "Visit Primate",
+      "skills": "React, Python, Playwright, AWS, Docker",
+      "poster": "/demos/primate-poster.jpg",
+      "mediaAspectRatio": "16 / 9"
+    }
+  },
+  "content": [
+    {
+      "type": "Text",
+      "props": {
+        "id": "primate-1",
+        "title": "Background",
+        "body": "Conor works full-time at Stripe and reached out to me about building Primate. I ended up spending about six months on it with him and Jeremy."
+      }
+    },
+    {
+      "type": "Contributions",
+      "props": {
+        "id": "primate-2",
+        "title": "My work",
+        "items": [
+          {
+            "title": "Figuring out which pages to check",
+            "body": "A big part of my work was figuring out where a code change actually showed up in the app. We used a crawler to build a sitemap, then built a reverse dependency graph from the frontend imports. If a component changed, we could follow the graph back to the pages that used it. If the change was already in a page, we could just go there."
+          },
+          {
+            "title": "The review agent",
+            "body": "I spent a lot of time building and researching the review loop: how the agent decided what to check, used the browser, and reported what it found. I also looked into visual prompting strategies like Set-of-Mark to help it understand what it was looking at on the page."
+          },
+          {
+            "title": "Browser tooling",
+            "body": "We didn’t want to pay for a browser provider, so I built our own browser sandbox and browser-use commands from scratch in Python."
+          }
+        ]
+      }
+    },
+    {
+      "type": "Image",
+      "props": {
+        "id": "primate-3",
+        "src": "/projects/primate/landing-page.png",
+        "title": "The landing page",
+        "caption": ""
+      }
+    },
+    {
+      "type": "Image",
+      "props": {
+        "id": "primate-4",
+        "src": "/projects/primate/comment-triggered-qa.jpg",
+        "title": "Tests requested in a PR comment",
+        "caption": "A developer asks @primate to test the account switcher. The bot queues the run and replies with a link."
+      }
+    },
+    {
+      "type": "Image",
+      "props": {
+        "id": "primate-5",
+        "src": "/projects/primate/visual-regression-finding.jpg",
+        "title": "A bug caught during review",
+        "caption": "Primate caught an upside-down “Join the Waitlist” button and attached a screenshot to the report."
+      }
+    },
+    {
+      "type": "Videos",
+      "props": {
+        "id": "primate-6",
+        "items": [
+          {
+            "src": "/projects/primate/mobile-pr-review.mp4",
+            "poster": "/projects/primate/mobile-pr-review.jpg",
+            "title": "Reviewing a PR on a phone",
+            "caption": "Conor reviews the new landing page from his phone using the desktop, tablet, and mobile screenshots in the PR.",
+            "aspectRatio": "480 / 1044"
+          }
+        ]
+      }
+    },
+    {
+      "type": "Outcomes",
+      "props": {
+        "id": "primate-7",
+        "title": "Where it got to",
+        "body": "We didn’t make it work as a business. We had a few design partners and interest from startups, but unfortunately never got a paying customer. I learned a ton from this experience. I went deep into trying to perfect the agent loop, spent a ridiculous amount of time building our own browser tooling, and learned what it takes to try to grow and promote a product.",
+        "items": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+---
+import type { CaseBlock } from "../lib/admin/content";
+interface Props { sections: CaseBlock[] }
+const { sections } = Astro.props;
+---
+{sections.map(block => (
+  <>
+    {block.type === "Text" && <section class="prose"><h2>{block.props.title}</h2><p>{block.props.body}</p></section>}
+    {block.type === "Contributions" && <section class="prose"><h2>{block.props.title}</h2>{block.props.items.map(item => <div><h3>{item.title}</h3><p>{item.body}</p></div>)}</section>}
+    {block.type === "Image" && <figure class="product-screen">
+      <div class="prose"><h3>{block.props.title}</h3>{block.props.caption && <p>{block.props.caption}</p>}</div>
+      {block.props.src && <a href={block.props.src} target="_blank" rel="noopener noreferrer" aria-label={`Open screenshot: ${block.props.title}`}><img src={block.props.src} alt={block.props.caption || block.props.title} loading="lazy" /></a>}
+    </figure>}
+    {block.type === "Videos" && <div class="feature-demos">{block.props.items.map(demo => <figure class="feature-demo"><h3>{demo.title}</h3><p>{demo.caption}</p>{demo.src && <video controls playsinline muted preload="none" poster={demo.poster} style={`aspect-ratio: ${demo.aspectRatio}`} aria-label={demo.title}><source src={demo.src} type="video/mp4" /></video>}</figure>)}</div>}
+    {block.type === "Outcomes" && <section class="prose outcomes"><h2>{block.props.title}</h2>{block.props.body && <p>{block.props.body}</p>}{block.props.items.length > 0 && <ul>{block.props.items.map(item => <li>{item.text}</li>)}</ul>}</section>}
+  </>
+))}

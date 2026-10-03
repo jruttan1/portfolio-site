@@ -1,0 +1,171 @@
+<div id="dj-meter-options" aria-label="DJ meter design comparison">
+  <div class="dj-options">
+    <section class="dj-option" aria-labelledby="needle-title">
+      <h3 id="needle-title">Recessed needle</h3>
+      <div class="dj-stage">
+        <div class="dj-model" data-option="needle">
+          <div class="dj-character"><div class="dj-headset"></div><div class="dj-orb"><span></span><span></span></div></div>
+          <div class="dj-deck">
+            <div class="dj-palm left"></div><div class="dj-palm right"></div>
+            <div class="dj-platter"><div class="dj-grooves"><div class="dj-art"></div><span class="dj-spindle"></span></div></div>
+            <div class="dj-arm"><span></span></div>
+            <div class="dj-instruments">
+              <div class="dj-vu" aria-label="Analog level meter">
+                <svg viewBox="0 0 90 43" role="img" aria-label="Needle moving across a level gauge">
+                  <path class="dj-scale" d="M14 26 A38 38 0 0 1 76 26" fill="none" />
+                  <g class="dj-ticks"></g>
+                  <line class="dj-needle" x1="45" y1="41" x2="45" y2="10" />
+                  <circle class="dj-hinge" cx="45" cy="41" r="3" />
+                </svg>
+              </div>
+              <div class="dj-small-led"></div>
+            </div>
+            <div class="dj-progress-line"><span></span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="dj-option" aria-labelledby="bars-title">
+      <h3 id="bars-title">Embedded bars</h3>
+      <div class="dj-stage">
+        <div class="dj-model" data-option="bars">
+          <div class="dj-character"><div class="dj-headset"></div><div class="dj-orb"><span></span><span></span></div></div>
+          <div class="dj-deck">
+            <div class="dj-palm left"></div><div class="dj-palm right"></div>
+            <div class="dj-platter"><div class="dj-grooves"><div class="dj-art"></div><span class="dj-spindle"></span></div></div>
+            <div class="dj-arm"><span></span></div>
+            <div class="dj-instruments">
+              <div class="dj-led-slot" aria-label="Two recessed LED level bars"><div class="dj-led-row" data-channel="left"></div><div class="dj-led-row" data-channel="right"></div></div>
+              <div class="dj-small-led"></div>
+            </div>
+            <div class="dj-progress-line"><span></span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="dj-preview-controls"><button type="button" class="cursor-interaction" aria-pressed="false">Preview motion</button></div>
+</div>
+<style>
+  #dj-meter-options { color: light-dark(#242522,#eeeae1); font-family: "DM Sans", system-ui, sans-serif; }
+  #dj-meter-options * { box-sizing: border-box; }
+  #dj-meter-options .dj-options { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 20px; }
+  #dj-meter-options h3 { margin: 0; text-align: center; font-size: 14px; font-weight: 500; }
+  #dj-meter-options .dj-stage { min-height: 282px; display: grid; place-items: center; padding: 24px 0 20px; }
+  #dj-meter-options .dj-model { width: 180px; position: relative; }
+  #dj-meter-options .dj-character { width: 90px; height: 72px; margin: 0 auto -17px; position: relative; z-index: 3; }
+  #dj-meter-options .dj-orb { position: absolute; left: 15px; top: 12px; width: 60px; height: 60px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff 0%, #eef1ff 55%,#d9e2ff 100%); border: 1px solid #c9d2e7; box-shadow: 0 4px 8px #3d63dd26; display: flex; align-items: center; justify-content: center; gap: 15px; }
+  #dj-meter-options .dj-orb::before { content:""; position: absolute; inset: 6px; border: 2px dotted #728ed9; border-radius: 50%; }
+  #dj-meter-options .dj-orb span { width: 4px; height: 7px; border-radius: 4px; background: #283c83; }
+  #dj-meter-options .dj-headset { position: absolute; inset: 1px 10px auto; height: 52px; border: 5px solid #343635; border-bottom: 0; border-radius: 40px 40px 0 0; box-shadow: 0 -2px 0 #8f918c; z-index: 2; }
+  #dj-meter-options .dj-headset::before, #dj-meter-options .dj-headset::after { content:""; position: absolute; top: 26px; width: 13px; height: 26px; background: #343635; border: 2px solid #666b67; border-radius: 6px; }
+  #dj-meter-options .dj-headset::before { left:-9px; transform:rotate(-8deg); }
+  #dj-meter-options .dj-headset::after { right:-9px; transform:rotate(8deg); }
+  #dj-meter-options .dj-deck { position: relative; width: 180px; height: 178px; padding: 12px 13px; border: 1px solid #81878d; border-bottom-color: #3d4248; border-radius: 18px; background: linear-gradient(68deg,transparent 49.5%,#9fb5c319 50%,#d9e8ef26 100%),linear-gradient(155deg,#191d22,#050607 55%,#101419); box-shadow: inset 1px 1px 0 #e4eaf17a,inset -1px -1px 0 #a8b5c04a,inset 0 0 0 4px #030405,0 3px 0 #171b20,0 7px 12px #10111430; }
+  #dj-meter-options .dj-deck::before { content:""; position: absolute; inset: 4px; border: 1px solid #ffffff13; border-top-color:#c9d8e742; border-radius: 14px; pointer-events:none; }
+  #dj-meter-options .dj-palm { position:absolute; top:-4px; z-index:4; width:16px; height:11px; border:1px solid #afbbe7; border-radius:9px; background:linear-gradient(#e0e7ff,#bfcdf1); box-shadow:0 2px 2px #14172235; }
+  #dj-meter-options .dj-palm.left { left:51px; transform:rotate(-8deg); }
+  #dj-meter-options .dj-palm.right { right:51px; transform:rotate(8deg); }
+  #dj-meter-options .dj-platter { position:relative; display:grid; place-items:center; width:110px; height:110px; margin:0 auto; padding:4px; border:1px solid #6f7d87; border-radius:50%; background:linear-gradient(145deg,#bdc8d0,#49545f 45%,#202a33 70%,#8b969f); box-shadow:0 2px 6px #0009,0 0 0 4px #030609,inset 0 1px 1px #e6f2ff9c; }
+  #dj-meter-options .dj-grooves { position:relative; width:100%; height:100%; padding:8px; border-radius:50%; background:repeating-radial-gradient(circle,#1a1c20 0 1px,#33373c 1px 2px,#191b1e 2px 4px); }
+  #dj-meter-options .dj-art { position:relative; width:100%; height:100%; border-radius:50%; background:conic-gradient(from 20deg,#639aa6,#d59aa0 20%,#daab62 32%,#80ada3 43%,#51838e 58%,#788158 74%,#c9ab7a 89%,#639aa6); box-shadow:inset 0 0 14px #29364780; }
+  #dj-meter-options .dj-spindle { position:absolute; left:50%; top:50%; width:19px; height:19px; border:5px solid #e7e2d5; border-radius:50%; transform:translate(-50%,-50%); background:#42454a; box-shadow:0 0 0 3px #161b2840; }
+  #dj-meter-options .dj-arm { position:absolute; top:13px; right:33px; width:12px; height:64px; border-left:4px solid #b4b9c0; border-bottom:11px solid #373b42; border-radius:0 0 3px 4px; transform-origin:3px 4px; transform:rotate(22deg); filter:drop-shadow(2px 2px 1px #0003); }
+  #dj-meter-options .dj-arm span { position:absolute; left:-9px; top:-3px; width:13px; height:13px; border:3px solid #9da2aa; border-radius:50%; background:#43474d; }
+  #dj-meter-options .dj-instruments { position:absolute; bottom:21px; left:14px; right:14px; display:flex; align-items:center; justify-content:space-between; gap:16px; }
+  #dj-meter-options .dj-vu { width:69px; height:32px; overflow:hidden; border-radius:4px; background:var(--vu-face,#dccb9a); box-shadow:inset 0 2px 4px #241e1790,inset 0 0 0 2px #090b0d,0 1px 0 #c9d2dd30; }
+  #dj-meter-options .dj-vu svg { display:block; width:100%; height:100%; }
+  #dj-meter-options .dj-scale, #dj-meter-options .dj-ticks { stroke:var(--vu-mark,#514633); stroke-width:1; opacity:.8; }
+  #dj-meter-options .dj-needle { stroke:#a74130; stroke-width:1.7; transform-origin:45px 41px; transform:rotate(-35deg); }
+  #dj-meter-options .dj-hinge { fill:var(--vu-mark,#514633); }
+  #dj-meter-options .dj-small-led { width:4px; height:4px; margin-right:4px; border-radius:50%; background:#c8964b; box-shadow:0 0 4px #d79b4940; }
+  #dj-meter-options .dj-led-slot { display:grid; gap:5px; width:83px; height:26px; padding:6px; border-radius:3px; background:#090b0d; box-shadow:inset 0 2px 4px #000b,0 1px 0 #c9d2dd20; }
+  #dj-meter-options .dj-led-row { display:grid; grid-template-columns:repeat(12,1fr); gap:2px; }
+  #dj-meter-options .dj-led-row i { display:block; height:4px; border-radius:1px; background:#403321; }
+  #dj-meter-options .dj-led-row i.lit { background:#d9a14b; box-shadow:0 0 3px #d9a14b30; }
+  #dj-meter-options .dj-led-row i.lit:last-child { background:#ba6447; }
+  #dj-meter-options .dj-progress-line { position:absolute; left:15px; right:15px; bottom:12px; height:3px; background:#17191c; box-shadow:inset 0 1px 1px #0004; }
+  #dj-meter-options .dj-progress-line span { display:block; width:42%; height:100%; background:#d75946; }
+  #dj-meter-options .dj-preview-controls { display:flex; justify-content:center; padding:0 0 8px; }
+  #dj-meter-options .dj-preview-controls button { font:500 13px "DM Sans",system-ui,sans-serif; min-height:44px; padding:9px 16px; color:light-dark(#242522,#eeeae1); background:light-dark(#f6f4ef,#242522); border:1px solid light-dark(#dad7cf,#4c4b46); border-radius:7px; }
+  #dj-meter-options[data-playing="true"] .dj-art { animation:dj-preview-spin 7s linear infinite; }
+  @keyframes dj-preview-spin { to { transform:rotate(360deg); } }
+  @media(max-width:420px) { #dj-meter-options .dj-options { grid-template-columns:1fr; gap:10px; } #dj-meter-options .dj-stage { min-height:255px; padding:16px 0; } }
+  @media(prefers-reduced-motion:reduce) { #dj-meter-options .dj-art { animation:none!important; } }
+</style>
+<script>
+(() => {
+  const root = document.getElementById('dj-meter-options');
+  const button = root.querySelector('.dj-preview-controls button');
+  const needle = root.querySelector('.dj-needle');
+  const ticks = root.querySelector('.dj-ticks');
+  const rows = [...root.querySelectorAll('.dj-led-row')];
+  const state = { playing: false, face: 'Warm ivory', response: 'Soft' };
+  function restore(saved) {
+    if (!saved) return;
+    const values = saved.privateContent ?? saved;
+    if (typeof values.playing === 'boolean') state.playing = values.playing;
+    if (['Warm ivory','Dark glass'].includes(values.face)) state.face = values.face;
+    if (['Soft','Snappy'].includes(values.response)) state.response = values.response;
+  }
+  restore(window.openai?.widgetState);
+  let frame = 0, previous = 0, envelope = .38, start = 0;
+  for (let index = 0; index < 9; index++) {
+    const angle = (-54 + index * 13.5) * Math.PI / 180;
+    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1', String(45 + Math.sin(angle) * 32));
+    line.setAttribute('y1', String(41 - Math.cos(angle) * 32));
+    line.setAttribute('x2', String(45 + Math.sin(angle) * (index % 2 ? 35 : 37)));
+    line.setAttribute('y2', String(41 - Math.cos(angle) * (index % 2 ? 35 : 37)));
+    ticks.append(line);
+  }
+  rows.forEach(row => { for (let index = 0; index < 12; index++) row.append(document.createElement('i')); });
+  function paint(level, time) {
+    needle.style.transform = `rotate(${-54 + level * 108}deg)`;
+    rows.forEach((row, channel) => {
+      const value = Math.min(1, Math.max(0, level + (channel ? .07 * Math.sin(time * 2.3) : 0)));
+      [...row.children].forEach((cell, index) => cell.classList.toggle('lit', index < Math.round(value * 12)));
+    });
+  }
+  function tick(now) {
+    if (!state.playing) return;
+    if (!start) start = now;
+    const time = (now - start) / 1000;
+    const dt = previous ? Math.min(.1, (now - previous) / 1000) : 1/60;
+    previous = now;
+    const pulse = Math.pow(Math.max(0, Math.sin(time * 7)), 6);
+    const target = .25 + .12 * Math.sin(time * 1.6) + .5 * pulse;
+    const speed = state.response === 'Snappy' ? .055 : target > envelope ? .09 : .32;
+    envelope += (target - envelope) * (1 - Math.exp(-dt / speed));
+    paint(envelope, time);
+    frame = requestAnimationFrame(tick);
+  }
+  function render() {
+    cancelAnimationFrame(frame);
+    root.dataset.playing = String(state.playing);
+    root.style.setProperty('--vu-face', state.face === 'Warm ivory' ? '#dccb9a' : '#1d211d');
+    root.style.setProperty('--vu-mark', state.face === 'Warm ivory' ? '#514633' : '#bea776');
+    button.textContent = state.playing ? 'Pause preview' : 'Preview motion';
+    button.setAttribute('aria-pressed', String(state.playing));
+    previous = 0;
+    if (state.playing) frame = requestAnimationFrame(tick);
+    else paint(.38, .8);
+  }
+  button.addEventListener('click', () => {
+    state.playing = !state.playing;
+    render();
+    window.openai?.setWidgetState?.({ modelContent: { needleFace: state.face, movement: state.response }, privateContent: { ...state } }).catch(() => {});
+  });
+  window.addEventListener('openai:set_globals', event => {
+    restore(event.detail?.globals?.widgetState);
+    render();
+  });
+  render();
+  if (globalThis.Tweak) {
+    const tweaks = new Tweak({ container: root, onChange: render });
+    tweaks.addSelect(state, 'face', { label: 'Needle face', options: ['Warm ivory','Dark glass'] });
+    tweaks.addSelect(state, 'response', { label: 'Movement', options: ['Soft','Snappy'] });
+    tweaks.addToggle(state, 'playing', { label: 'Preview motion' });
+  }
+})();
+</script>

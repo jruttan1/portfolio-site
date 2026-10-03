@@ -1,0 +1,21 @@
+body { margin: 0; font-family: system-ui, sans-serif; color: #242522; }
+.editor-bar,.editor-status { display:flex; align-items:center; flex-wrap:wrap; gap:16px; padding:12px 20px; border-bottom:1px solid #ddd; background:#faf9f6; font-size:14px; }
+.editor-bar a,.editor-status a { color:inherit; text-decoration:underline; text-underline-offset:3px; }
+.editor-bar label { display:flex; align-items:center; gap:8px; }
+.editor-account { margin-left:auto; color:#666; }
+.editor-bar button,.editor-status button,.editor-retry { padding:6px 10px; border:1px solid #ccc; border-radius:6px; background:white; cursor:pointer; }
+.editor-bar select { font:inherit; padding:6px; }
+.editor-status { font-size:12px; min-height:32px; }
+.editor-status span { flex:1; }
+.editor-error { padding:12px 20px; background:#fff0ee; color:#942b23; white-space:pre-line; }
+.editor-error a { color:inherit; }
+.editor-loading,.editor-retry { margin:24px; }
+.editor-preview { padding:40px 28px; background:#f7f5ef; min-height:100vh; box-sizing:border-box; }
+.editor-preview header { padding-top:20px; }
+.editor-preview img,.editor-preview video { max-width:100%; }
+.media-field { display:flex; flex-direction:column; gap:10px; font-size:12px; }
+.media-field input:not([type=file]),.media-field select { display:block; width:100%; box-sizing:border-box; padding:9px; margin-top:6px; border:1px solid #bbb; border-radius:4px; background:white; font:inherit; }
+.media-field small { color:#666; line-height:1.5; }
+.upload-label { display:block; padding:10px; border:1px dashed #aaa; border-radius:4px; cursor:pointer; }
+.upload-label input { display:block; max-width:100%; margin-top:6px; font:inherit; }
+.media-placeholder { padding:48px 16px; background:#e8e5de; color:#666; text-align:center; border-radius:8px; }

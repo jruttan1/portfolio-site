@@ -20,7 +20,7 @@ export const profile = {
       period: "2025 — 2026",
       description: "Leading development of pro-bono software projects with the Canadian Red Cross and Brain Tumour Foundation of Canada.",
       url: "https://tethos.ca",
-      logo: "/tethosassociation_logo.jpeg",
+      logo: "/tethos-association-logo.jpg",
       chip: { bg: "#fee2e2", text: "#991b1b" }
     },
     {
@@ -41,7 +41,7 @@ export const profile = {
       title: "Advancing Uto-Aztecan Language Technologies: A Case Study on the Endangered Comanche Language",
       description: "We compiled the first digitized Comanche dataset and a low-cost way to expand it with the goal of preserving a critically endangered language. We built a pipeline to generate translations from a small set of trusted examples, compare them with human-verified answers using normalized Levenshtein similarity, and keep only outputs that pass a quality threshold",
       venues: [
-        { name: "AmericasNLP 2025", note: "Proceedings of the Fifth Workshop on NLP for Indigenous Languages of the Americas", logo: "/Association_for_Computational_Linguistics_logo.svg" }
+        { name: "AmericasNLP 2025", note: "Proceedings of the Fifth Workshop on NLP for Indigenous Languages of the Americas", logo: "/acl-logo.svg" }
       ]
     }
   ],
@@ -58,7 +58,7 @@ export const profile = {
       slug: "whim",
       description: "Plan, shop, and play in your iMessage group chat with an AI agent.",
       url: "https://github.com/chang-07/htn-26",
-      prizes: [{ name: "Hack the North 2026", note: "Best Use of Linq · Cloudflare Best Agent with a Brain", logo: "/HTNLogo.148bc3f0.webp" }],
+      prizes: [{ name: "Hack the North 2026", note: "Best Use of Linq · Cloudflare Best Agent with a Brain", logo: "/hack-the-north-logo.webp" }],
       chip: { bg: "#ffe3ec", text: "#c72462" }
     },
     {
@@ -66,7 +66,7 @@ export const profile = {
       slug: "optimate",
       description: "Ranks insurance submissions by how well they fit an insurer’s risk appetite.",
       url: "https://devpost.com/software/optimate",
-      prizes: [{ name: "Hack the North 2025", note: "Y Combinator Unicorn Prize · Federato RiskOps Gold Sponsor", logo: "/HTNLogo.148bc3f0.webp" }],
+      prizes: [{ name: "Hack the North 2025", note: "Y Combinator Unicorn Prize · Federato RiskOps Gold Sponsor", logo: "/hack-the-north-logo.webp" }],
       chip: { bg: "#ede9fe", text: "#5b21b6" }
     },
     {
@@ -74,7 +74,7 @@ export const profile = {
       slug: "doppels",
       description: "A networking prototype where AI agents talk to find common ground between people.",
       url: "https://doppels.vercel.app",
-      prizes: [{ name: "McHacks", note: "Best Product Design · Top 5 Finalist", logo: "/mchacks-martlet-tight.c15b06650e3e5cda2d82cb370481b855.svg" }],
+      prizes: [{ name: "McHacks", note: "Best Product Design · Top 5 Finalist", logo: "/mchacks-logo.svg" }],
       chip: { bg: "#e0e7ff", text: "#3730a3" }
     },
   ],
@@ -84,7 +84,7 @@ export const profile = {
     { label: "LinkedIn", href: "https://linkedin.com/in/jack-ruttan" },
     { label: "X", href: "https://x.com/jruttan0" },
     { label: "Google Scholar", href: "https://scholar.google.com/citations?user=ItZcN84AAAAJ&hl=en&authuser=1" },
-    { label: "Resume", href: "/Jack_Ruttan_Resume.pdf" },
+    { label: "Resume", href: "/jack-ruttan-resume.pdf" },
     { label: "Cal.com", href: "https://cal.com/jack-ruttan" }
   ]
 };

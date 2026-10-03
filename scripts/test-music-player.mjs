@@ -323,3 +323,26 @@ test('underwater sweep is audible, smoothly enveloped, and restores the dry trac
   assert.equal(s.filters[2].frequency.value, 20000);
   s.player.toggle();
 });
+
+test('manual switches apply immediately outside scheduled effects and restore the dry signal', async () => {
+  const s = setup(); await s.start();
+  s.media[0].currentTime = 43; await s.tick();
+  const dryGains = s.gains.map(node => node.gain.value);
+  assert.equal(s.filters[2].frequency.value, 20000);
+  for (const effect of ['reverb', 'flanger']) {
+    s.player.setEffect(effect, true);
+    assert.equal(s.player.snapshot().effects[effect], true);
+    assert.ok(s.gains.some((node, index) => node.gain.value > dryGains[index]), `${effect} is audible immediately`);
+    s.player.setEffect(effect, false);
+    s.gains.forEach((node, index) => assert.equal(node.gain.value, dryGains[index]));
+  }
+  s.player.setEffect('filter', true);
+  assert.equal(s.filters[2].frequency.value, 950);
+  assert.equal(s.player.snapshot().playing, true);
+  s.player.toggle(); s.player.toggle(); await flush();
+  assert.equal(s.player.snapshot().effects.filter, true);
+  assert.equal(s.filters[2].frequency.value, 950);
+  s.player.setEffect('filter', false);
+  assert.equal(s.filters[2].frequency.value, 20000);
+  s.player.toggle();
+});

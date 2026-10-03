@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "slug": "whim",
+  "root": {
+    "props": {
+      "name": "Whim",
+      "eyebrow": "Whim · Hack the North 2026",
+      "title": "An iMessage agent for plans and games",
+      "overview": "Whim is an agent you can add to an iMessage group chat to help plan trips, shop, and generate games. It shares interactive cards that everyone in the chat can use.",
+      "role": "Agent tools and full-stack development",
+      "timeline": "September 2026",
+      "team": "Lucian Lavric, Karan Anand, Sheng Chang Li, and me",
+      "media": "/demos/whim.mp4",
+      "demoNote": "The iMessage widgets were a TestFlight prototype and aren’t available on the public website.",
+      "externalUrl": "https://github.com/chang-07/htn-26",
+      "externalLabel": "View on GitHub",
+      "skills": "TypeScript, Cloudflare Workers, Durable Objects, OpenAI, Linq, SwiftUI, Browserbase",
+      "poster": "/demos/whim-poster.jpg",
+      "mediaAspectRatio": "1 / 1"
+    }
+  },
+  "content": [
+    {
+      "type": "Text",
+      "props": {
+        "id": "whim-1",
+        "title": "The idea",
+        "body": "We built Whim at Hack the North because we wanted to see how much we could do without leaving iMessage. Group chats are already where people make plans, so we wanted to let them actually do something with those plans there too."
+      }
+    },
+    {
+      "type": "Contributions",
+      "props": {
+        "id": "whim-2",
+        "title": "My work",
+        "items": [
+          {
+            "title": "Seeing what the agent was actually doing",
+            "body": "The main thing I built was a telemetry dashboard to help us build and debug Whim. There were so many tools, APIs, and connections that it was hard to tell what was breaking or why a run was taking so long. Each run had its own tab, with turns, tool calls, inputs, and responses shown as nodes in a trace. I integrated Sentry and tracked turn timings, token usage per run, and p95 model response latency. We could open a run, look through each step, and see where the time was going and what had failed."
+          },
+          {
+            "title": "Deciding when to search or fetch a page",
+            "body": "Browserbase had APIs for web search and fetching a page. I used Jev, a lightweight classification model from Typesafe, to score which one made sense for what the agent was trying to do. I wanted to avoid spending more on browser calls than we needed to."
+          },
+          {
+            "title": "Browser tools and tying things together",
+            "body": "Browserbase took care of a lot of the browser work. I connected skills and APIs from browse.sh so the agent could look up things like hiking routes and DoorDash menus. I was also the glue guy for a lot of this, getting the agent, iMessage widgets, and web app to work together."
+          },
+          {
+            "title": "The web app and iMessage sync",
+            "body": "I built the whole web app, including the frontend, and connected it to what was happening in iMessage. Users signed up with their phone number. Whenever the group finished building a trip or generated a widget, we hit an API to save it in the database and link it to their account."
+          }
+        ]
+      }
+    },
+    {
+      "type": "Image",
+      "props": {
+        "id": "whim-3",
+        "src": "/projects/whim/telemetry-dashboard.png",
+        "title": "Debugging an agent run",
+        "caption": "Here, a request to generate a pool game hit an HTTP 403 during Jev relevance scoring. The dashboard brings the error, run timings, and activity trace together."
+      }
+    },
+    {
+      "type": "Image",
+      "props": {
+        "id": "whim-4",
+        "src": "/projects/whim/landing-page.png",
+        "title": "The signup page",
+        "caption": "Users enter a phone number, then continue setup over iMessage."
+      }
+    },
+    {
+      "type": "Videos",
+      "props": {
+        "id": "whim-5",
+        "items": [
+          {
+            "src": "/projects/whim/group-trip.mp4",
+            "poster": "/projects/whim/group-trip.jpg",
+            "title": "Planning a trip",
+            "caption": "The group asks for a trip, votes on flights, and gets shopping suggestions.",
+            "aspectRatio": "720 / 1566"
+          },
+          {
+            "src": "/projects/whim/generated-blackjack.mp4",
+            "poster": "/projects/whim/generated-blackjack.jpg",
+            "title": "Generating a game",
+            "caption": "A request for blackjack becomes a playable iMessage card.",
+            "aspectRatio": "720 / 1560"
+          }
+        ]
+      }
+    },
+    {
+      "type": "Text",
+      "props": {
+        "id": "whim-6",
+        "title": "How it fits together",
+        "body": "We ran the agent on Cloudflare Workers and gave each chat a Durable Object to keep its conversation history and plan state. Linq connected it to iMessage, and OpenAI handled reasoning and tool calls. We built the native widgets in SwiftUI and had the model generate structured game definitions that our runtime checked before running."
+      }
+    },
+    {
+      "type": "Outcomes",
+      "props": {
+        "id": "whim-7",
+        "title": "Hack the North 2026",
+        "body": "",
+        "items": [
+          {
+            "text": "Best Use of Linq"
+          },
+          {
+            "text": "Cloudflare: Best Agent with a Brain"
+          }
+        ]
+      }
+    }
+  ]
+}

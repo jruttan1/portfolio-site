@@ -47,6 +47,7 @@ export function createMusicPlayer() {
   let samples: Uint8Array<ArrayBuffer> | undefined;
   let wanted = false;
   let volume = 0.36;
+  const effects = { reverb: false, filter: false, flanger: false };
   let request = 0;
   let timer: ReturnType<typeof setInterval> | undefined;
   let startingTransition = false;
@@ -125,7 +126,8 @@ export function createMusicPlayer() {
     master = context.createGain();
     master.gain.value = 0;
     analyser = context.createAnalyser();
-    analyser.fftSize = 256;
+    analyser.fftSize = 2048;
+    analyser.smoothingTimeConstant = 0.18;
     samples = new Uint8Array(analyser.frequencyBinCount);
     master.connect(analyser);
     analyser.connect(context.destination);
@@ -164,11 +166,11 @@ export function createMusicPlayer() {
       deck.channel = { bass, highpass, lowpass, gain, echo: wet };
     }
     // One small, shared reverb impulse; no samples to download.
-    const impulse = context.createBuffer(2, Math.ceil(context.sampleRate * 1.0), context.sampleRate);
+    const impulse = context.createBuffer(2, Math.ceil(context.sampleRate * 2.0), context.sampleRate);
     for (let channel = 0; channel < impulse.numberOfChannels; channel++) {
       const data = impulse.getChannelData(channel);
       for (let i = 0; i < data.length; i++) {
-        data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / data.length, 3);
+        data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / data.length, 2.2);
       }
     }
     for (const deck of [current, next]) {
@@ -179,11 +181,19 @@ export function createMusicPlayer() {
       room.buffer = impulse;
       const roomFilter = context.createBiquadFilter();
       roomFilter.type = "highpass";
-      roomFilter.frequency.value = 650;
+      roomFilter.frequency.value = 220;
+      const predelay = context.createDelay(.1);
+      predelay.delayTime.value = .028;
+      const damping = context.createBiquadFilter();
+      damping.type = "lowpass";
+      damping.frequency.value = 6500;
+      damping.Q.value = .5;
       ch.lowpass.connect(roomFilter);
       roomFilter.connect(reverb);
-      reverb.connect(room);
-      room.connect(ch.gain);
+      reverb.connect(predelay);
+      predelay.connect(room);
+      room.connect(damping);
+      damping.connect(ch.gain);
       const flanger = context.createGain();
       flanger.gain.value = 0;
       const flangeDelay = context.createDelay(0.02);
@@ -208,6 +218,10 @@ export function createMusicPlayer() {
       return;
     }
     const ch = deck.channel;
+    // Manual effects apply immediately on both decks, independently of the DJ's timed effects.
+    if (effects.reverb) wash = Math.max(wash, 1.05);
+    if (effects.filter) lowpass = Math.min(lowpass, 950);
+    if (effects.flanger) { flange = Math.max(flange, .38); sweep = context.currentTime / 4; }
     ch.reverb?.gain.setTargetAtTime(wash, context.currentTime, 0.08);
     ch.flanger?.gain.setTargetAtTime(flange, context.currentTime, 0.08);
     ch.flangeDelay?.delayTime.setTargetAtTime(0.001 + 0.005 * (0.5 - 0.5 * Math.cos(sweep * Math.PI * 2)), context.currentTime, 0.12);
@@ -391,10 +405,14 @@ export function createMusicPlayer() {
   }
 
   return {
-    snapshot: () => ({ transitionCount, playing: wanted, track: tracks[current.index], tone, echo, phase, error, volume,
+    snapshot: () => ({ transitionCount, playing: wanted, track: tracks[current.index], tone, echo, phase, error, volume, effects: { ...effects },
       position: current.ready ? Math.max(0, Math.min(current.duration, current.audio.currentTime - current.cue)) : 0,
       duration: current.duration, effectsAvailable: typeof window.AudioContext !== "undefined" }),
     toggle() { if (wanted) stop(); else void start(); },
+    setEffect(effect: "reverb" | "filter" | "flanger", enabled: boolean) {
+      effects[effect] = enabled;
+      if (wanted) tick(); else emit();
+    },
     setVolume(value: number) {
       if (!Number.isFinite(value)) return;
       volume = Math.max(0, Math.min(1, value));
@@ -411,12 +429,32 @@ export function createMusicPlayer() {
       tick();
     },
     subscribe(listener: () => void) { listeners.add(listener); return () => { listeners.delete(listener); }; },
-    energy() {
-      if (!analyser || !samples || !wanted) return 0;
+    spectrum(target: Float32Array<ArrayBuffer>) {
+      if (!analyser || !samples || !wanted || !context || volume === 0) { target.fill(0); return; }
       analyser.getByteFrequencyData(samples);
-      let bass = 0;
-      for (let i = 1; i < 12; i++) bass += samples[i];
-      return Math.min(1, bass / (11 * 170));
+      const binWidth = context.sampleRate / analyser.fftSize;
+      for (let band = 0; band < target.length; band++) {
+        const low = 60 * (12000 / 60) ** (band / target.length);
+        const high = 60 * (12000 / 60) ** ((band + 1) / target.length);
+        const start = Math.max(1, Math.floor(low / binWidth));
+        const end = Math.min(samples.length, Math.max(start + 1, Math.ceil(high / binWidth)));
+        let sum = 0;
+        for (let index = start; index < end; index++) sum += (samples[index] / 255) ** 2;
+        target[band] = Math.min(1, Math.sqrt(sum / Math.max(1, end - start)) * 1.25);
+      }
+    },
+    bands() {
+      if (!analyser || !samples || !wanted || !context || volume === 0) return { bass: 0, energy: 0, treble: 0 };
+      analyser.getByteFrequencyData(samples);
+      const binWidth = context.sampleRate / analyser.fftSize;
+      const band = (low: number, high: number) => {
+        const start = Math.max(1, Math.ceil(low / binWidth));
+        const end = Math.min(samples!.length, Math.floor(high / binWidth) + 1);
+        let sum = 0;
+        for (let i = start; i < end; i++) sum += (samples![i] / 255) ** 2;
+        return Math.sqrt(sum / Math.max(1, end - start));
+      };
+      return { bass: band(40, 180), energy: band(40, 8000), treble: band(2500, 10000) };
     }
   };
 }
