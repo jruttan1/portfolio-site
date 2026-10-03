@@ -58,3 +58,7 @@
   }
 
 .case-study .prose p { white-space: pre-line; }
+
+@media (max-width: 720px) {
+  .case-dj { padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+}

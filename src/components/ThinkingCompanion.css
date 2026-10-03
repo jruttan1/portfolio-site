@@ -342,3 +342,83 @@
   [data-playing="true"] .dj-hand--left { transform: translate(calc(-1 * var(--record-touch)), calc(var(--record-y) - 12px)); }
   [data-playing="true"] .dj-hand--right { transform: translate(var(--record-touch), calc(var(--record-y) + 1px)); }
 }
+
+.dj-body { display: contents; }
+.dj-collapse, .dj-expand { display: none; }
+@media (max-width: 720px) {
+  .thinking-companion {
+    --dj-edge: max(12px, env(safe-area-inset-right));
+    position: fixed;
+    right: var(--dj-edge);
+    bottom: max(12px, env(safe-area-inset-bottom));
+    z-index: 40;
+    pointer-events: none;
+  }
+  .dj-body {
+    display: block;
+    position: relative;
+    pointer-events: auto;
+    touch-action: pan-y;
+    transform: translateX(var(--dj-drag, 0px));
+    transition: transform 320ms cubic-bezier(.22, 1, .36, 1), visibility 320ms;
+  }
+  .dj-body button { touch-action: pan-y; }
+  .dj-body[data-dragging="true"] { transition: none; }
+  .thinking-companion[data-collapsed="true"] .dj-body {
+    transform: translateX(calc(100% + var(--dj-edge) + 24px));
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .dj-collapse {
+    display: grid;
+    place-items: center;
+    position: absolute;
+    top: 16px;
+    right: -7px;
+    z-index: 5;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    color: #536572;
+    background: #f6f4efdc;
+    cursor: pointer;
+  }
+  .dj-expand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    position: absolute;
+    right: calc(-1 * var(--dj-edge));
+    bottom: 34px;
+    min-width: 48px;
+    height: 44px;
+    padding: 0 10px 0 8px;
+    border: 1px solid #9caab2;
+    border-right: 0;
+    border-radius: 9px 0 0 9px;
+    background: #d4dde2;
+    color: #394d5b;
+    box-shadow: 0 2px 8px #24394420;
+    font: 600 11px/1 var(--font-sans);
+    cursor: pointer;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: transform 280ms ease, opacity 180ms ease, visibility 280ms;
+  }
+  .dj-expand span { font-size: 21px; font-weight: 400; }
+  .thinking-companion[data-collapsed="true"] .dj-expand {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+  .thinking-companion[data-collapsed="true"] .dj-tooltip { display: none; }
+  .thinking-companion:has(.dj-collapse:focus-visible) .dj-tooltip { visibility: hidden; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dj-body, .dj-expand { transition: none; }
+}

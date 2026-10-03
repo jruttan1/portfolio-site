@@ -254,6 +254,43 @@ function RecordArtwork({ src }: { src: string }) {
 
 export default function ThinkingCompanion() {
   const tooltipId = useId();
+  const bodyId = useId();
+  const [mobile, setMobile] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
+  const bodyRef = useRef<HTMLDivElement>(null);
+  const expandRef = useRef<HTMLButtonElement>(null);
+  const swipe = useRef<{ id: number; x: number; y: number; dragging: boolean } | null>(null);
+  const suppressClick = useRef(false);
+
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 720px)");
+    const update = () => {
+      setMobile(query.matches);
+      swipe.current = null;
+      bodyRef.current?.style.removeProperty("--dj-drag");
+      bodyRef.current?.removeAttribute("data-dragging");
+    };
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+
+  const tuckAway = () => {
+    setCollapsed(true);
+    setTooltipDismissed(true);
+    requestAnimationFrame(() => expandRef.current?.focus({ preventScroll: true }));
+  };
+  const finishSwipe = (event: React.PointerEvent<HTMLDivElement>, cancelled = false) => {
+    const gesture = swipe.current;
+    if (!gesture || gesture.id !== event.pointerId) return;
+    swipe.current = null;
+    bodyRef.current?.style.removeProperty("--dj-drag");
+    bodyRef.current?.removeAttribute("data-dragging");
+    if (gesture.dragging) {
+      suppressClick.current = true;
+      if (!cancelled && event.clientX - gesture.x > 40) tuckAway();
+    }
+  };
   const [tooltipDismissed, setTooltipDismissed] = useState(false);
   const [music, setMusic] = useState<ReturnType<ReturnType<typeof getMusicPlayer>["snapshot"]> | null>(null);
   const [stopping, setStopping] = useState(false);
@@ -328,10 +365,44 @@ export default function ThinkingCompanion() {
   }, [playing, music?.transitionCount, triggerScratch]);
 
   return (
-    <aside ref={djRef} className="thinking-companion" data-playing={playing} data-stopping={stopping} data-scratching={scratching} data-mixing={music?.phase === "echo" || music?.phase === "transitioning" || music?.phase === "cueing"} aria-label="Pocket DJ" data-tooltip-dismissed={tooltipDismissed}
+    <aside ref={djRef} className="thinking-companion" data-collapsed={collapsed} data-playing={playing} data-stopping={stopping} data-scratching={scratching} data-mixing={music?.phase === "echo" || music?.phase === "transitioning" || music?.phase === "cueing"} aria-label="Pocket DJ" data-tooltip-dismissed={tooltipDismissed}
       onKeyDown={(event) => { if (event.key === "Escape") setTooltipDismissed(true); }}
       onPointerLeave={() => setTooltipDismissed(false)}
       onFocusCapture={() => setTooltipDismissed(false)}>
+      <button ref={expandRef} className="dj-expand" type="button" aria-label="Show DJ"
+        aria-expanded={!collapsed} aria-controls={bodyId} onClick={() => {
+          setCollapsed(false);
+          requestAnimationFrame(() => bodyRef.current?.querySelector<HTMLButtonElement>(".dj-collapse")?.focus({ preventScroll: true }));
+        }}><span aria-hidden="true">‹</span> DJ</button>
+      <div id={bodyId} ref={bodyRef} className="dj-body" inert={mobile && collapsed}
+        onPointerDown={event => {
+          suppressClick.current = false;
+          if (!mobile || collapsed || event.pointerType === "mouse" || !event.isPrimary) return;
+          swipe.current = { id: event.pointerId, x: event.clientX, y: event.clientY, dragging: false };
+        }}
+        onPointerMove={event => {
+          const gesture = swipe.current;
+          if (!gesture || gesture.id !== event.pointerId) return;
+          const dx = event.clientX - gesture.x;
+          const dy = event.clientY - gesture.y;
+          if (!gesture.dragging) {
+            if (Math.abs(dy) > 10 && Math.abs(dy) > Math.abs(dx)) { swipe.current = null; return; }
+            if (dx < 10 || dx < Math.abs(dy) * 1.3) return;
+            gesture.dragging = true;
+            event.currentTarget.setPointerCapture(event.pointerId);
+            event.currentTarget.dataset.dragging = "true";
+          }
+          event.currentTarget.style.setProperty("--dj-drag", `${Math.max(0, Math.min(dx, 160))}px`);
+        }}
+        onPointerUp={event => finishSwipe(event)}
+        onPointerCancel={event => finishSwipe(event, true)}
+        onClickCapture={event => {
+          if (suppressClick.current) { event.preventDefault(); event.stopPropagation(); suppressClick.current = false; }
+        }}>
+      <button className="dj-collapse" type="button" aria-label="Hide DJ (or swipe right)"
+        aria-expanded={!collapsed} aria-controls={bodyId} onClick={tuckAway}>
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m6 3 5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+      </button>
       <button className="dj-head" type="button" onClick={() => getMusicPlayer().toggle()}
         onPointerMove={event => {
           if (event.pointerType !== "mouse" || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -413,6 +484,7 @@ export default function ThinkingCompanion() {
         </dl>
       </div>
       <p className="dj-status" aria-live="polite">{music?.error || ""}</p>
+      </div>
     </aside>
   );
 }
