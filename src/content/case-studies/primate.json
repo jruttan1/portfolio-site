@@ -25,7 +25,7 @@
       "props": {
         "id": "primate-1",
         "title": "Background",
-        "body": "Conor works full-time at Stripe and reached out to me about building Primate. I ended up spending about six months on it with him and Jeremy."
+        "body": "After a Linkedin post about another one of my projects, an engineer from Stripe reached out to me and pitched this idea. We ended up spending about six months building and growing it along with another co-founder."
       }
     },
     {
@@ -44,7 +44,7 @@
           },
           {
             "title": "Browser tooling",
-            "body": "We didn’t want to pay for a browser provider, so I built our own browser sandbox and browser-use commands from scratch in Python."
+            "body": "We didn’t want to pay for a browser provider, so I built our own browser sandbox and browser-use commands from scratch in Python using Pydantic and Playwright."
           }
         ]
       }

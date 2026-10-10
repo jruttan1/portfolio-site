@@ -1,0 +1,34 @@
+---
+interface Props { skills: string[] }
+const { skills } = Astro.props;
+const icons: Record<string, string> = {
+  React: "react", Python: "python", Playwright: "playwright",
+  AWS: "amazonwebservices", Docker: "docker", "Next.js": "nextdotjs",
+  Cohere: "ai", TypeScript: "typescript",
+  "Cloudflare Workers": "cloudflare", "Durable Objects": "database",
+  OpenAI: "openai", Linq: "link", SwiftUI: "swift", Browserbase: "browser",
+  "Tailwind CSS": "tailwindcss", "Google Gemini API": "googlegemini",
+  "Supabase Realtime": "supabase", PostgreSQL: "postgresql", "shadcn/ui": "shadcnui",
+};
+---
+
+{skills.length > 0 && (
+  <ul class="tech-stack" aria-label="Tech stack">
+    {skills.map((skill) => (
+      <li tabindex="0" aria-label={skill}>
+        <img src={`/tech/${icons[skill] ?? "ai"}.svg`} width="17" height="17" alt="" aria-hidden="true" loading="lazy" />
+        <span class="tech-tooltip" aria-hidden="true">{skill}</span>
+      </li>
+    ))}
+  </ul>
+)}
+
+<style>
+  .tech-stack { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 3px 0 0; padding: 0; list-style: none; }
+  li { position: relative; display: grid; width: 24px; height: 28px; place-items: center; border-radius: 4px; outline-offset: 3px; }
+  img { display: block; object-fit: contain; opacity: .55; transition: opacity 160ms ease; }
+  li:hover img, li:focus-visible img { opacity: .9; }
+  .tech-tooltip { position: absolute; bottom: calc(100% + 6px); left: 50%; z-index: 5; transform: translateX(-50%); padding: 5px 8px; border-radius: 4px; background: #171715; color: #f6f4ef; font: 11px/1.3 var(--font-mono); white-space: nowrap; pointer-events: none; visibility: hidden; opacity: 0; }
+  li:hover .tech-tooltip, li:focus-visible .tech-tooltip { visibility: visible; opacity: 1; }
+  @media (prefers-reduced-motion: reduce) { img { transition: none; } }
+</style>

@@ -5,7 +5,7 @@
     "props": {
       "name": "Optimate",
       "eyebrow": "Optimate · Hack the North 2025",
-      "title": "An underwriting prototype",
+      "title": "AI-powered underwriting prioritization",
       "overview": "Optimate helps underwriters decide which insurance submissions to look at first, based on the risks their company wants to cover.",
       "role": "Product design and full-stack development",
       "timeline": "September 2025",
@@ -14,7 +14,7 @@
       "demoNote": "",
       "externalUrl": "https://devpost.com/software/optimate",
       "externalLabel": "View on Devpost",
-      "skills": "Next.js, Python, Cohere, AWS, Data visualization",
+      "skills": "Next.js, Python, Cohere, AWS",
       "poster": "/demos/optimate-poster.jpg",
       "mediaAspectRatio": "48 / 25"
     }
@@ -36,7 +36,7 @@
         "items": [
           {
             "title": "Product design and full-stack work",
-            "body": "I did some of the overall product design and built features across the frontend and backend. One was an LLM chat tied to a specific policy, so an underwriter could ask questions about it. I also worked on some of the risk processing logic."
+            "body": "I contributed to the product design and built features across the frontend and backend, including a policy-specific LLM chat that lets underwriters ask questions about a submission. I also contributed to the risk processing logic behind the recommendations."
           }
         ]
       }

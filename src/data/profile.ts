@@ -72,7 +72,7 @@ export const profile = {
     {
       name: "Doppels",
       slug: "doppels",
-      description: "A networking prototype where AI agents talk to find common ground between people.",
+      description: "AI agents find shared interests and score compatibility through live conversations.",
       url: "https://doppels.vercel.app",
       prizes: [{ name: "McHacks", note: "Best Product Design · Top 5 Finalist", logo: "/mchacks-logo.svg" }],
       chip: { bg: "#e0e7ff", text: "#3730a3" }

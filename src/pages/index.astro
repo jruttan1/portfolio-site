@@ -1,5 +1,6 @@
 ---
 import DemoVideo from "../components/DemoVideo.astro";
+import TechText from "../components/TechText.jsx";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ChessWidget from "../components/toys/ChessWidget.astro";
 import LineSidebar from "../components/new/LineSidebar.astro";
@@ -33,7 +34,7 @@ const availabilityItems = profile.availability.split(" · ");
       <div class="content">
         <div id="top" class="top-anchor section-anchor">
           <header class="site-header">
-            <h1>Jack Ruttan</h1>
+            <h1 class="name-heading"><span class="name-text">Jack Ruttan</span><span class="name-effect"><TechText client:load text="Jack Ruttan" fontWeight={600} letterSpacing={-0.03} color="#171715" accentColor="#d9482b" strokeWidth={0.7} specks={5} sweep={false} /></span></h1>
             <div class="header-contact">
               <span class="header-contact-label">Contact</span>
               <nav class="header-links" aria-label="Contact links">
@@ -283,6 +284,9 @@ const availabilityItems = profile.availability.split(" · ");
   .section-anchor { scroll-margin-top: 40px; }
   .site-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 32px; padding: 36px 0 35px; }
   .site-header h1 { margin: 0; font-size: 45px; font-weight: 600; letter-spacing: -.03em; line-height: 1; }
+  .name-heading { position: relative; width: max-content; flex: 0 0 auto; }
+  .name-effect { position: absolute; inset: -24px; }
+  .name-heading:has([data-ready="true"]) .name-text { opacity: 0; }
   .header-contact { display: flex; align-items: center; gap: 16px; margin-right: clamp(30px, 4vw, 60px); padding-top: 10px; border-top: 1px solid rgba(23, 23, 21, .2); }
   .header-contact-label { color: rgba(23, 23, 21, .42); font: 10px/1 var(--font-mono); letter-spacing: .18em; text-transform: uppercase; }
   .header-links { display: flex; align-items: center; gap: 12px; }

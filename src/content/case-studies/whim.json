@@ -11,7 +11,7 @@
       "timeline": "September 2026",
       "team": "Lucian Lavric, Karan Anand, Sheng Chang Li, and me",
       "media": "/demos/whim.mp4",
-      "demoNote": "The iMessage widgets were a TestFlight prototype and aren’t available on the public website.",
+      "demoNote": "The native iMessage widgets were distributed through TestFlight. The public website shows the companion web experience.",
       "externalUrl": "https://github.com/chang-07/htn-26",
       "externalLabel": "View on GitHub",
       "skills": "TypeScript, Cloudflare Workers, Durable Objects, OpenAI, Linq, SwiftUI, Browserbase",
@@ -44,7 +44,7 @@
           },
           {
             "title": "Browser tools and tying things together",
-            "body": "Browserbase took care of a lot of the browser work. I connected skills and APIs from browse.sh so the agent could look up things like hiking routes and DoorDash menus. I was also the glue guy for a lot of this, getting the agent, iMessage widgets, and web app to work together."
+            "body": "I integrated Browserbase and connected skills and APIs from browse.sh so the agent could find hiking routes, DoorDash menus, and other information needed for group plans. I also connected the agent, native iMessage widgets, and web app into a shared experience."
           },
           {
             "title": "The web app and iMessage sync",

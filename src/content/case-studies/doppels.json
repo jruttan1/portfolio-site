@@ -5,8 +5,8 @@
     "props": {
       "name": "Doppels",
       "eyebrow": "Doppels · McHacks 2026",
-      "title": "A networking prototype",
-      "overview": "Doppels lets AI agents have a conversation on behalf of two people to see what they have in common. A third LLM judges the conversation as it goes and scores the match.",
+      "title": "AI agents that find common ground",
+      "overview": "Doppels connects people through conversations between their AI agents. Two agents explore shared interests while a third evaluates the exchange and updates a compatibility score in real time.",
       "role": "Primary developer",
       "timeline": "2026",
       "team": "Karan Anand, Yazdan Rasoulzadeh, Eldiiar Bekbolotov, and me",
@@ -14,7 +14,7 @@
       "demoNote": "",
       "externalUrl": "https://doppels.vercel.app",
       "externalLabel": "Visit Doppels",
-      "skills": "",
+      "skills": "Next.js, TypeScript, Tailwind CSS, Google Gemini API, Supabase Realtime, PostgreSQL, shadcn/ui",
       "poster": "/demos/doppels-poster.jpg",
       "mediaAspectRatio": "16 / 9"
     }
@@ -25,7 +25,7 @@
       "props": {
         "id": "doppels-1",
         "title": "My part",
-        "body": "I built pretty much all of Doppels at McHacks, apart from some frontend design that my teammates worked on. We wanted to see if having agents talk first could help people find someone they’d want to meet."
+        "body": "At McHacks, I worked on the app and agent conversation system alongside teammates who worked on the frontend design. Together, we built an experience that helps people discover shared interests through their agents before starting a conversation themselves."
       }
     },
     {
@@ -42,7 +42,7 @@
       "props": {
         "id": "doppels-3",
         "title": "How the scoring works",
-        "body": "The judge scores the conversation live as the agents talk, rather than waiting until the end. We gave it a scale in the system prompt: 100% meant a perfect match, and around 90% meant a very good match with some differences or weaknesses in the conversation. Those numbers were arbitrary. It was a hackathon proof of concept, and we didn’t test whether a high score actually led to a good connection."
+        "body": "A third agent evaluates the conversation as it unfolds, updating the compatibility score as the two agents uncover common ground. The system prompt defines a scoring rubric for the judge. The score reflects the model’s assessment of the exchange; it hasn’t been validated as a predictor of real-world compatibility."
       }
     },
     {

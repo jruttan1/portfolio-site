@@ -2,6 +2,7 @@
 import CaseSections from "../../components/CaseSections.astro";
 import "../../styles/case-study.css";
 import DemoVideo from "../../components/DemoVideo.astro";
+import TechStack from "../../components/TechStack.astro";
 import ArrowIcon from "../../components/ArrowIcon.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PocketDJ from "../../components/PocketDJ.astro";
@@ -47,7 +48,7 @@ const nextStudy = caseStudies[(currentIndex + 1) % caseStudies.length];
         {study.role && <div><dt>My role</dt><dd>{study.role}</dd></div>}
         <div><dt>When</dt><dd>{study.timeline}</dd></div>
         <div><dt>Team</dt><dd>{study.team}</dd></div>
-        {study.skills.length > 0 && <div><dt>Built with</dt><dd>{study.skills.join(", ")}</dd></div>}
+        {study.skills.length > 0 && <div><dt>Built with</dt><dd><TechStack skills={study.skills} /></dd></div>}
       </dl>
 
       <CaseSections sections={study.sections} />
